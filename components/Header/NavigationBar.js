@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Link from "next/Link";
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 
 import { Sidebar } from 'primereact/sidebar';
 import { Menu } from 'primereact/menu';
