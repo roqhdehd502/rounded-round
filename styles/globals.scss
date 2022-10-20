@@ -1,0 +1,104 @@
+@import "./_variables";
+@import "./sass/_layout";
+@import "./_overrides";
+
+
+/** carousel */
+.carousel-container .carousel-item .carousel-item-content {
+  border: 1px solid var(--surface-d); border-radius: 3px;
+  margin: .3rem; padding: 2rem 0;
+  text-align: center;
+}
+
+.carousel-demo .carousel-item .carousel-image {
+  width: 50%;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+
+/** form card center */
+.form-vertical-align-center {
+  min-height: 100vh;
+}
+
+/** image to link */
+.image-link:hover {
+  cursor: pointer;
+}
+
+/** sidebar font */
+.sidebar-font {
+  a {
+    font-size: 1.2rem;
+    text-decoration: none;
+    color: #000;
+    transform: rotate(0.04deg);
+    font-family: 'Noto Sans KR', sans-serif;
+
+    i {
+      font-size: 1.2rem;
+    }
+  }
+
+  a:hover {
+    color: #7349BD;
+    cursor: pointer;
+  }
+}
+
+/** DataTableDemo.css */
+.datatable-doc-demo .p-paginator .p-paginator-current {
+  margin-left: auto;
+}
+.datatable-doc-demo .p-progressbar {
+  height: 0.5rem;
+  background-color: #d8dadc;
+}
+.datatable-doc-demo .p-progressbar .p-progressbar-value {
+  background-color: #607d8b;
+}
+.datatable-doc-demo .p-datepicker {
+  min-width: 25rem;
+}
+.datatable-doc-demo .p-datepicker td {
+  font-weight: 400;
+}
+.datatable-doc-demo .p-datatable.p-datatable-customers .p-datatable-header {
+  padding: 1rem;
+  text-align: left;
+  font-size: 1.5rem;
+}
+.datatable-doc-demo .p-datatable.p-datatable-customers .p-paginator {
+  padding: 1rem;
+}
+.datatable-doc-demo .p-datatable.p-datatable-customers .p-datatable-thead > tr > th {
+  text-align: left;
+}
+.datatable-doc-demo .p-datatable.p-datatable-customers .p-dropdown-label:not(.p-placeholder) {
+  text-transform: uppercase;
+}
+
+/** DialogDemo.css */
+.dialog-demo .p-button {
+  margin: 0 .5rem 0 0;
+  min-width: 10rem;
+}
+.dialog-demo p {
+  margin: 0;
+  line-height: 1.5;
+}
+.dialog-demo .p-dialog .p-button {
+  min-width: 6rem;
+}
+
+/** pc-layout-width */
+.content-width-padding {
+  padding-left: 20%;
+  padding-right: 20%;
+}  
+@media (max-width: 991px) {
+  .content-width-padding {
+    padding-left: 0px;
+    padding-right: 0px;  
+  }
+}

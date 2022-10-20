@@ -1,6 +1,6 @@
 {
   "name": "rounded-round",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,12 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.8.5",
+    "big.js": "^6.2.1",
+    "classnames": "^2.3.2",
     "next": "12.3.1",
+    "next-redux-wrapper": "^8.0.0",
+    "primeflex": "^3.2.1",
+    "primeicons": "^6.0.1",
+    "primereact": "^8.6.1",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-redux": "^8.0.4",
+    "sass": "^1.55.0",
+    "time-counting": "^2.0.2"
   },
   "devDependencies": {
     "eslint": "8.24.0",
-    "eslint-config-next": "12.3.1"
+    "eslint-config-next": "12.3.1",
+    "redux-logger": "^3.0.6"
   }
 }

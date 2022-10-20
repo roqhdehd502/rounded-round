@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
+
+
+/* General */
+// $fontSize: 0.9rem;
+$borderRadius: 12px;
+$transitionDuration:.2s;
+
+html {
+  background-color: white;
+  font-size: 0.9rem; transform: rotate(0.04deg);
+  font-family: 'Noto Sans KR', sans-serif;
+
+  body {
+    margin: 0px; padding: 0px;
+    -webkit-font-smoothing: antialiased; 
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
