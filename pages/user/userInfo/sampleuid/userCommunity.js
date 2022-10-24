@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 
-import Link from "next/Link";
 import { useRouter } from 'next/router';
 
 import { TabMenu } from 'primereact/tabmenu';
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
@@ -20,12 +18,6 @@ export default function userCommunity() {
 
     const [customers, setCustomers] = useState(null);
     const [selectedCustomers, setSelectedCustomers] = useState(null);
-    const [filters, setFilters] = useState({
-        'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
-        'artistName': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-        'songName': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-        'albumName': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-    });
     const [multiSortMeta, setMultiSortMeta] = useState([{ field: 'popularCount', order: -1 }]);
     const [loading, setLoading] = useState(true);  
 
@@ -102,7 +94,7 @@ export default function userCommunity() {
                     <DataTable 
                       value={customers} className="p-datatable-customers" rows={10}
                       dataKey="id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)}
-                      paginator paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" rowsPerPageOptions={[10,25,50]}
+                      paginator paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                       currentPageReportTemplate="{first} / {last} of {totalRecords}"
                       sortMode="multiple" removableSort multiSortMeta={multiSortMeta} onSort={(e) => setMultiSortMeta(e.multiSortMeta)}               
                       loading={loading} responsiveLayout="scroll"

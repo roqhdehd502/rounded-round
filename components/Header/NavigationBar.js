@@ -16,7 +16,7 @@ export const NavigationBar = () => {
     const customSidebarIcons = (
         <>
             <Link href="/">
-                <img className="pt-4 mr-7" src="/img/logo.png" width='120px' />
+                <img className="pt-2 mr-5" src="/img/logo.png" width='180px' />
             </Link>
         </>
     );
@@ -96,21 +96,25 @@ export const NavigationBar = () => {
     ];
 
     const leftContents = (
-        <div>
+        <div className="ml-0 mr-0">
             <Sidebar className="sidebar-font" visible={visibleLeft} position="left" onHide={() => setVisibleLeft(false)} icons={customSidebarIcons}>
+                <div className="p-inputgroup">
+                    <InputText placeholder="검색" />
+                    <Button icon="pi pi-search" className="p-button-primary"/>
+                </div>  
                 <Menu className="border-0 w-auto"  model={sideMenuItems} />
             </Sidebar>
             <Button icon="pi pi-bars" onClick={() => setVisibleLeft(true)} />
             <Link href="/">
-                <img className="ml-3" src="/img/logo.png" width='120px' />
+                <img className="ml-3" src="/img/logo.png" width='180px' />
             </Link>
         </div>
     );
 
     const centerContents = (
-        <div className='mr-8 pr-1 w-20rem'>
+        <div className='-ml-7 mr-8 w-22rem'>
             <div className="p-inputgroup">
-                <InputText />
+                <InputText placeholder="검색" />
                 <Button icon="pi pi-search" className="p-button-primary"/>
             </div>
         </div>

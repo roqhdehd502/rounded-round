@@ -1,9 +1,13 @@
-import { useState } from 'react';
-import Link from "next/Link";
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { TabMenu } from 'primereact/tabmenu';
-import { Button } from 'primereact/button';
+
+import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
+
+import { SongService } from '../../../../service/SongService';
+
+import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../../commons/functional/filters';
 
 
 userContents.layout = "L1";
@@ -12,6 +16,10 @@ export default function userContents() {
 
     const [activeIndex, setActiveIndex] = useState(0);
     const [userObj, setUserObj] = useState({});
+
+    const [customers, setCustomers] = useState(null);
+    const [layout, setLayout] = useState('grid');
+    const [loading, setLoading] = useState(true);      
 
     const userInfoMenuItems = [{
         label: '컨텐츠',
@@ -36,6 +44,80 @@ export default function userContents() {
       },
     ];
 
+    const songService = new SongService();
+
+    useEffect(() => {
+        const data = songService.getCustomersLarge();
+        setCustomers(getCustomers(data)); setLoading(false);
+    }, []);
+
+    const getCustomers = (data) => {
+        return [...data || []].map(d => {
+            d.uploadDate = new Date(d.uploadDate);
+            return d;
+        });
+    }
+
+    const renderListItem = (data) => {
+        return (
+            <>
+                <div className="col-12">
+                    <div className="product-list-item">
+                        <img src={`${data.thumbnail}`} onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} />
+                        <div className="product-list-detail">
+                            <div className="product-description">{ellipsisText(data.songName, 27)}</div>
+                        </div>
+                        <div className="product-list-action">
+                            <span className="product-price">조회수 {formatUnitEachThousand(data.views)}회 • {timeCounter(data.uploadDate)}</span>
+                        </div>
+                    </div>
+                </div>
+            </>
+            
+        );
+    }
+
+    const renderGridItem = (data) => {
+        return (
+            <>
+                <div className="col-12 md:col-4">
+                    <div className="product-grid-item card">
+                        <div className="product-grid-item-content">
+                            <img src={`${data.thumbnail}`} onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} />
+                            <div className="product-description">{ellipsisText(data.songName, 27)}</div>
+                            <span className="product-price">조회수 {formatUnitEachThousand(data.views)}회 • {timeCounter(data.uploadDate)}</span>
+                        </div>
+                    </div>
+                </div>
+            </>
+            
+        );
+    }
+
+    const itemTemplate = (product, layout) => {
+        if (!product) return;
+        if (layout === 'list') {
+            return renderListItem(product);
+        } else if (layout === 'grid') {
+            return renderGridItem(product);
+        }
+    }    
+    
+    const renderHeader = () => {
+        return (
+            <>
+                <div className="grid grid-nogutter">
+                    <div className="col-12" style={{textAlign: 'right'}}>
+                        <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
+                    </div>
+                </div>
+            </>
+            
+        );
+    }
+
+    const header = renderHeader();
+
     return (
         <>
             <div className="flex align-content-center align-items-center justify-content-center">
@@ -52,38 +134,11 @@ export default function userContents() {
                 </div>
             </div>    
 
-            <div className="flex align-content-center align-items-center justify-content-evenly">
-                <div className="card w-auto">
-                    <div class="grid text-700 text-center">
-                        <div class="col-12">
-                            <img className="w-24rem image-align-center" src="https://img.hiphople.com/files/attach/images/11972418/421/045/023/3902e6934b1f1b284bad5ff406442beb.png" />
-                            <h3>MBS로 듣는 켄드릭 라마의 의식</h3>
-                        </div>
-                        <div class="col-4">
-                            <img className="w-10rem image-align-center" src="https://img.hiphople.com/files/attach/images/11972418/421/045/023/3902e6934b1f1b284bad5ff406442beb.png" />
-                            <h4>History Of Compton</h4>
-                        </div>
-                        <div class="col-4">
-                            <img className="w-10rem image-align-center" src="https://img.hiphople.com/files/attach/images/11972418/421/045/023/3902e6934b1f1b284bad5ff406442beb.png" />
-                            <h4>Good Kidd becomes Good Rapper</h4>
-                        </div>
-                        <div class="col-4">
-                            <img className="w-10rem image-align-center" src="https://img.hiphople.com/files/attach/images/11972418/421/045/023/3902e6934b1f1b284bad5ff406442beb.png" />
-                            <h4>Hiii Power</h4>
-                        </div>
-                        <div class="col-4">
-                            <img className="w-10rem image-align-center" src="https://img.hiphople.com/files/attach/images/11972418/421/045/023/3902e6934b1f1b284bad5ff406442beb.png" />
-                            <h4>Hiii Power</h4>
-                        </div>
-                        <div class="col-4">
-                            <img className="w-10rem image-align-center" src="https://img.hiphople.com/files/attach/images/11972418/421/045/023/3902e6934b1f1b284bad5ff406442beb.png" />
-                            <h4>Hiii Power</h4>
-                        </div>
-                        <div class="col-4">
-                            <img className="w-10rem image-align-center" src="https://img.hiphople.com/files/attach/images/11972418/421/045/023/3902e6934b1f1b284bad5ff406442beb.png" />
-                            <h4>Hiii Power</h4>
-                        </div>
-                    </div>
+            <div className="dataview-demo">
+                <div className="card">
+                    <DataView value={customers} layout={layout} header={header}
+                      itemTemplate={itemTemplate} paginator rows={9} loading={loading}
+                    /> 
                 </div>
             </div>
         </>
