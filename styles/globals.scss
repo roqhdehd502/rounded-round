@@ -245,3 +245,17 @@
       width: 100%;
   }
 }
+
+
+/** search input visible media query */
+@media screen and (max-width: 820px) {
+    .pc-search-input {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 820px) {
+    .mobile-search-input {
+        display: none;
+    }
+}

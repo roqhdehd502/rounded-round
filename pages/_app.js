@@ -9,6 +9,8 @@ import Head from 'next/head'
 
 import { wrapper } from "../store";
 
+import { firestore, firebaseStorage } from '../firebaseConfiguration';
+
 import DefaultLayout from '../layouts/DefaultLayout';
 import EmptyLayout from '../layouts/EmptyLayout';
 
@@ -21,18 +23,22 @@ const layouts = {
 function MyApp({ Component, pageProps }) {
     const Layout = layouts[Component.layout] || ((children) => <>{children}</>);
 
+    firestore;
+    firebaseStorage;
+
     return (
         <>
             <Head>
                 <title>Rounded Round</title>
                 <meta name="referrer" content="no-referrer" />
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Layout>
                 <Component {...pageProps} />
             </Layout>
         </>
-    ) 
+    ); 
 }
 
 export default wrapper.withRedux(MyApp)

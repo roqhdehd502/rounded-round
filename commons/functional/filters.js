@@ -23,3 +23,25 @@ export const timeCounter = (referenceTime) => {
 
     return timeCount;
 }
+
+
+export const timeFormatting = (referenceTime, getTimeType='YYYYMMDD') => {
+    const time = new Date(referenceTime);
+    let fomattedTime;
+    switch(getTimeType) {
+        case 'YYYYMMDD':
+            fomattedTime = `${time.getFullYear()}.${time.getMonth()}.${time.getDate()}`;
+            break;
+        case 'YYYY':
+            fomattedTime = `${time.getFullYear()}`;
+            break;
+        case 'MM':
+            fomattedTime = `${time.getMonth()}`;
+            break;
+        case 'DD':
+            fomattedTime = `${time.getDate()}`;
+            break;        
+    }
+
+    return fomattedTime;
+}

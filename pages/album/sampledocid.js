@@ -108,37 +108,37 @@ export default function albumDetail() {
             <div className="ml-3">
                 <h1 className="mt-0">앨범 정보</h1>
                 <div className="card ">
-                    <div class="grid">
-                        <div class="col-4 md:col-4 sm:col-12">
+                    <div className="grid">
+                        <div className="col-4 md:col-4 sm:col-12">
                             <img className="w-auto max-w-20rem" src="https://img.hiphople.com/files/attach/images/11972418/421/045/023/3902e6934b1f1b284bad5ff406442beb.png" />
                         </div>
-                        <div class="col-8 md:col-8 sm:col-12">
-                            <div class="grid">
-                                <div class="col-12">
+                        <div className="col-8 md:col-8 sm:col-12">
+                            <div className="grid">
+                                <div className="col-12">
                                     <h3 className="mb-0">Mr. Morale {'&'} The Big Steppers</h3>
                                 </div>
-                                <div class="col-12">
+                                <div className="col-12">
                                     <h3 className="mt-0">Kendrick Lamar</h3>
                                 </div>
-                                <div class="col-2">
+                                <div className="col-2">
                                     <label>발매일</label>
                                 </div>
                                 <div className="col-10">
                                     <label>2022/05/13</label>
                                 </div>
-                                <div class="col-2">
+                                <div className="col-2">
                                     <label>장르</label>
                                 </div>
                                 <div className="col-10">
                                     <label>Hip-Hop</label>
                                 </div>
-                                <div class="col-2">
+                                <div className="col-2">
                                     <label>발매사</label>
                                 </div>
                                 <div className="col-10">
                                     <label>Interscope Records</label>
                                 </div>
-                                <div class="col-2">
+                                <div className="col-2">
                                     <label>기획사</label>
                                 </div>
                                 <div className="col-10">

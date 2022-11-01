@@ -1,15 +1,56 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
 import Link from "next/Link";
+import { useRouter } from 'next/router';
+
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 
+import * as userInfoActions from '../../store/modules/userInfo';
+
 
 signIn.layout = "L2";
 export default function signIn() {
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const auth = getAuth();
+
     const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPassword] = useState('');
+
+    const emailLogin = useCallback((payload) => {
+        if(!payload.userEmail || !payload.userPassword) {
+            alert('올바른 계정이 아닙니다.');
+            return;
+        } 
+
+        signInWithEmailAndPassword(auth, payload.userEmail, payload.userPassword)
+          .then((result) => {
+              const payload = result.user;
+              dispatch(userInfoActions.userLogin(payload));
+              router.replace('/');
+          })
+          .catch((error) => { 
+              console.log("LOGIN FAILED!", error);
+          });
+    }, [dispatch]);
+
+    const googleLogin = useCallback(() => {
+        const provider = new GoogleAuthProvider();
+        auth.languageCode = 'ko';
+        signInWithPopup(auth, provider)
+          .then((payload) => { 
+              dispatch(userInfoActions.userGoogleLogin(payload.user));
+              router.replace('/');
+          })
+          .catch((error) => { 
+              console.log("GOOGLE LOGIN FAILED!", error); 
+          });
+    }, [dispatch]);
 
     return (
         <>
@@ -29,10 +70,10 @@ export default function signIn() {
                         </span>
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Button label="이메일 로그인" icon="pi pi-sign-in" className="pr-5" />
+                        <Button label="이메일 로그인" icon="pi pi-sign-in" className="pr-5" onClick={() => emailLogin({userEmail, userPassword})} />
                     </div>
                     <div className="field p-fluid">
-                        <Button label="구글 로그인" icon="pi pi-google" className="pr-5" />
+                        <Button label="구글 로그인" icon="pi pi-google" className="pr-5" onClick={() => googleLogin()} />
                     </div>
                     <div className="field p-fluid mt-6">
                         <Link href="/auth/signUp">

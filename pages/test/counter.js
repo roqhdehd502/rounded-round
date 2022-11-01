@@ -9,11 +9,11 @@ export default function Test() {
     const dispatch = useDispatch();
     const value = useSelector(({ counter }) => counter.value);
 
-    const plus = useCallback(({ value }) => {
+    const plus = useCallback(( value ) => {
         dispatch(counterActions.increment());
     }, [dispatch]);
 
-    const minus = useCallback(({ value }) => {
+    const minus = useCallback(( value ) => {
         dispatch(counterActions.decrement());
     }, [dispatch]);
 

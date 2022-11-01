@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+
 import Link from "next/Link";
 import { useRouter } from 'next/router';
 
@@ -7,11 +9,19 @@ import { Menu } from 'primereact/menu';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 
+import * as userInfoActions from '../../store/modules/userInfo';
 
-export const NavigationBar = () => {
+
+export const NavigationBar = (props) => {
+    const dispatch = useDispatch();
     const router = useRouter();
 
     const [visibleLeft, setVisibleLeft] = useState(false);
+
+    const logout = () => {
+        dispatch(userInfoActions.userLogout());
+        router.push('/');
+    };
 
     const customSidebarIcons = (
         <>
@@ -21,7 +31,7 @@ export const NavigationBar = () => {
         </>
     );
 
-    const sideMenuItems = [
+    const sideMenuItemsSignOut = [
         {
             label: '기본메뉴',
             items: [
@@ -59,6 +69,9 @@ export const NavigationBar = () => {
                 },
             ]
         },
+    ];
+
+    const sideMenuItemsSignIn = [
         {
             label: '기록',
             items: [
@@ -67,7 +80,12 @@ export const NavigationBar = () => {
                     icon: 'pi pi-clock',
                     command:(e) => {
                         setVisibleLeft(false);
-                        router.push('/popular/popularList');
+                        router.push({
+                          pathname: `/user/${props.userObj.uid}/history`,
+                          query: { ...props.userObj },
+                          },
+                          `/user/${props.userObj.uid}/history`,
+                        );
                     } 
                 },
                 {
@@ -75,7 +93,12 @@ export const NavigationBar = () => {
                     icon: 'pi pi-bookmark',
                     command:(e) => {
                         setVisibleLeft(false);
-                        router.push('/popular/popularList');
+                        router.push({
+                          pathname: `/user/${props.userObj.uid}/subscribes`,
+                          query: { ...props.userObj },
+                          },
+                          `/user/${props.userObj.uid}/subscribes`,
+                        );
                     }
                 }
             ]
@@ -95,6 +118,8 @@ export const NavigationBar = () => {
         },
     ];
 
+    const sideMenuItems = props.userObj ? [...sideMenuItemsSignOut, ...sideMenuItemsSignIn] : [...sideMenuItemsSignOut];
+
     const leftContents = (
         <div className="ml-0 mr-0">
             <Sidebar className="sidebar-font" visible={visibleLeft} position="left" onHide={() => setVisibleLeft(false)} icons={customSidebarIcons}>
@@ -104,7 +129,7 @@ export const NavigationBar = () => {
                 </div>  
                 <Menu className="border-0 w-auto"  model={sideMenuItems} />
             </Sidebar>
-            <Button icon="pi pi-bars" onClick={() => setVisibleLeft(true)} />
+            <Button className="mb-1" icon="pi pi-bars" onClick={() => setVisibleLeft(true)} />
             <Link href="/">
                 <img className="ml-3" src="/img/logo.png" width='180px' />
             </Link>
@@ -112,7 +137,7 @@ export const NavigationBar = () => {
     );
 
     const centerContents = (
-        <div className='-ml-7 mr-8 w-22rem'>
+        <div className="ml-0 mr-8 w-22rem pc-search-input">
             <div className="p-inputgroup">
                 <InputText placeholder="검색" />
                 <Button icon="pi pi-search" className="p-button-primary"/>
@@ -120,15 +145,26 @@ export const NavigationBar = () => {
         </div>
     );
     
-    const isLogin = false;
-    const rightContents = isLogin ? (
-        // <Link href="/profile/[uid]">
-            <Button icon="pi pi-user" />
-        // </Link>
+    const rightContents = props.userObj ? (
+        <div className="ml-0 mr-0">
+            <Link 
+              href={{
+                pathname: `/user/${props.userObj.uid}/userProfile`,
+                query: { ...props.userObj },
+              }}
+              as={`/user/${props.userObj.uid}/userProfile`}
+              shallow
+            >
+                <img className="mr-3 mt-1 border-circle" width={35} alt={props.userObj.displayName} src={props.userObj.photoURL ? props.userObj.photoURL : '/img/anonymous-user-logo.png'} onError={(e) => e.target.src = '/img/anonymous-user-logo.png'} />
+            </Link>
+            <Button className="mb-1" label="로그아웃" icon="pi pi-lock" onClick={() => logout()} />
+        </div>
     ) : (
-        <Link href="/auth/signIn">
-            <Button label="로그인" icon="pi pi-unlock" />
-        </Link>
+        <div className="ml-0 mr-0">
+            <Link href="/auth/signIn">
+                <Button label="로그인" icon="pi pi-unlock" />
+            </Link>
+        </div>
     );
 
     return (

@@ -54,13 +54,13 @@ export default function userProfile() {
 
             <div className="flex align-content-center align-items-center justify-content-center">
                 <div className="card w-auto">
-                    <div class="grid text-center">
-                        <div class="col-4 text-500"><h3 className="mb-0">컨텐츠</h3></div>
-                        <div class="col-4 text-500"><h3 className="mb-0">구독자 수</h3></div>
-                        <div class="col-4 text-500"><h3 className="mb-0">가입일</h3></div>
-                        <div class="col-4 text-700"><h3 className="mt-0">1,230개</h3></div>
-                        <div class="col-4 text-700"><h3 className="mt-0">20만</h3></div>
-                        <div class="col-4 text-700"><h3 className="mt-0">2020/12/07</h3></div>
+                    <div className="grid text-center">
+                        <div className="col-4 text-500"><h3 className="mb-0">컨텐츠</h3></div>
+                        <div className="col-4 text-500"><h3 className="mb-0">구독자 수</h3></div>
+                        <div className="col-4 text-500"><h3 className="mb-0">가입일</h3></div>
+                        <div className="col-4 text-700"><h3 className="mt-0">1,230개</h3></div>
+                        <div className="col-4 text-700"><h3 className="mt-0">20만</h3></div>
+                        <div className="col-4 text-700"><h3 className="mt-0">2020/12/07</h3></div>
                     </div>
                     <div className="field text-center p-fluid mt-4 p-1 pl-3 pr-3 surface-100 border-round-3xl">
                         <h3>설명</h3>

@@ -12,6 +12,7 @@ import { SongService } from '../../../../service/SongService';
 userCommunity.layout = "L1";
 export default function userCommunity() {
     const router = useRouter();
+    //const { uid } = router.query;
 
     const [activeIndex, setActiveIndex] = useState(1);
     const [userObj, setUserObj] = useState({});
