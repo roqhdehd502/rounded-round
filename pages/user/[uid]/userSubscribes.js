@@ -1,54 +1,23 @@
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-
-import { TabMenu } from 'primereact/tabmenu';
 
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 
-import { SongService } from '../../../../service/SongService';
+import { getContents } from '../../../service';
 
-import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../../commons/functional/filters';
+import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../commons/functional/filters';
 
 
-userContents.layout = "L1";
-export default function userContents() {
-    const router = useRouter();
-
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [userObj, setUserObj] = useState({});
+userSubscribes.layout = "L1";
+export default function userSubscribes() {
 
     const [customers, setCustomers] = useState(null);
     const [layout, setLayout] = useState('grid');
-    const [loading, setLoading] = useState(true);      
-
-    const userInfoMenuItems = [{
-        label: '컨텐츠',
-        icon: 'pi pi-fw pi-calendar',
-        command:(e) => {
-            router.push('/user/userInfo/sampleuid/userContents');
-        }
-      },
-      {
-        label: '커뮤니티',
-        icon: 'pi pi-fw pi-pencil',
-        command:(e) => {
-            router.push('/user/userInfo/sampleuid/userCommunity');
-        }
-      },
-      {
-        label: '정보',
-        icon: 'pi pi-fw pi-file',
-        command:(e) => {
-            router.push('/user/userInfo/sampleuid/userProfile');
-        }
-      },
-    ];
-
-    const songService = new SongService();
+    const [loading, setLoading] = useState(true);   
 
     useEffect(() => {
-        const data = songService.getCustomersLarge();
-        setCustomers(getCustomers(data)); setLoading(false);
+        const data = getContents();
+        setCustomers(getCustomers(data)); 
+        setLoading(false);
     }, []);
 
     const getCustomers = (data) => {
@@ -65,7 +34,7 @@ export default function userContents() {
                     <div className="product-list-item">
                         <img src={`${data.thumbnail}`} onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} />
                         <div className="product-list-detail">
-                            <div className="product-description">{ellipsisText(data.songName, 27)}</div>
+                            <div className="product-description">{ellipsisText(data.title, 27)}</div>
                         </div>
                         <div className="product-list-action">
                             <span className="product-price">조회수 {formatUnitEachThousand(data.views)}회 • {timeCounter(data.uploadDate)}</span>
@@ -81,10 +50,10 @@ export default function userContents() {
         return (
             <>
                 <div className="col-12 md:col-4">
-                    <div className="product-grid-item card">
+                    <div className="product-grid-item card surface-0 border-round-2xl">
                         <div className="product-grid-item-content">
                             <img src={`${data.thumbnail}`} onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} />
-                            <div className="product-description">{ellipsisText(data.songName, 27)}</div>
+                            <div className="product-description">{ellipsisText(data.title, 27)}</div>
                             <span className="product-price">조회수 {formatUnitEachThousand(data.views)}회 • {timeCounter(data.uploadDate)}</span>
                         </div>
                     </div>
@@ -107,12 +76,14 @@ export default function userContents() {
         return (
             <>
                 <div className="grid grid-nogutter">
-                    <div className="col-12" style={{textAlign: 'right'}}>
+                    <div className="col-6 text-400 pt-3 pl-1" style={{textAlign: 'left'}}>
+                        <h4 className="mt-0 mb-0"><i className="pi pi-exclamation-circle mr-2" />회원님이 구독한 유저의 최신 컨텐츠 입니다.</h4>
+                    </div>
+                    <div className="col-6" style={{textAlign: 'right'}}>
                         <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
                     </div>
                 </div>
             </>
-            
         );
     }
 
@@ -120,22 +91,9 @@ export default function userContents() {
 
     return (
         <>
-            <div className="flex align-content-center align-items-center justify-content-center">
-                <div className="card w-30rem">
-                    <div className="field p-fluid">
-                        <img className="border-circle w-15rem h-15rem image-align-center" alt={userObj.userNickName} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRr0YlatAy-hrNCQjzZ7fqDzNiXt7HGmzVaA&usqp=CAU" onError={(e) => e.target.src = '/img/user-logo.png'} />
-                    </div>
-                    <h1 className="flex justify-content-center">김라운디드</h1>
-                </div>
-            </div>
-            <div className="flex align-content-center align-items-center justify-content-center mb-3">
-                <div className="card w-auto">
-                    <TabMenu model={userInfoMenuItems} activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)} />
-                </div>
-            </div>    
-
             <div className="dataview-demo">
-                <div className="card">
+                <div className="card surface-0 p-5 border-round-2xl">
+                    <h1 className="ml-3 mt-0 mb-0">내가 구독한 유저</h1>
                     <DataView value={customers} layout={layout} header={header}
                       itemTemplate={itemTemplate} paginator rows={9} loading={loading}
                     /> 

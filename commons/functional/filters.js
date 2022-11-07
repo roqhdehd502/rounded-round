@@ -30,7 +30,7 @@ export const timeFormatting = (referenceTime, getTimeType='YYYYMMDD') => {
     let fomattedTime;
     switch(getTimeType) {
         case 'YYYYMMDD':
-            fomattedTime = `${time.getFullYear()}.${time.getMonth()}.${time.getDate()}`;
+            fomattedTime = `${time.getFullYear()}.${time.getMonth()+1}.${time.getDate()}`;
             break;
         case 'YYYY':
             fomattedTime = `${time.getFullYear()}`;
@@ -44,4 +44,9 @@ export const timeFormatting = (referenceTime, getTimeType='YYYYMMDD') => {
     }
 
     return fomattedTime;
+}
+
+
+export const convertNewlineText = (referenceText) => {
+    return referenceText.replace(/\\n/g, '<br />');
 }

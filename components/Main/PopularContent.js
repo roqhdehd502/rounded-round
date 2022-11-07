@@ -1,39 +1,26 @@
 import { useState, useEffect } from 'react';
 
-import { Image } from 'primereact/image';
-import { Button } from 'primereact/button';
-
-import { productService } from '../../service/ProductService';
+import { getContents } from '../../service';
 
 import { CarouselCommon } from '../../commons/primereact/CarouselCommon';
 
 
 export const PopularContent = () => {
-  const [products, setProducts] = useState([]);
+  const [contents, setContents] = useState([]);
 
   useEffect(() => {
-      setProducts(productService().slice(0,9));
+      setContents(getContents().slice(0,9));
   }, []);
 
-  const productTemplate = (product) => {
+  const contentsTemplate = (content) => {
       return (
-          <div className="carousel-item">
-              <div className="carousel-item-content">
-                  <div className="mb-3">
-                      <Image 
-                        src={`${product.image}`} 
-                        onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} 
-                        alt={product.name} 
-                        className="carousel-image" 
-                        width="250"
-                      />
-                  </div>
-                  <div>
-                      <h4 className="mb-1">{product.name}</h4>
-                      <span className={`product-badge status-${product.inventoryStatus.toLowerCase()}`}>{product.inventoryStatus}</span>
-                      <div className="car-buttons mt-5">
-                          <Button icon="pi pi-search" className="p-button p-button-rounded mr-2" />
-                      </div>
+          <div className="carousel-item border-round-2xl">
+              <div 
+                className="h-30rem flex align-items-end flex-wrap carousel-item-content" 
+                style={{backgroundImage: `url(${content.thumbnail}), url('https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', width: 'auto'}}
+              >
+                  <div className="bg-black-alpha-60 text-white w-full py-2 border-round-bottom-2xl">
+                      <h4>{content.title}</h4>
                   </div>
               </div>
           </div>
@@ -43,13 +30,15 @@ export const PopularContent = () => {
   return (
     <>
         <div className="carousel-container">
-          <div className="card">
-              <CarouselCommon 
-                value={products} 
-                itemTemplate={productTemplate} 
-                header={<h3 className="ml-4">인기있는 콘텐츠</h3>} 
-              />
-          </div>
+            <div className="card surface-0 p-5 border-round-2xl">
+                <CarouselCommon 
+                  value={contents} 
+                  numVisible={3}
+                  numScroll={3}
+                  itemTemplate={contentsTemplate} 
+                  header={<h2 className="ml-4">인기있는 콘텐츠</h2>} 
+                />
+            </div>
         </div>
     </>
   );

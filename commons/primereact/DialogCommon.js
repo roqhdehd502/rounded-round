@@ -32,12 +32,11 @@ export const DialogCommon = (props) => {
 
     return (
         <div className="dialog-demo">
-            <div className="card">
+            <div className="card surface-0 border-round-2xl">
                 <Button label={ props.label } icon={ props.icon } onClick={() => onClick('displayBasic')} />
                 <Dialog header={ props.header } visible={ displayBasic } style={{ width: '50vw' }} footer={renderFooter('displayBasic')} onHide={() => onHide('displayBasic')}>
                     <iframe 
-                      width="560" 
-                      height="315" 
+                      width="auto" 
                       src={ props.youtubeURL } 
                       title="YouTube video player" 
                       frameborder="0" 

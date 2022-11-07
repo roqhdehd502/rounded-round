@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -15,13 +15,10 @@ import * as userInfoActions from '../../store/modules/userInfo';
 export const NavigationBar = (props) => {
     const dispatch = useDispatch();
     const router = useRouter();
+    
+    const userProfileItem = useRef(null);
 
     const [visibleLeft, setVisibleLeft] = useState(false);
-
-    const logout = () => {
-        dispatch(userInfoActions.userLogout());
-        router.push('/');
-    };
 
     const customSidebarIcons = (
         <>
@@ -30,6 +27,96 @@ export const NavigationBar = (props) => {
             </Link>
         </>
     );
+
+    const userProfileItems = [
+        {
+              items: [
+                  {
+                      label: '로그아웃',
+                      icon: 'pi pi-lock',
+                      command:(e) => {
+                          dispatch(userInfoActions.userLogout());
+                          router.replace('/');
+                      },
+                  },
+              ]
+        },
+        {
+              label: '쇼핑',
+              items: [
+                  {
+                      label: '장바구니',
+                      icon: 'pi pi-shopping-cart',
+                      command:(e) => {
+                          router.push({
+                            pathname: `/purchase/${props.userObj.uid}/cartList`,
+                            query: { uid: props.userObj.uid },
+                          },
+                          `/purchase/${props.userObj.uid}/cartList`,
+                          { shallow: true }
+                          );
+                      },
+                  },
+                  {
+                      label: '내가 구입한 노래',
+                      icon: 'pi pi-wallet',
+                      command:(e) => {
+                          router.push({
+                            pathname: `/purchase/${props.userObj.uid}/buyHistory`,
+                            query: { uid: props.userObj.uid },
+                          },
+                          `/purchase/${props.userObj.uid}/buyHistory`,
+                          { shallow: true }
+                          );
+                      },
+                  },
+              ]
+        },
+        {
+            label: '유저',
+            items: [
+                {
+                    label: '프로필',
+                    icon: 'pi pi-user',
+                    command:(e) => {
+                        router.push({
+                          pathname: `/user/${props.userObj.uid}/userProfile`,
+                          query: { uid: props.userObj.uid },
+                        },
+                        `/user/${props.userObj.uid}/userProfile`,
+                        { shallow: true }
+                        );
+                    },
+                },
+                {
+                    label: '커뮤니티',
+                    icon: 'pi pi-comments',
+                    command:(e) => {
+                        router.push({
+                          pathname: `/user/${props.userObj.uid}/userCommunity`,
+                          query: { uid: props.userObj.uid },
+                        },
+                        `/user/${props.userObj.uid}/userCommunity`,
+                        { shallow: true }
+                        );
+                    },
+                },
+                {
+                    label: '콘텐츠',
+                    icon: 'pi pi-folder',
+                    command:(e) => {
+                        router.push({
+                          pathname: `/user/${props.userObj.uid}/userContents`,
+                          query: { uid: props.userObj.uid },
+                        },
+                        `/user/${props.userObj.uid}/userContents`,
+                        { shallow: true }
+                        );
+                    },
+                },
+            ]
+        },       
+    ];
 
     const sideMenuItemsSignOut = [
         {
@@ -81,10 +168,11 @@ export const NavigationBar = (props) => {
                     command:(e) => {
                         setVisibleLeft(false);
                         router.push({
-                          pathname: `/user/${props.userObj.uid}/history`,
-                          query: { ...props.userObj },
-                          },
-                          `/user/${props.userObj.uid}/history`,
+                          pathname: `/user/${props.userObj.uid}/userHistory`,
+                          query: { uid: props.userObj.uid },
+                        },
+                        `/user/${props.userObj.uid}/userHistory`,
+                        { shallow: true }
                         );
                     } 
                 },
@@ -94,10 +182,11 @@ export const NavigationBar = (props) => {
                     command:(e) => {
                         setVisibleLeft(false);
                         router.push({
-                          pathname: `/user/${props.userObj.uid}/subscribes`,
-                          query: { ...props.userObj },
-                          },
-                          `/user/${props.userObj.uid}/subscribes`,
+                          pathname: `/user/${props.userObj.uid}/userSubscribes`,
+                          query: { uid: props.userObj.uid },
+                        },
+                        `/user/${props.userObj.uid}/userSubscribes`,
+                        { shallow: true }
                         );
                     }
                 }
@@ -107,12 +196,18 @@ export const NavigationBar = (props) => {
             label: '구독 바로가기',
             items: [
                 {
-                    label: '구독한 유저 1',
+                    label: '김라운디드',
                     icon: 'pi pi-user',
-                },
-                {
-                    label: '구독한 유저 2',
-                    icon: 'pi pi-user',
+                    command:(e) => {
+                        setVisibleLeft(false);
+                        router.push({
+                          pathname: `/user/wODlzR5zAjZobEl2vpNkkyihHIj1/userProfile`,
+                          query: { uid: "wODlzR5zAjZobEl2vpNkkyihHIj1" },
+                        },
+                        `/user/wODlzR5zAjZobEl2vpNkkyihHIj1/userProfile`,
+                        { shallow: true }
+                        );
+                    }
                 },
             ]
         },
@@ -147,17 +242,10 @@ export const NavigationBar = (props) => {
     
     const rightContents = props.userObj ? (
         <div className="ml-0 mr-0">
-            <Link 
-              href={{
-                pathname: `/user/${props.userObj.uid}/userProfile`,
-                query: { ...props.userObj },
-              }}
-              as={`/user/${props.userObj.uid}/userProfile`}
-              shallow
-            >
-                <img className="mr-3 mt-1 border-circle" width={35} alt={props.userObj.displayName} src={props.userObj.photoURL ? props.userObj.photoURL : '/img/anonymous-user-logo.png'} onError={(e) => e.target.src = '/img/anonymous-user-logo.png'} />
-            </Link>
-            <Button className="mb-1" label="로그아웃" icon="pi pi-lock" onClick={() => logout()} />
+            <Menu model={userProfileItems} popup ref={userProfileItem} id="popup_menu" />
+            <Button className="p-button-rounded p-button-text" onClick={(event) => userProfileItem.current.toggle(event)} aria-controls="popup_menu" aria-haspopup>
+                <img className="border-circle" width={35} alt={props.userObj.displayName} src={props.userObj.photoURL ? props.userObj.photoURL : '/img/anonymous-user-logo.png'} onError={(e) => e.target.src = '/img/anonymous-user-logo.png'} />
+            </Button>
         </div>
     ) : (
         <div className="ml-0 mr-0">

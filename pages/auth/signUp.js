@@ -4,18 +4,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import Link from "next/Link";
 import { useRouter } from 'next/router';
 
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 
-import * as userInfoActions from '../../store/modules/userInfo';
-import { checkDuplicatedEmailThunk, createUserEmailThunk } from '../../store/modules/userInfo';
+import { checkDuplicatedEmailThunk, createUserObjThunk } from '../../store/modules/userInfo';
 
 
 signUp.layout = "L2";
 export default function signUp() {
     const dispatch = useDispatch();
     const router = useRouter();
+    const auth = getAuth();
 
     const isDuplicatedUserEmailResult = useSelector(({ userInfo }) => userInfo.isDuplicatedUserEmailResult);
     const duplicatedCheckLoading = useSelector(({ userInfo }) => userInfo.loading);
@@ -82,13 +84,28 @@ export default function signUp() {
         if (isCorrectEmail && isCorrectPassword) {
             const userEmail = `${id}@${emailAddress}`;
             const userPassword = password;
-            const payload = { userEmail, userPassword };
             try {
                 if (confirm('정말 가입하시겠습니까?')) {
-                    dispatch(userInfoActions.userSignUp(payload)); 
-                    await dispatch(createUserEmailThunk(payload.userEmail));
-                    dispatch(userInfoActions.userLogout()); 
-                    router.replace('/');
+                    createUserWithEmailAndPassword(auth, userEmail, userPassword)
+                      .then((userCredential) => {
+                          const userObj = {
+                              displayName: userCredential.user.displayName,
+                              userEmail: userCredential.user.email,
+                              photoURL: userCredential.user.photoURL,
+                              uid: userCredential.user.uid,
+                              createdAt: Date.now(),
+                              subscribes: 0,
+                              bio: '',
+                              infoDetail: '',
+                              link: [],
+                              enabled: true,
+                          }
+                          dispatch(createUserObjThunk(userObj));
+                          router.replace('/');
+                      })
+                      .catch((error) => { 
+                          console.log("SIGN UP FAILED!", error); 
+                      });
                 } else {
                     return;
                 }
@@ -108,7 +125,7 @@ export default function signUp() {
     return (
         <>
             <div className="flex align-content-center align-items-center justify-content-center form-vertical-align-center">
-                <div className="card w-30rem">
+                <div className="card surface-0 p-5 border-round-2xl w-30rem">
                     <h1 className="flex justify-content-center">회원가입</h1>
                     <div className="field p-fluid mt-6">
                         <label>이메일</label>

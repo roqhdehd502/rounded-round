@@ -1,18 +1,36 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+
 import Link from "next/Link";
+import { useRouter } from 'next/router';
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 
+import * as userInfoActions from '../../store/modules/userInfo';
+
 
 findPassword.layout = "L2";
 export default function findPassword() {
+    const dispatch = useDispatch();
+    const router = useRouter();
+
     const [userEmail, setUserEmail] = useState('');
+
+    const onFindPassword = useCallback((email) => {
+        try {
+            dispatch(userInfoActions.patchUserPassword(email));
+            alert('가입하신 회원님의 이메일로 비밀번호 변경 요청을 전송하였습니다.');
+            router.replace('/');
+        } catch (error) {
+            console.log(error);
+        }
+    }, [dispatch]);
 
     return (
         <>
             <div className="flex align-content-center align-items-center justify-content-center form-vertical-align-center">
-                <div className="card w-30rem">
+                <div className="card surface-0 p-5 border-round-2xl w-30rem">
                     <h1 className="flex justify-content-center">비밀번호 찾기</h1>
                     <div className="field p-fluid mt-6">
                         <span className="p-float-label">
@@ -21,7 +39,7 @@ export default function findPassword() {
                         </span>
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Button label="비밀번호 찾기" icon="pi pi-search" className="pr-5" />
+                        <Button label="비밀번호 찾기" icon="pi pi-search" className="pr-5" onClick={() => onFindPassword(userEmail)} />
                     </div>
                     <div className="field p-fluid mt-6">
                         <Link href="/auth/signIn">

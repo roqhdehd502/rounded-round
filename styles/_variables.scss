@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
-
+// @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
 
 /* General */
 // $fontSize: 0.9rem;
@@ -7,9 +7,9 @@ $borderRadius: 12px;
 $transitionDuration:.2s;
 
 html {
-  background-color: white;
+  background-color: var(--surface-100);
   font-size: 0.9rem; transform: rotate(0.04deg);
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: 'Nanum Gothic', sans-serif;
 
   body {
     margin: 0px; padding: 0px;

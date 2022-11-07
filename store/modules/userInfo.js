@@ -2,11 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { 
     getAuth,
-    onAuthStateChanged,
-    signInWithEmailAndPassword,
-    signInWithPopup,
-    getRedirectResult,
-    GoogleAuthProvider,
     createUserWithEmailAndPassword,
     signOut,
     updateProfile,
@@ -17,10 +12,14 @@ import {
 
 import { 
     collection,
+    doc,
+    getDoc,
     getDocs,
     query,
     where,
     addDoc,
+    setDoc,
+    updateDoc, 
 } from "firebase/firestore";
 
 import { firestore } from '../../firebaseConfiguration';
@@ -30,8 +29,13 @@ import * as firebaseStorage from "firebase/storage";
 
 const initialState = { 
     userObj: null,
+    userInfoObj: null,
     isDuplicatedUserEmailResult: null,
     loginAccess: false,
+
+    userContents: null,
+    userCommunity: null,
+
     loading: false,
     error: null,
 };
@@ -58,18 +62,98 @@ export const checkDuplicatedEmailThunk = createAsyncThunk(
     }
 );
 
-export const createUserEmailThunk = createAsyncThunk(
-  "userInfo/createUserEmailThunk",
-  async (userEmail, thunkAPI) => {
-      try {
-          await addDoc(collection(firestore, "userInfo"), userEmail)
-            .then(res => { return res; })
-            .catch(error => console.log(error));
-      } catch (error) {
-          return thunkAPI.rejectWithValue(error);
-      }
-  }
+export const createUserObjThunk = createAsyncThunk(
+    "userInfo/createUserObjThunk",
+    async (userObj, thunkAPI) => {
+        try {
+            await setDoc(doc(firestore, "userInfo", userObj.uid), userObj)
+              .then((docRef) => { return docRef })
+              .catch((error) => { console.log(error) });
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error);
+        }
+    }
 );
+
+export const getUserInfoObjThunk = createAsyncThunk(
+    "userInfo/getUserInfoObjThunk",
+    async (uid, thunkAPI) => {
+        try {
+            const docRef = doc(firestore, "userInfo", uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                return docSnap.data();
+            } else {
+                return null;
+            }      
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error);
+        }
+    }
+);
+
+export const patchUserInfoObjThunk = createAsyncThunk(
+    "userInfo/patchUserInfoObjThunk",
+    async (payload, thunkAPI) => {
+        const docRef = doc(firestore, "userInfo", payload.uid);
+        try {
+            await updateDoc(docRef, {
+                displayName: payload.updateUserObj.displayName,
+                photoURL: payload.photoURL,
+                bio: payload.updateUserObj.bio,
+                infoDetail: payload.updateUserObj.infoDetail,
+                link: payload.updateUserObj.link,
+            })
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error);
+        }
+    }
+);
+
+export const getUserContentsThunk = createAsyncThunk(
+    "userInfo/getUserContentsThunk",
+    async (uid, thunkAPI) => {
+        let userContents = [];
+        let q = query(
+            collection(firestore, "userContents"),
+            where("uid", "==", uid),
+        );
+        try {
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                data.docId = doc.id;
+                userContents.push(data);
+            });
+            return userContents.length;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error);
+        }
+    }
+);
+
+export const getUserCommunityThunk = createAsyncThunk(
+    "userInfo/getUserCommunityThunk",
+    async (uid, thunkAPI) => {
+        let userCommunity = [];
+        let q = query(
+            collection(firestore, "userCommunity"),
+            where("uid", "==", uid),
+        );
+        try {
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                data.docId = doc.id;
+                userCommunity.push(data);
+            });
+            return userCommunity.length;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error);
+        }
+    }
+);
+
 
 const userInfoSlice = createSlice({
     name: 'userInfo',
@@ -106,25 +190,16 @@ const userInfoSlice = createSlice({
             state.userObj = null;
         },
         patchUserObj(state, action) { 
-            const storage = firebaseStorage.getStorage();
-            const storageRef = firebaseStorage.ref(storage, `userimages/${userObj.uid}`);
-            const imageFile = action.payload.imageFile
-            let imageURL = null;
-
-            if (imageFile !== undefined) {
-                firebaseStorage.uploadBytes(storageRef, imageFile)
-                .then((snapshot) => {
-                    console.log("upload image: ", snapshot);
-                    firebaseStorage.getDownloadURL(storageRef);
-                });
-            }
-
             updateProfile(getAuth().currentUser, {
-                displayName: action.payload.userObj.displayName,
-                photoURL: imageURL === undefined ? action.payload.userObj.photoURL : imageURL
+                displayName: action.payload.updateUserObj.displayName,
+                photoURL: action.payload.photoURL,
+            }).then(() => {
+                console.log("UPDATE SUCCESS!");
+            }).catch((error) => {
+                console.log(error);
             });
         },
-        putUserPassword(state, action) {
+        patchUserPassword(state, action) {
             getAuth().languageCode = 'ko';
             sendPasswordResetEmail(getAuth(), action.payload)
               .then(() => { console.log("UPDATE USER PASSWORD SEND SUCCESS.") })
@@ -146,6 +221,7 @@ const userInfoSlice = createSlice({
     extraReducers: {
         [checkDuplicatedEmailThunk.pending]: (state, action) => {
             state.loading = true;
+            console.log("SEARCH...", action.payload);
         },
         [checkDuplicatedEmailThunk.fulfilled]: (state, action) => {
             state.loading = false;
@@ -159,14 +235,62 @@ const userInfoSlice = createSlice({
             state.loading = false;
             state.error = action.error;
         },
-        [createUserEmailThunk.pending]: (state, action) => {
+
+        [createUserObjThunk.pending]: (state, action) => {
+            state.loading = true;
+            console.log("SIGN UP...", action.payload);
+        },
+        [createUserObjThunk.fulfilled]: (state, action) => {
+            state.loading = false;
+            console.log("SIGN UP SUCCESS.", action.payload);
+        },
+        [createUserObjThunk.rejected]: (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        },
+        [getUserInfoObjThunk.pending]: (state, action) => {
             state.loading = true;
         },
-        [createUserEmailThunk.fulfilled]: (state, action) => {
-            console.log("users email : ", action.payload);
+        [getUserInfoObjThunk.fulfilled]: (state, action) => {
+            state.loading = false;
+            state.userInfoObj = action.payload;
+        },
+        [getUserInfoObjThunk.rejected]: (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        },
+        [patchUserInfoObjThunk.pending]: (state, action) => {
+            state.loading = true;
+        },
+        [patchUserInfoObjThunk.fulfilled]: (state, action) => {
             state.loading = false;
         },
-        [createUserEmailThunk.rejected]: (state, action) => {
+        [patchUserInfoObjThunk.rejected]: (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        },
+          
+        [getUserContentsThunk.pending]: (state, action) => {
+            state.loading = true;
+        },
+        [getUserContentsThunk.fulfilled]: (state, action) => {
+            state.loading = false;
+            state.userContents = action.payload;
+        },
+        [getUserContentsThunk.rejected]: (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        },        
+
+
+        [getUserCommunityThunk.pending]: (state, action) => {
+            state.loading = true;
+        },
+        [getUserCommunityThunk.fulfilled]: (state, action) => {
+            state.loading = false;
+            state.userCommunity = action.payload;
+        },
+        [getUserCommunityThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },

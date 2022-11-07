@@ -7,7 +7,7 @@ import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 
-import { SongService } from '../../service/SongService';
+import { getSongs } from '../../service';
 
 import { DialogCommon } from '../../commons/primereact/DialogCommon';
 import { ellipsisText, formatUnitEachThousand } from '../../commons/functional/filters';
@@ -42,11 +42,10 @@ export default function popularList() {
         },
     ];
 
-    const songService = new SongService();
-
     useEffect(() => {
-        const data = songService.getCustomersLarge();
-        setCustomers(getCustomers(data)); setLoading(false);
+        const data = getSongs();
+        setCustomers(getCustomers(data)); 
+        setLoading(false);
     }, []);
 
     const getCustomers = (data) => {
@@ -82,7 +81,7 @@ export default function popularList() {
 
     const rankBodyTemplate = (rowData) => {
         const rankRef = rowData.popularCount;
-        const sorted = songService.getCustomersLarge().slice().sort((a, b) => { return b.popularCount - a.popularCount });
+        const sorted = getSongs().slice().sort((a, b) => { return b.popularCount - a.popularCount });
         const rank = sorted.findIndex(i => i.popularCount === rankRef);
         if(rank > -1) {
             return rank + 1;
@@ -141,11 +140,9 @@ export default function popularList() {
 
     return (
         <>
-            <div className="card">
-                <h1 className="ml-3 mt-0 mb-0">인기있는 음악</h1>
-            </div>
             <div className="datatable-doc-demo">
-                <div className="card">
+                <div className="card surface-0 p-5 border-round-2xl">
+                    <h1 className="ml-3 mt-0 mb-0">인기있는 음악</h1>
                     <DataTable 
                       value={customers} className="p-datatable-customers" header={header} rows={10}
                       dataKey="id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)}

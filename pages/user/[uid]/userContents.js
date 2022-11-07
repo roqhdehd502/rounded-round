@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { useRouter } from 'next/router';
 
@@ -6,29 +7,31 @@ import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 
 import UserHeader from '../../../components/User/UserHeader';
 
-import { SongService } from '../../../service/SongService';
+import { getContents } from '../../../service';
 
 import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../commons/functional/filters';
+
+import { getUserInfoObjThunk } from '../../../store/modules/userInfo';
 
 
 userContents.layout = "L1";
 export default function userContents() {
+    const dispatch = useDispatch();
     const router = useRouter();
 
-    /** 향후 fbase 적용시 where절에 router.query.uid 조건걸어서 가져오기 */
-    const [userObj, setUserObj] = useState(router.query);
+    const userObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
 
     const [customers, setCustomers] = useState(null);
     const [layout, setLayout] = useState('grid');
     const [loading, setLoading] = useState(true);     
 
-    const songService = new SongService();
-
     useEffect(() => {
-        setUserObj(router.query);
-
-        const data = songService.getCustomersLarge();
-        setCustomers(getCustomers(data)); setLoading(false);
+        dispatch(getUserInfoObjThunk(router.query.uid));
+        const data = getContents();
+        setCustomers(getCustomers(data).filter((d) => {
+            return d.uid === router.query.uid;
+        })); 
+        setLoading(false);
     }, [router.query]);
 
     const getCustomers = (data) => {
@@ -61,10 +64,10 @@ export default function userContents() {
         return (
             <>
                 <div className="col-12 md:col-4">
-                    <div className="product-grid-item card">
+                    <div className="product-grid-item card surface-0 border-round-2xl">
                         <div className="product-grid-item-content">
                             <img src={`${data.thumbnail}`} onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} />
-                            <div className="product-description">{ellipsisText(data.songName, 27)}</div>
+                            <div className="product-description">{ellipsisText(data.title, 27)}</div>
                             <span className="product-price">조회수 {formatUnitEachThousand(data.views)}회 • {timeCounter(data.uploadDate)}</span>
                         </div>
                     </div>
@@ -100,18 +103,28 @@ export default function userContents() {
 
     return (
         <>
-            <UserHeader
-              activeIndex={0}
-              userObj={userObj}             
-            />   
+            {userObj ? (
+                <>
+                    <UserHeader
+                      activeIndex={0}
+                      userObj={userObj}             
+                    />   
 
-            <div className="dataview-demo">
-                <div className="card">
-                    <DataView value={customers} layout={layout} header={header}
-                      itemTemplate={itemTemplate} paginator rows={9} loading={loading}
-                    /> 
-                </div>
-            </div>
+                    <div className="dataview-demo">
+                        <div className="card surface-0 p-5 border-round-2xl">
+                            <DataView value={customers} layout={layout} header={header}
+                              itemTemplate={itemTemplate} paginator rows={9} loading={loading}
+                            /> 
+                        </div>
+                    </div>  
+                </>
+            ) : (
+                <>
+                    <div className="flex align-items-baseline">
+                        <i className="flex align-items-center justify-content-center pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
+                    </div>                
+                </>
+            )}
         </>
     );
 }

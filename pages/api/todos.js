@@ -52,7 +52,7 @@ export const loadTodos = async (uid) => {
 
 
 export const createTodo = async (todoObj) => {
-  await addDoc(collection(db, "todos"), todoObj);
+  await addDoc(collection(db, "todos", todoObj.uid), todoObj);
 };
 
 

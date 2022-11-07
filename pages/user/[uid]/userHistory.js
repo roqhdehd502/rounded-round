@@ -7,13 +7,13 @@ import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 
-import { SongService } from '../../../service/SongService';
+import { getSongs } from '../../../service';
 
 import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../commons/functional/filters';
 
 
-history.layout = "L1";
-export default function history() {
+userHistory.layout = "L1";
+export default function userHistory() {
     const [customers, setCustomers] = useState(null);
     const [selectedCustomers, setSelectedCustomers] = useState(null);
     const [filters, setFilters] = useState({
@@ -34,11 +34,10 @@ export default function history() {
         },
     ];
 
-    const songService = new SongService();
-
     useEffect(() => {
-        const data = songService.getCustomersLarge();
-        setCustomers(getCustomers(data)); setLoading(false);
+        const data = getSongs();
+        setCustomers(getCustomers(data)); 
+        setLoading(false);
     }, []);
 
     const getCustomers = (data) => {
@@ -116,11 +115,9 @@ export default function history() {
 
     return (
         <>
-            <div className="card">
-                <h1 className="ml-3 mt-0 mb-0">내가 조회한 음악</h1>
-            </div>
             <div className="datatable-doc-demo">
-                <div className="card">
+                <div className="card surface-0 p-5 border-round-2xl">
+                    <h1 className="ml-3 mt-0 mb-0">내가 조회한 음악</h1>
                     <DataTable 
                       value={customers} className="p-datatable-customers" header={header} rows={10}
                       dataKey="id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)}

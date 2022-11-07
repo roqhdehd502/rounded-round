@@ -11,6 +11,7 @@ import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 
 import * as userInfoActions from '../../store/modules/userInfo';
+import { checkDuplicatedEmailThunk, createUserObjThunk } from '../../store/modules/userInfo';
 
 
 signIn.layout = "L2";
@@ -19,8 +20,16 @@ export default function signIn() {
     const router = useRouter();
     const auth = getAuth();
 
+    const isDuplicatedUserEmailResult = useSelector(({ userInfo }) => userInfo.loading);
+
     const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPassword] = useState('');
+    const [userObj, setUserObj] = useState(null);
+
+    useEffect(() => {
+        console.log("유저정보 제대로 오나...", userObj);
+        if (isDuplicatedUserEmailResult) createGoogleNewUserObj(isDuplicatedUserEmailResult, userObj);
+    }, [isDuplicatedUserEmailResult]);    
 
     const emailLogin = useCallback((payload) => {
         if(!payload.userEmail || !payload.userPassword) {
@@ -44,18 +53,43 @@ export default function signIn() {
         auth.languageCode = 'ko';
         signInWithPopup(auth, provider)
           .then((payload) => { 
+              setUserObj(payload.user);
               dispatch(userInfoActions.userGoogleLogin(payload.user));
-              router.replace('/');
+              dispatch(checkDuplicatedEmailThunk(payload.user.uid));
           })
           .catch((error) => { 
               console.log("GOOGLE LOGIN FAILED!", error); 
           });
     }, [dispatch]);
 
+    const createGoogleNewUserObj = useCallback((emailExist, userInfo) => {
+        switch(emailExist) {
+            case 'Y':
+                console.log("이미 있지롱", emailExist);
+                break;
+            case 'N':
+                console.log("있지롱", emailExist);
+                const user = {
+                    displayName: userInfo.displayName,
+                    userEmail: userInfo.email,
+                    photoURL: userInfo.photoURL,
+                    uid: userInfo.uid,
+                    createdAt: Date.now(),
+                    subscribes: 0,
+                    bio: '',
+                    infoDetail: '',
+                    link: [],
+                    enabled: true,
+                }
+                dispatch(createUserObjThunk(user));
+                break;
+        }
+    }, [dispatch]);
+
     return (
         <>
             <div className="flex align-content-center align-items-center justify-content-center form-vertical-align-center">
-                <div className="card w-30rem">
+                <div className="card surface-0 p-5 border-round-2xl w-30rem">
                     <h1 className="flex justify-content-center">로그인</h1>
                     <div className="field p-fluid mt-6">
                         <span className="p-float-label">

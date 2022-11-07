@@ -6,7 +6,7 @@ import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 
-import { SongService } from '../../service/SongService';
+import { getSongs } from '../../service';
 
 import { DialogCommon } from '../../commons/primereact/DialogCommon';
 import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../commons/functional/filters';
@@ -25,11 +25,10 @@ export default function newList() {
     const [globalFilterValue, setGlobalFilterValue] = useState('');
     const [loading, setLoading] = useState(true);    
 
-    const songService = new SongService();
-
     useEffect(() => {
-        const data = songService.getCustomersLarge();
-        setCustomers(getCustomers(data)); setLoading(false);
+        const data = getSongs();
+        setCustomers(getCustomers(data).slice(0,200)); 
+        setLoading(false);
     }, []);
 
     const getCustomers = (data) => {
@@ -115,11 +114,9 @@ export default function newList() {
 
     return (
         <>
-            <div className="card">
-                <h1 className="ml-3 mt-0 mb-0">최신 음악</h1>
-            </div>
             <div className="datatable-doc-demo">
-                <div className="card">
+                <div className="card surface-0 p-5 border-round-2xl">
+                    <h1 className="ml-3 mt-0 mb-0">최신 음악</h1>
                     <DataTable 
                       value={customers} className="p-datatable-customers" header={header} rows={10}
                       dataKey="id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)}
