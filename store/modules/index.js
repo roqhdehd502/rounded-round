@@ -4,6 +4,8 @@ import { combineReducers } from "@reduxjs/toolkit";
 import counter from './counter';
 import toast from './toast';
 import userInfo from "./userInfo";
+import userCommunity from "./userCommunity";
+import userContents from "./userContents";
 
  
 const reducer = (state, action) => {
@@ -17,6 +19,8 @@ const reducer = (state, action) => {
         counter,
         toast,
         userInfo,
+        userCommunity,
+        userContents,
     })(state, action);
 }
 

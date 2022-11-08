@@ -11,26 +11,42 @@ import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Divider } from 'primereact/divider';
 
+import { convertNewlineText } from '../../../commons/functional/filters';
+
 import * as userInfoActions from '../../../store/modules/userInfo';
 import { getUserInfoObjThunk, patchUserInfoObjThunk } from '../../../store/modules/userInfo';
 
 
 userProfileUpdate.layout = "L1";
-export default function userProfileUpdate() {
+
+export const getServerSideProps = async ({ query: { uid, displayName, photoURL, bio, infoDetail, link } }) => {
+    return {
+        props: {
+            uid,
+            displayName,
+            photoURL,
+            bio,
+            infoDetail,
+            link: link ? JSON.parse(link) : '',
+        },
+    };
+}
+
+export default function userProfileUpdate({ uid, displayName, photoURL, bio, infoDetail, link }) {
     const dispatch = useDispatch();
     const router = useRouter();
 
     const userObj = useSelector(({ userInfo }) => userInfo.userObj);
     const userInfoObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
 
-    const [displayName, setDisplayName] = useState(userObj.displayName);
-    const [bio, setBio] = useState(userInfoObj.bio);
-    const [infoDetail, setInfoDetail] = useState(userInfoObj.infoDetail);
-    const [link, setLink] = useState(userInfoObj.link);
+    const [userDisplayName, setUserDisplayName] = useState(displayName);
+    const [userBio, setUserBio] = useState(bio);
+    const [userInfoDetail, setUserInfoDetail] = useState(convertNewlineText(infoDetail));
+    const [userLink, setUserLink] = useState(link);
     const [addLink, setAddLink] = useState([]);
 
     useEffect(() => {
-        dispatch(getUserInfoObjThunk(router.query.uid));
+        dispatch(getUserInfoObjThunk(uid));
     }, [router.query]);
 
     const addUserLink = () => {
@@ -51,16 +67,15 @@ export default function userProfileUpdate() {
     const updateUser = useCallback(async (userInfo) => {
         try {
             if (confirm('정말 변경하시겠습니까?')) {
-                let photoURL = null;
-                const uid = userObj.uid;
                 const updateUserObj = {
-                    displayName:  userInfo.displayName,
-                    bio: userInfo.bio,
-                    infoDetail: userInfo.infoDetail.replaceAll("<br>", "\\n"), 
-                    link: userInfo.link,        
+                    displayName: userInfo.userDisplayName,
+                    bio: userInfo.userBio,
+                    infoDetail: userInfo.userInfoDetail.replaceAll("\n", "\\n"), 
+                    link: userInfo.userLink,        
                 }
-                console.log("infodetail", updateUserObj.infoDetail);
-
+                console.log("updateUserObj", updateUserObj);
+                
+                let userPhotoURL = null;
                 const photoFile = document.querySelector('#photo-file').files[0];
                 const storage = firebaseStorage.getStorage();
                 const storageRef = firebaseStorage.ref(storage, `userimages/${uid}`);
@@ -71,20 +86,20 @@ export default function userProfileUpdate() {
                           console.log("upload image", snapshot);
                           firebaseStorage.getDownloadURL(storageRef)
                             .then((url) => {
-                                photoURL = url;
-                                dispatch(userInfoActions.patchUserObj({updateUserObj, photoURL}));
-                                dispatch(patchUserInfoObjThunk({uid, updateUserObj, photoURL} ));
+                                userPhotoURL = url;
+                                dispatch(userInfoActions.patchUserObj({updateUserObj, userPhotoURL}));
+                                dispatch(patchUserInfoObjThunk({uid, updateUserObj, userPhotoURL} ));
                             });
                       }).catch((error) => {
                           console.log(error);
                       });
                 } else {
-                    photoURL = userObj.photoURL;
-                    dispatch(userInfoActions.patchUserObj({updateUserObj, photoURL}));
-                    dispatch(patchUserInfoObjThunk({uid, updateUserObj, photoURL} ));
+                    userPhotoURL = photoURL;
+                    dispatch(userInfoActions.patchUserObj({updateUserObj, userPhotoURL}));
+                    dispatch(patchUserInfoObjThunk({uid, updateUserObj, userPhotoURL} ));
                 }
 
-                router.replace(`/user/${userObj.uid}/userProfile`);
+                router.replace(`/user/${uid}/userProfile`);
             }
         }   catch(error) {
             console.log(error);
@@ -93,7 +108,7 @@ export default function userProfileUpdate() {
 
     const updateUserPassword = useCallback(() => {
         try {
-            dispatch(userInfoActions.patchUserPassword(userObj.email));
+            dispatch(userInfoActions.patchUserPassword(userEmail));
             alert('가입하신 회원님의 이메일로 비밀번호 변경 요청을 전송하였습니다.');
             dispatch(userInfoActions.userLogout());
             router.replace(`/`);
@@ -133,28 +148,28 @@ export default function userProfileUpdate() {
                             <div className="field p-fluid mt-6">
                                 <label>이름</label>
                                 <span className="p-inputgroup">
-                                    <InputText value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
+                                    <InputText value={userDisplayName} onChange={(e) => setUserDisplayName(e.target.value)} />
                                 </span>
                             </div>
                             <div className="field p-fluid mt-6">
                                 <label>설명</label>
                                 <span className="p-inputgroup">
-                                    <InputText value={bio} onChange={(e) => setBio(e.target.value)} />
+                                    <InputText value={userBio} onChange={(e) => setUserBio(e.target.value)} />
                                 </span>
                             </div>
                             <div className="field p-fluid mt-6">
                                 <label>세부정보</label>
                                 <span className="p-inputgroup">
-                                    <InputTextarea value={infoDetail} onChange={(e) => setInfoDetail(e.target.value)} rows={5} cols={30} autoResize />
+                                    <InputTextarea value={userInfoDetail} onChange={(e) => setUserInfoDetail(e.target.value)} rows={5} cols={30} autoResize />
                                 </span>
                             </div>
                             <div className="field p-fluid mt-6">
                                 <label>링크</label>
-                                {link ? link.map((item, index) => {
+                                {userLink ? userLink.map((item, index) => {
                                     return (
                                       <div key={index} className="p-inputgroup">
-                                          <InputText value={item.linkName} onChange={(e) => setLink(e.target.value)} />
-                                          <InputText value={item.linkAddress} onChange={(e) => setLink(e.target.value)} />
+                                          <InputText value={item.linkName} onChange={(e) => setUserLink(e.target.value)} />
+                                          <InputText value={item.linkAddress} onChange={(e) => setUserLink(e.target.value)} />
                                       </div>
                                     )
                                 }) : (
@@ -166,7 +181,7 @@ export default function userProfileUpdate() {
                                 </Divider>
                             </div>
                             <div className="field p-fluid mt-6">
-                                <Button label="변경하기" icon="pi pi-user-edit" className="pr-5" onClick={()=> updateUser({displayName, bio, infoDetail, link})} />
+                                <Button label="변경하기" icon="pi pi-user-edit" className="pr-5" onClick={()=> updateUser({userDisplayName, userBio, userInfoDetail, userLink})} />
                             </div>
                             <Divider />
                             <div className="field p-fluid">

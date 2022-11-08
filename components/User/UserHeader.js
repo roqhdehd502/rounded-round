@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -8,6 +8,7 @@ import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 
 import * as userInfoActions from '../../store/modules/userInfo';
+import { getUserInfoObjThunk } from '../../store/modules/userInfo';
 
 
 export default function UserHeader(props) {
@@ -16,10 +17,11 @@ export default function UserHeader(props) {
     const router = useRouter();
 
     const userObj = useSelector(({ userInfo }) => userInfo.userObj);
+    const userInfoObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
 
     useEffect(() => {
-
-    }, [userObj]);
+        dispatch(getUserInfoObjThunk(userObj.uid));
+    }, []);
 
     const onEmailVerificationSend = useCallback(() => {
         dispatch(userInfoActions.sendUserEmailVerification());
@@ -54,7 +56,14 @@ export default function UserHeader(props) {
                                 <Link 
                                   href={{
                                     pathname: `/user/${userObj.uid}/userProfileUpdate`,
-                                    query: { uid: userObj.uid }
+                                    query: { 
+                                      uid: userInfoObj.uid,
+                                      displayName: userInfoObj.displayName,
+                                      photoURL: userInfoObj.photoURL,
+                                      bio: userInfoObj.bio,
+                                      infoDetail: userInfoObj.infoDetail,
+                                      link: JSON.stringify(userInfoObj.link),
+                                    }
                                   }}
                                   as={`/user/${userObj.uid}/userProfileUpdate`}
                                   shallow

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
+import Link from "next/Link";
 import { useRouter } from 'next/router';
 
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
+import { Button } from 'primereact/button';
 
 import UserHeader from '../../../components/User/UserHeader';
 
@@ -48,7 +50,7 @@ export default function userContents() {
                     <div className="product-list-item">
                         <img src={`${data.thumbnail}`} onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} />
                         <div className="product-list-detail">
-                            <div className="product-description">{ellipsisText(data.songName, 27)}</div>
+                            <div className="product-description">{ellipsisText(data.title, 27)}</div>
                         </div>
                         <div className="product-list-action">
                             <span className="product-price">조회수 {formatUnitEachThousand(data.views)}회 • {timeCounter(data.uploadDate)}</span>
@@ -79,10 +81,13 @@ export default function userContents() {
 
     const itemTemplate = (product, layout) => {
         if (!product) return;
-        if (layout === 'list') {
-            return renderListItem(product);
-        } else if (layout === 'grid') {
-            return renderGridItem(product);
+        switch (layout) {
+            case 'list':
+                return renderListItem(product);
+                break;
+            case 'grid':
+                return renderGridItem(product);
+                break;
         }
     }    
     
@@ -112,6 +117,22 @@ export default function userContents() {
 
                     <div className="dataview-demo">
                         <div className="card surface-0 p-5 border-round-2xl">
+                            {userObj && userObj.uid === router.query.uid ? (
+                                <div className="flex justify-content-end">
+                                    <Link 
+                                      href={{
+                                        pathname: `/user/${userObj.uid}/userCommunityCreate`,
+                                        query: { uid: userObj.uid },
+                                      }}
+                                      as={`/user/${userObj.uid}/userCommunityCreate`}
+                                      shallow
+                                    >
+                                        <Button className="ml-4 w-9rem p-button-rounded p-button-info" icon="pi pi-plus" label="새 컨텐츠" />
+                                    </Link>
+                                </div>
+                            ) : (
+                                <div></div>
+                            )}
                             <DataView value={customers} layout={layout} header={header}
                               itemTemplate={itemTemplate} paginator rows={9} loading={loading}
                             /> 

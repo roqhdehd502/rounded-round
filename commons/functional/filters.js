@@ -48,5 +48,5 @@ export const timeFormatting = (referenceTime, getTimeType='YYYYMMDD') => {
 
 
 export const convertNewlineText = (referenceText) => {
-    return referenceText.replace(/\\n/g, '<br />');
+    return referenceText.replace(/\\n/g, '\n');
 }

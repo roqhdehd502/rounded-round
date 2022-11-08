@@ -96,58 +96,15 @@ export const patchUserInfoObjThunk = createAsyncThunk(
     "userInfo/patchUserInfoObjThunk",
     async (payload, thunkAPI) => {
         const docRef = doc(firestore, "userInfo", payload.uid);
+        console.log("payload.userPhotoURL", payload.userPhotoURL);
         try {
             await updateDoc(docRef, {
                 displayName: payload.updateUserObj.displayName,
-                photoURL: payload.photoURL,
+                photoURL: payload.userPhotoURL,
                 bio: payload.updateUserObj.bio,
                 infoDetail: payload.updateUserObj.infoDetail,
                 link: payload.updateUserObj.link,
             })
-        } catch (error) {
-            return thunkAPI.rejectWithValue(error);
-        }
-    }
-);
-
-export const getUserContentsThunk = createAsyncThunk(
-    "userInfo/getUserContentsThunk",
-    async (uid, thunkAPI) => {
-        let userContents = [];
-        let q = query(
-            collection(firestore, "userContents"),
-            where("uid", "==", uid),
-        );
-        try {
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) => {
-                let data = doc.data();
-                data.docId = doc.id;
-                userContents.push(data);
-            });
-            return userContents.length;
-        } catch (error) {
-            return thunkAPI.rejectWithValue(error);
-        }
-    }
-);
-
-export const getUserCommunityThunk = createAsyncThunk(
-    "userInfo/getUserCommunityThunk",
-    async (uid, thunkAPI) => {
-        let userCommunity = [];
-        let q = query(
-            collection(firestore, "userCommunity"),
-            where("uid", "==", uid),
-        );
-        try {
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) => {
-                let data = doc.data();
-                data.docId = doc.id;
-                userCommunity.push(data);
-            });
-            return userCommunity.length;
         } catch (error) {
             return thunkAPI.rejectWithValue(error);
         }
@@ -268,32 +225,7 @@ const userInfoSlice = createSlice({
         [patchUserInfoObjThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
-        },
-          
-        [getUserContentsThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [getUserContentsThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.userContents = action.payload;
-        },
-        [getUserContentsThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },        
-
-
-        [getUserCommunityThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [getUserCommunityThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.userCommunity = action.payload;
-        },
-        [getUserCommunityThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },
+        },   
     },
 });
 

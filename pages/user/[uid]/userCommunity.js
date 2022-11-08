@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
+import Link from "next/Link";
 import { useRouter } from 'next/router';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Divider } from 'primereact/divider';
+import { Button } from 'primereact/button';
 
 import UserHeader from '../../../components/User/UserHeader';
 
 import { timeCounter } from '../../../commons/functional/filters'
 
-import { getCommunityData } from '../../../service';
-
 import { getUserInfoObjThunk } from '../../../store/modules/userInfo';
+import { getUserCommunitiesThunk } from '../../../store/modules/userCommunity';
 
 
 userCommunity.layout = "L1";
@@ -22,48 +23,59 @@ export default function userCommunity() {
     const router = useRouter();
 
     const userObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
+    const userCommunities = useSelector(({ userCommunity }) => userCommunity.userCommunities);
 
-    const [customers, setCustomers] = useState(null);
-    const [selectedCustomers, setSelectedCustomers] = useState(null);
     const [multiSortMeta, setMultiSortMeta] = useState([{ field: 'popularCount', order: -1 }]);
     const [loading, setLoading] = useState(true);  
 
     useEffect(() => {
         dispatch(getUserInfoObjThunk(router.query.uid));
-        const data = getCommunityData();
-        setCustomers(getCustomers(data).filter((d) => {
-            return d.uid === router.query.uid;
-        })); 
+        dispatch(getUserCommunitiesThunk(router.query.uid));
         setLoading(false);
     }, [router.query]);
-
-    const getCustomers = (data) => {
-        return [...data || []].map(d => {
-            d.uploadDate = new Date(d.uploadDate);
-            return d;
-        });
-    }
 
     const contentBodyTemplate = (rowData) => {
         return (
             <>
                 <div className="flex align-content-center align-items-center justify-content-center">
                     <div className="card surface-0 p-5 w-9">
-                        <div className="field p-fluid w-full text-right">
-                            {timeCounter(rowData.uploadDate)}에 작성
+                        <div className="flex justify-content-end mr-3">
+                            <div className="mr-3">
+                                <Link
+                                  href={{
+                                    pathname: `/user/${rowData.uid}/userCommunityUpdate`,
+                                    query: {
+                                      ...rowData
+                                    }
+                                  }}
+                                  as={`/user/${rowData.uid}/userCommunityUpdate`}
+                                  shallow
+                                >
+                                    <Button className="p-button-rounded p-button-info" icon="pi pi-pencil" />
+                                </Link>
+                            </div>
+                            <div className="pt-1">
+                                {timeCounter(rowData.uploadDate)}에 작성
+                            </div>
                         </div>
                         <Divider />
                         <div className="field p-fluid w-full">
-                            <p className="text-lg white-space-normal w-full">
+                            <div className="text-lg white-space-normal w-full">
                                 {rowData.contents.split('\\n').map((line, index) => {
                                     return (
-                                        <span key={index}>{line}<br /></span>
+                                        <>
+                                            <span key={index}>{line}<br /></span>
+                                        </>
                                     )
                                 })}
-                            </p>
+                            </div>
                         </div>                    
                         <div className="field p-fluid w-full">
-                            <img className="border-round-2xl w-full" src={rowData.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} />
+                            {rowData.thumbnail ? (
+                                <img className="border-round-2xl w-full" src={rowData.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} />
+                            ) : (
+                                <div className="h-16rem"></div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -82,9 +94,21 @@ export default function userCommunity() {
 
                     <div className="flex align-content-center align-items-center justify-content-center">
                         <div className="card surface-0 p-5 border-round-2xl w-auto">
+                            <div className="flex justify-content-end">
+                                <Link 
+                                  href={{
+                                    pathname: `/user/${userObj.uid}/userCommunityCreate`,
+                                    query: { uid: userObj.uid },
+                                  }}
+                                  as={`/user/${userObj.uid}/userCommunityCreate`}
+                                  shallow
+                                >
+                                    <Button className="ml-4 w-9rem p-button-rounded p-button-info" icon="pi pi-plus" label="새 커뮤니티" />
+                                </Link>
+                            </div>
                             <DataTable 
-                              value={customers} className="p-datatable-customers" rows={10}
-                              dataKey="id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)}
+                              value={userCommunities} className="p-datatable-customers" rows={10}
+                              dataKey="id" rowHover
                               paginator paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                               currentPageReportTemplate="{first} / {last} of {totalRecords}"
                               sortMode="multiple" removableSort multiSortMeta={multiSortMeta} onSort={(e) => setMultiSortMeta(e.multiSortMeta)}               

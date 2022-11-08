@@ -15,7 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { createUserCommunityThunk } from '../../../store/modules/userCommunity';
 
 
-userCommunityCreate.layout = "L1";
+userContentsCreate.layout = "L1";
 
 export const getServerSideProps = async ({ query: { uid } }) => {
     return {
@@ -25,7 +25,7 @@ export const getServerSideProps = async ({ query: { uid } }) => {
     };
 }
 
-export default function userCommunityCreate({ uid }) {
+export default function userContentsCreate({ uid }) {
     const dispatch = useDispatch();
     const router = useRouter();
 
