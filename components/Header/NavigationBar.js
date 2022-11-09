@@ -53,7 +53,6 @@ export const NavigationBar = (props) => {
                             query: { uid: props.userObj.uid },
                           },
                           `/purchase/${props.userObj.uid}/cartList`,
-                          { shallow: true }
                           );
                       },
                   },
@@ -66,7 +65,6 @@ export const NavigationBar = (props) => {
                             query: { uid: props.userObj.uid },
                           },
                           `/purchase/${props.userObj.uid}/buyHistory`,
-                          { shallow: true }
                           );
                       },
                   },
@@ -84,7 +82,6 @@ export const NavigationBar = (props) => {
                           query: { uid: props.userObj.uid },
                         },
                         `/user/${props.userObj.uid}/userProfile`,
-                        { shallow: true }
                         );
                     },
                 },
@@ -97,7 +94,6 @@ export const NavigationBar = (props) => {
                           query: { uid: props.userObj.uid },
                         },
                         `/user/${props.userObj.uid}/userCommunity`,
-                        { shallow: true }
                         );
                     },
                 },
@@ -110,7 +106,6 @@ export const NavigationBar = (props) => {
                           query: { uid: props.userObj.uid },
                         },
                         `/user/${props.userObj.uid}/userContents`,
-                        { shallow: true }
                         );
                     },
                 },
@@ -172,7 +167,6 @@ export const NavigationBar = (props) => {
                           query: { uid: props.userObj.uid },
                         },
                         `/user/${props.userObj.uid}/userHistory`,
-                        { shallow: true }
                         );
                     } 
                 },
@@ -186,7 +180,6 @@ export const NavigationBar = (props) => {
                           query: { uid: props.userObj.uid },
                         },
                         `/user/${props.userObj.uid}/userSubscribes`,
-                        { shallow: true }
                         );
                     }
                 }
@@ -205,7 +198,6 @@ export const NavigationBar = (props) => {
                           query: { uid: "wODlzR5zAjZobEl2vpNkkyihHIj1" },
                         },
                         `/user/wODlzR5zAjZobEl2vpNkkyihHIj1/userProfile`,
-                        { shallow: true }
                         );
                     }
                 },

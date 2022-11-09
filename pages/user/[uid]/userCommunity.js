@@ -22,17 +22,19 @@ export default function userCommunity() {
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const userObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
+    const userObj = useSelector(({ userInfo }) => userInfo.userObj);
+    const userInfoObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
     const userCommunities = useSelector(({ userCommunity }) => userCommunity.userCommunities);
 
     const [multiSortMeta, setMultiSortMeta] = useState([{ field: 'popularCount', order: -1 }]);
     const [loading, setLoading] = useState(true);  
 
     useEffect(() => {
+        if (!router.isReady) return; 
         dispatch(getUserInfoObjThunk(router.query.uid));
         dispatch(getUserCommunitiesThunk(router.query.uid));
         setLoading(false);
-    }, [router.query]);
+    }, [router.isReady]);
 
     const contentBodyTemplate = (rowData) => {
         return (
@@ -49,7 +51,6 @@ export default function userCommunity() {
                                     }
                                   }}
                                   as={`/user/${rowData.uid}/userCommunityUpdate`}
-                                  shallow
                                 >
                                     <Button className="p-button-rounded p-button-info" icon="pi pi-pencil" />
                                 </Link>
@@ -63,9 +64,9 @@ export default function userCommunity() {
                             <div className="text-lg white-space-normal w-full">
                                 {rowData.contents.split('\\n').map((line, index) => {
                                     return (
-                                        <>
-                                            <span key={index}>{line}<br /></span>
-                                        </>
+                                        <span key={index}>
+                                            {line}<br />
+                                        </span>
                                     )
                                 })}
                             </div>
@@ -85,27 +86,30 @@ export default function userCommunity() {
 
     return (
         <>
-            {userObj ? (
+            {userInfoObj ? (
                 <>
                     <UserHeader
-                      activeIndex={1}
-                      userObj={userObj}             
+                      activeIndex={1}           
                     />    
 
                     <div className="flex align-content-center align-items-center justify-content-center">
                         <div className="card surface-0 p-5 border-round-2xl w-auto">
-                            <div className="flex justify-content-end">
-                                <Link 
-                                  href={{
-                                    pathname: `/user/${userObj.uid}/userCommunityCreate`,
-                                    query: { uid: userObj.uid },
-                                  }}
-                                  as={`/user/${userObj.uid}/userCommunityCreate`}
-                                  shallow
-                                >
-                                    <Button className="ml-4 w-9rem p-button-rounded p-button-info" icon="pi pi-plus" label="새 커뮤니티" />
-                                </Link>
-                            </div>
+                            {userObj && userObj.uid === userInfoObj.uid ? (
+                                <div className="flex justify-content-end">
+                                    <Link 
+                                      href={{
+                                        pathname: `/user/${userObj.uid}/userCommunityCreate`,
+                                        query: { uid: userObj.uid },
+                                      }}
+                                      as={`/user/${userObj.uid}/userCommunityCreate`}
+                                    >
+                                        <Button className="ml-4 w-9rem p-button-rounded p-button-info" icon="pi pi-plus" label="새 커뮤니티" />
+                                    </Link>
+                                </div>
+                            ) : (
+                                <div></div>
+                            )}
+                            
                             <DataTable 
                               value={userCommunities} className="p-datatable-customers" rows={10}
                               dataKey="id" rowHover

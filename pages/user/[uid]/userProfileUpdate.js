@@ -19,35 +19,35 @@ import { getUserInfoObjThunk, patchUserInfoObjThunk } from '../../../store/modul
 
 userProfileUpdate.layout = "L1";
 
-export const getServerSideProps = async ({ query: { uid, displayName, photoURL, bio, infoDetail, link } }) => {
+export const getServerSideProps = async ({ query: { uid } }) => {
     return {
         props: {
             uid,
-            displayName,
-            photoURL,
-            bio,
-            infoDetail,
-            link: link ? JSON.parse(link) : '',
+            // displayName,
+            // photoURL,
+            // bio,
+            // infoDetail,
+            // link: link ? JSON.parse(link) : '',
         },
     };
 }
 
-export default function userProfileUpdate({ uid, displayName, photoURL, bio, infoDetail, link }) {
+export default function userProfileUpdate({ uid }) {
     const dispatch = useDispatch();
     const router = useRouter();
 
     const userObj = useSelector(({ userInfo }) => userInfo.userObj);
     const userInfoObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
 
-    const [userDisplayName, setUserDisplayName] = useState(displayName);
-    const [userBio, setUserBio] = useState(bio);
-    const [userInfoDetail, setUserInfoDetail] = useState(convertNewlineText(infoDetail));
-    const [userLink, setUserLink] = useState(link);
-    const [addLink, setAddLink] = useState([]);
+    const [userDisplayName, setUserDisplayName] = useState(userObj.displayName);
+    const [userBio, setUserBio] = useState(userInfoObj.bio);
+    const [userInfoDetail, setUserInfoDetail] = useState(convertNewlineText(userInfoObj.infoDetail));
+    const [userLink, setUserLink] = useState(userInfoObj.link);
 
     useEffect(() => {
+        if (!router.isReady) return; 
         dispatch(getUserInfoObjThunk(uid));
-    }, [router.query]);
+    }, [router.isReady]);
 
     const addUserLink = () => {
         return (
@@ -94,7 +94,7 @@ export default function userProfileUpdate({ uid, displayName, photoURL, bio, inf
                           console.log(error);
                       });
                 } else {
-                    userPhotoURL = photoURL;
+                    userPhotoURL = userObj.photoURL;
                     dispatch(userInfoActions.patchUserObj({updateUserObj, userPhotoURL}));
                     dispatch(patchUserInfoObjThunk({uid, updateUserObj, userPhotoURL} ));
                 }
@@ -165,21 +165,12 @@ export default function userProfileUpdate({ uid, displayName, photoURL, bio, inf
                             </div>
                             <div className="field p-fluid mt-6">
                                 <label>링크</label>
-                                {userLink ? userLink.map((item, index) => {
-                                    return (
-                                      <div key={index} className="p-inputgroup">
-                                          <InputText value={item.linkName} onChange={(e) => setUserLink(e.target.value)} />
-                                          <InputText value={item.linkAddress} onChange={(e) => setUserLink(e.target.value)} />
-                                      </div>
-                                    )
-                                }) : (
-                                    <div></div>
-                                )}
-                                {addLink}
-                                <Divider align="center">
-                                    <Button icon="pi pi-plus" className="ml-2 p-button-rounded" onClick={()=> addUserLink()} />
-                                </Divider>
+                                <div className="p-inputgroup">
+                                    <InputText value={userLink.linkName} onChange={(e) => setUserLink(e.target.value)} />
+                                    <InputText value={userLink.linkAddress} onChange={(e) => setUserLink(e.target.value)} />
+                                </div>
                             </div>
+                            <Divider />
                             <div className="field p-fluid mt-6">
                                 <Button label="변경하기" icon="pi pi-user-edit" className="pr-5" onClick={()=> updateUser({userDisplayName, userBio, userInfoDetail, userLink})} />
                             </div>

@@ -97,7 +97,7 @@ export default function signUp() {
                               subscribes: 0,
                               bio: '',
                               infoDetail: '',
-                              link: [],
+                              link: {linkName: '', linkAddress: ''},
                               enabled: true,
                           }
                           dispatch(createUserObjThunk(userObj));

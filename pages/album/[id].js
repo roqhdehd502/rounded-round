@@ -1,34 +1,45 @@
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
+import Link from "next/Link";
+import { useRouter } from 'next/router';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 
-import { getSongs } from '../../service';
-
 import { DialogCommon } from '../../commons/primereact/DialogCommon';
-import { ellipsisText, formatUnitEachThousand } from '../../commons/functional/filters';
+import { ellipsisText, formatUnitEachThousand, timeFormatting } from '../../commons/functional/filters';
+
+import { getAlbum, getSongsInAlbum } from '../../service';
+
+import * as albumActions from '../../store/modules/album';
 
 
 albumDetail.layout = "L1";
 export default function albumDetail() {
-    const [customers, setCustomers] = useState(null);
+    //const dispatch = useDispatch();
+    const router = useRouter();
+
+    //const albumObj = useSelector(({ album }) => album.albumObj);
+    //const songsInAlbum = useSelector(({ album }) => album.songsInAlbum);
+    const [albumObj, setAlbumObj] = useState(null);
+    const [songsInAlbum, setSongsInAlbum] = useState([]);
+
     const [selectedCustomers, setSelectedCustomers] = useState(null);
-    const [multiSortMeta, setMultiSortMeta] = useState([{ field: 'cdNumber', order: 1 }, { field: 'albumTrackNumber', order: 1 }]);
+    const [multiSortMeta, setMultiSortMeta] = useState([{ field: 'cdNumber', order: 1 }]);
     const [loading, setLoading] = useState(true);    
 
     useEffect(() => {
-        const data = getSongs();
-        setCustomers(getCustomers(data)); 
-        setLoading(false);
-    }, []);
+        // if (!router.isReady) return; 
 
-    const getCustomers = (data) => {
-        return [...data || []].map(d => {
-            d.uploadDate = new Date(d.uploadDate);
-            return d;
-        });
-    }
+        // dispatch(albumActions.getAlbumObj(id));
+        // dispatch(albumActions.getSongsInAlbum(id));
+        setAlbumObj(getAlbum(router.query.id));
+        setSongsInAlbum(getSongsInAlbum(router.query.id));
+
+        setLoading(false);
+    }, [router.query, albumObj]);
 
     const renderHeader = () => {
         return (
@@ -58,7 +69,7 @@ export default function albumDetail() {
     }
 
     const thumbnailBodyTemplate = (rowData) => {
-        return <img alt={rowData.albumName} src={rowData.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} width={50} height={50} />;
+        return <img alt={rowData.albumName} src={rowData.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'}  width={50} height={50} />;
     }
 
     const songInformationBodyTemplate = (rowData) => {
@@ -104,57 +115,63 @@ export default function albumDetail() {
 
     return (
         <>
-            <div className="mb-5 card surface-0 p-5 border-round-2xl">
-                <h1 className="ml-3 mt-0 mb-3">앨범 정보</h1>
-                <div className="grid">
-                    <div className="col-4 md:col-4 sm:col-12">
-                        <img className="w-auto max-w-20rem" src="https://img.hiphople.com/files/attach/images/11972418/421/045/023/3902e6934b1f1b284bad5ff406442beb.png" />
-                    </div>
-                    <div className="col-8 md:col-8 sm:col-12">
-                        <div className="grid">
-                            <div className="col-12">
-                                <h3 className="mb-0">Mr. Morale {'&'} The Big Steppers</h3>
-                            </div>
-                            <div className="col-12">
-                                <h3 className="mt-0">Kendrick Lamar</h3>
-                            </div>
-                            <div className="col-2">
-                                <label>발매일</label>
-                            </div>
-                            <div className="col-10">
-                                <label>2022/05/13</label>
-                            </div>
-                            <div className="col-2">
-                                <label>장르</label>
-                            </div>
-                            <div className="col-10">
-                                <label>Hip-Hop</label>
-                            </div>
-                            <div className="col-2">
-                                <label>발매사</label>
-                            </div>
-                            <div className="col-10">
-                                <label>Interscope Records</label>
-                            </div>
-                            <div className="col-2">
-                                <label>기획사</label>
-                            </div>
-                            <div className="col-10">
-                                <label>TDE, pgLang</label>
-                            </div>
-                            <div className="col-12">
-                                <h3><i className="mr-2 pi pi-heart"></i>965</h3>
+            {albumObj ? (
+                <div className="mb-5 card surface-0 p-5 border-round-2xl">
+                    <h1 className="ml-3 mt-0 mb-3">앨범 정보</h1>
+                    <div className="grid">
+                        <div className="col-4 md:col-4 sm:col-12">
+                            <img className="w-auto max-w-20rem" src={albumObj.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} />
+                        </div>
+                        <div className="col-8 md:col-8 sm:col-12">
+                            <div className="grid">
+                                <div className="col-12">
+                                    <h3 className="mb-0">{albumObj.albumName}</h3>
+                                </div>
+                                <div className="col-12">
+                                    <h3 className="mt-0">{albumObj.artistName}</h3>
+                                </div>
+                                <div className="col-2">
+                                    <label>발매일</label>
+                                </div>
+                                <div className="col-10">
+                                    <label>{timeFormatting(albumObj.uploadDate)}</label>
+                                </div>
+                                <div className="col-2">
+                                    <label>장르</label>
+                                </div>
+                                <div className="col-10">
+                                    <label>{albumObj.genre}</label>
+                                </div>
+                                <div className="col-2">
+                                    <label>발매사</label>
+                                </div>
+                                <div className="col-10">
+                                    <label>{albumObj.publishingCompany}</label>
+                                </div>
+                                <div className="col-2">
+                                    <label>기획사</label>
+                                </div>
+                                <div className="col-10">
+                                    <label>{albumObj.agency}</label>
+                                </div>
+                                <div className="col-12">
+                                    <h3><i className="mr-2 pi pi-heart"></i>{albumObj.likes}</h3>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            ) : (
+                <div className="flex align-items-baseline">
+                    <i className="flex align-items-center justify-content-center pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
+                </div>
+            )}
             
             <div className="datatable-doc-demo">
                 <div className="card surface-0 p-5 border-round-2xl">
                     <h2 className="mb-1">수록곡</h2>
                     <DataTable 
-                      value={customers} className="p-datatable-customers" header={header} rows={10}
+                      value={songsInAlbum} className="p-datatable-customers" header={header} rows={10}
                       dataKey="id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)}
                       sortMode="multiple" removableSort multiSortMeta={multiSortMeta} onSort={(e) => setMultiSortMeta(e.multiSortMeta)}
                       paginator paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" rowsPerPageOptions={[10,25,50]}

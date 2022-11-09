@@ -27,7 +27,6 @@ export default function signIn() {
     const [userObj, setUserObj] = useState(null);
 
     useEffect(() => {
-        console.log("유저정보 제대로 오나...", userObj);
         if (isDuplicatedUserEmailResult) createGoogleNewUserObj(isDuplicatedUserEmailResult, userObj);
     }, [isDuplicatedUserEmailResult]);    
 
@@ -65,10 +64,11 @@ export default function signIn() {
     const createGoogleNewUserObj = useCallback((emailExist, userInfo) => {
         switch(emailExist) {
             case 'Y':
-                console.log("이미 있지롱", emailExist);
+                console.log("이미 있는 계정이지롱", emailExist);
+                console.log("없는 계정이지롱", emailExist);
                 break;
             case 'N':
-                console.log("있지롱", emailExist);
+                console.log("없는 계정이지롱", emailExist);
                 const user = {
                     displayName: userInfo.displayName,
                     userEmail: userInfo.email,
@@ -78,7 +78,7 @@ export default function signIn() {
                     subscribes: 0,
                     bio: '',
                     infoDetail: '',
-                    link: [],
+                    link: {linkName: '', linkAddress: ''},
                     enabled: true,
                 }
                 dispatch(createUserObjThunk(user));

@@ -6,6 +6,8 @@ import toast from './toast';
 import userInfo from "./userInfo";
 import userCommunity from "./userCommunity";
 import userContents from "./userContents";
+import album from "./album";
+import song from "./song";
 
  
 const reducer = (state, action) => {
@@ -21,7 +23,10 @@ const reducer = (state, action) => {
         userInfo,
         userCommunity,
         userContents,
+        album,
+        song,
     })(state, action);
 }
+
 
 export default reducer;

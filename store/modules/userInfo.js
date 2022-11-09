@@ -121,7 +121,6 @@ const userInfoSlice = createSlice({
         getUserObj(state, action) {
             state.userObj = action.payload ? action.payload : null;
             state.loginAccess = state.userObj ? true : false;
-            console.log("UserObj", state.userObj, state.loginAccess);
         },
         userLogin(state, action) {
             action.userObj = action.payload;

@@ -7,7 +7,7 @@ import { Button } from 'primereact/button';
 
 import UserHeader from '../../../components/User/UserHeader';
 
-import { formatUnitEachThousand, timeFormatting, convertNewlineText } from '../../../commons/functional/filters'
+import { formatUnitEachThousand, timeFormatting } from '../../../commons/functional/filters'
 
 import { getUserInfoObjThunk } from '../../../store/modules/userInfo';
 
@@ -17,19 +17,19 @@ export default function userProfile() {
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const userObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
+    const userInfoObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
 
     useEffect(() => {
+        if (!router.isReady) return; 
         dispatch(getUserInfoObjThunk(router.query.uid));
-    }, [router.query]);
+    }, [router.isReady]);
 
     return (
         <>
-            {userObj ? (
+            {userInfoObj ? (
                 <>
                     <UserHeader
-                      activeIndex={2}
-                      userObj={userObj}             
+                      activeIndex={2}          
                     />
                                  
                     <div className="flex align-content-center align-items-center justify-content-center">
@@ -39,41 +39,37 @@ export default function userProfile() {
                                 <div className="col-4 text-500"><h3 className="mb-0">구독자 수</h3></div>
                                 <div className="col-4 text-500"><h3 className="mb-0">가입일</h3></div>
                                 <div className="col-4 text-700"><h3 className="mt-0">{formatUnitEachThousand(1230)}개</h3></div>
-                                <div className="col-4 text-700"><h3 className="mt-0">{formatUnitEachThousand(userObj.subscribes)}명</h3></div>
-                                <div className="col-4 text-700"><h3 className="mt-0">{timeFormatting(userObj.createdAt)}</h3></div>
+                                <div className="col-4 text-700"><h3 className="mt-0">{formatUnitEachThousand(userInfoObj.subscribes)}명</h3></div>
+                                <div className="col-4 text-700"><h3 className="mt-0">{timeFormatting(userInfoObj.createdAt)}</h3></div>
                             </div>
                             <div className="field text-center p-fluid mt-4 p-1 pl-3 pr-3 border-round-3xl">
                                 <h3>설명</h3>
                                 <p className="white-space-normal">
-                                    {userObj.bio}
+                                    {userInfoObj.bio}
                                 </p>
                             </div>
                             <div className="field text-center p-fluid mt-4 p-1 border-round-3xl">
                                 <h3>세부정보</h3>
-                                <h4 className="white-space-normal">
-                                    {userObj.infoDetail.split('\\n').map((line, index) => {
+                                <p className="white-space-normal">
+                                    {userInfoObj.infoDetail.split('\\n').map((line, index) => {
                                         return (
-                                            <>
-                                                <span key={index}>{line}<br /></span>
-                                            </>
+                                            <span key={index}>
+                                                {line}<br />
+                                            </span>
                                         )
                                     })}
-                                </h4>
+                                </p>
                             </div>
                             <div className="field text-center p-fluid mt-4 p-1 border-round-3xl">
                                 <h3>링크</h3>
-                                {userObj.link.map((item, index) => {
-                                    return (
-                                      <div key={index}>
-                                          <Button 
-                                            label={item.linkName} 
-                                            icon="pi pi-external-link" 
-                                            className="p-button-text pr-5"
-                                            onClick={() => window.open(item.linkAddress)}
-                                          />
-                                      </div> 
-                                    )
-                                })}
+                                <div>
+                                    <Button 
+                                      label={userInfoObj.link.linkName} 
+                                      icon="pi pi-external-link" 
+                                      className="p-button-text pr-5"
+                                      onClick={() => window.open(userInfoObj.link.linkAddress)}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>

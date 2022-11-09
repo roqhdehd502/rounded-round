@@ -1,68 +1,90 @@
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { Button } from 'primereact/button';
+import Link from "next/Link";
 
 import { getAlbums } from '../../service';
 
 import { CarouselCommon } from '../../commons/primereact/CarouselCommon';
 
+//import * as albumActions from '../../store/modules/album';
+
 
 export const NewAlbum = () => {
-  const [leftNewAlbums, setLeftNewAlbums] = useState([]);
-  const [rightNewAlbums, setRightNewAlbums] = useState([]);
+    //const dispatch = useDispatch();
 
-  useEffect(() => {
-      setLeftNewAlbums(getAlbums().slice(0,9));
-      setRightNewAlbums(getAlbums().slice(6,9));
-  }, []);
+    //const albums = useSelector(({ album }) => album.albums);
+    const albums = getAlbums();
 
-  const rightNewAlbumsTemplate = (albums) => {
-      return (
-          <div className="carousel-item border-round-2xl">
-              <div 
-                className="h-24rem flex align-items-end flex-wrap carousel-item-content" 
-                style={{backgroundImage: `url(${albums.thumbnail}), url('https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', width: 'auto'}}
-              >
-                  <div className="bg-black-alpha-60 text-white w-full border-round-bottom-2xl">
-                      <h4 className="mb-0">{albums.artistName}</h4><br/>
-                      <h3 className="mt-0">{albums.albumName}</h3>
-                  </div>
-              </div>
-          </div>
-      );
-  }
+    useEffect(() => {
+        //dispatch(albumActions.getAlbums());
+    }, []);
 
-  return (
-    <>
-        <div className="carousel-container">
-            <div className="card surface-0 p-5 border-round-2xl">
-                <h2 className="ml-4">최신 앨범</h2>
-                <div className="grid">
-                    <div className="col ml-7 py-4">
-                        <div className="grid border-round-2xl">
-                            {leftNewAlbums.map((item) => {
-                                return (
-                                  <div 
-                                    key={item.id} 
-                                    className="col-4 h-8rem w-8rem"
-                                    style={{backgroundImage: `url(${item.thumbnail}), url('https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', width: 'auto'}}
-                                  >
-                                  </div>
-                                )
-                            })}
+    const rightNewAlbumsTemplate = (albumObj) => {
+        return (
+            <Link 
+              href={{
+                pathname: `/album/${albumObj.id}`,
+                query: { id: albumObj.id },
+              }}
+              as={`/album/${albumObj.id}`}
+            >
+                <div className="carousel-item border-round-2xl image-link">
+                    <div 
+                      className="h-24rem flex align-items-end flex-wrap carousel-item-content" 
+                      style={{backgroundImage: `url(${albumObj.thumbnail}), url('https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', width: 'auto'}}
+                    >
+                        <div className="bg-black-alpha-60 text-white w-full border-round-bottom-2xl">
+                            <h4 className="mb-0">{albumObj.artistName}</h4><br/>
+                            <h3 className="mt-0">{albumObj.albumName}</h3>
                         </div>
                     </div>
-                    <div className="col">
-                        <CarouselCommon 
-                          value={rightNewAlbums} 
-                          numVisible={1}
-                          numScroll={1}
-                          itemTemplate={rightNewAlbumsTemplate}  
-                        />
+                </div>
+            </Link>
+        );
+    }
+
+    return (
+        <>
+            <div className="carousel-container">
+                <div className="card surface-0 p-5 border-round-2xl">
+                    <h2 className="ml-4">최신 앨범</h2>
+                    <div className="grid">
+                        <div className="col ml-7 py-4">
+                            <div className="grid border-round-2xl">
+                                {albums.slice(0,9).map((item) => {
+                                    return (
+                                        <div key={item.id}>
+                                            {/* <Link 
+                                              href={{
+                                                pathname: `/album/${item.id}`,
+                                                query: { id: item.id },
+                                              }}
+                                              as={`/album/${item.id}`}
+                                            > */}
+                                            <Link href={`/album/${item.id}`} >
+                                                <div 
+                                                  className="col-4 h-8rem w-8rem image-link"
+                                                  style={{backgroundImage: `url(${item.thumbnail}), url('https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', width: 'auto'}}
+                                                >
+                                                </div>
+                                            </Link>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                        <div className="col">
+                            <CarouselCommon 
+                              value={albums.slice(6,9)} 
+                              numVisible={1}
+                              numScroll={1}
+                              itemTemplate={rightNewAlbumsTemplate}  
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </>
-  );
+        </>
+    );
 }  

@@ -18,10 +18,11 @@ export default function UserHeader(props) {
 
     const userObj = useSelector(({ userInfo }) => userInfo.userObj);
     const userInfoObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
-
+    
     useEffect(() => {
-        dispatch(getUserInfoObjThunk(userObj.uid));
-    }, []);
+        if (!router.isReady) return; 
+        dispatch(getUserInfoObjThunk(router.query.uid));
+    }, [router.isReady]);
 
     const onEmailVerificationSend = useCallback(() => {
         dispatch(userInfoActions.sendUserEmailVerification());
@@ -35,10 +36,10 @@ export default function UserHeader(props) {
             <div className="flex align-content-center align-items-center justify-content-center">
                 <div className="card w-30rem">
                     <div className="field p-fluid">
-                        <img className="border-circle w-15rem h-15rem image-align-center" alt={props.userObj.displayName} src={props.userObj.photoURL ? props.userObj.photoURL : '/img/anonymous-user-logo.png'} onError={(e) => e.target.src = '/img/anonymous-user-logo.png'} />
+                        <img className="border-circle w-15rem h-15rem image-align-center" alt={userInfoObj.displayName} src={userInfoObj.photoURL ? userInfoObj.photoURL : '/img/anonymous-user-logo.png'} onError={(e) => e.target.src = '/img/anonymous-user-logo.png'} />
                     </div>
                     <h1 className="flex justify-content-center">
-                        {props.userObj.displayName ? props.userObj.displayName : props.userObj.userEmail}
+                        {userInfoObj.displayName ? userInfoObj.displayName : userInfoObj.userEmail}
                     </h1>
                 </div>
             </div>
@@ -46,7 +47,7 @@ export default function UserHeader(props) {
             <div className="card w-auto mb-3">
                 <div className="flex justify-content-center flex-wrap">
                     <div className="flex align-items-center">
-                        {userObj && userObj.uid === props.userObj.uid ? (
+                        {userObj && userObj.uid === userInfoObj.uid ? (
                             <>
                                 {userObj.emailVerified ? (
                                     <Button className="mr-4 w-8rem p-button-rounded p-button-info" icon="pi pi-unlock" label="인증됨" disabled />
@@ -66,7 +67,6 @@ export default function UserHeader(props) {
                                     }
                                   }}
                                   as={`/user/${userObj.uid}/userProfileUpdate`}
-                                  shallow
                                 >
                                     <Button className="ml-4 w-8rem p-button-rounded p-button-warning" icon="pi pi-pencil" label="수정하기" />
                                 </Link>
@@ -76,7 +76,7 @@ export default function UserHeader(props) {
                                 {/* 구독여부 분기 처리 구현하기 */}
                                 {userObj ? (
                                     <>
-                                        <Button className={`p-button-rounded p-button-info`} icon="pi pi-plus" label="구독하기" />
+                                        <Button className={`p-button-rounded p-button-info`} icon="pi pi-plus" label="구독됨" />
                                     </>
                                 ) : (
                                     <>
@@ -96,31 +96,28 @@ export default function UserHeader(props) {
                     <div className="flex align-items-center">
                         <Link 
                           href={{
-                            pathname: `/user/${props.userObj.uid}/userContents`,
-                            query: { ...props.userObj },
+                            pathname: `/user/${userInfoObj.uid}/userContents`,
+                            query: { ...userInfoObj },
                           }}
-                          as={`/user/${props.userObj.uid}/userContents`}
-                          shallow
+                          as={`/user/${userInfoObj.uid}/userContents`}
                         >
                             <Button className={`w-8rem p-button-rounded${activeUserIndex === 0 ? '' : ' p-button-outlined'}`} icon="pi pi-folder" label="컨텐츠" />
                         </Link>
                         <Link 
                           href={{
-                            pathname: `/user/${props.userObj.uid}/userCommunity`,
-                            query: { ...props.userObj },
+                            pathname: `/user/${userInfoObj.uid}/userCommunity`,
+                            query: { ...userInfoObj },
                           }}
-                          as={`/user/${props.userObj.uid}/userCommunity`}
-                          shallow
+                          as={`/user/${userInfoObj.uid}/userCommunity`}
                         >
                             <Button className={`ml-4 mr-4 w-8rem p-button-rounded${activeUserIndex === 1 ? '' : ' p-button-outlined'}`} icon="pi pi-comments" label="커뮤니티" />
                         </Link>
                         <Link 
                           href={{
-                            pathname: `/user/${props.userObj.uid}/userProfile`,
-                            query: { ...props.userObj },
+                            pathname: `/user/${userInfoObj.uid}/userProfile`,
+                            query: { ...userInfoObj },
                           }}
-                          as={`/user/${props.userObj.uid}/userProfile`}
-                          shallow
+                          as={`/user/${userInfoObj.uid}/userProfile`}
                         >
                             <Button className={`w-8rem p-button-rounded${activeUserIndex === 2 ? '' : ' p-button-outlined'}`} icon="pi pi-user" label="정보" />
                         </Link>

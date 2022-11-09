@@ -20,21 +20,23 @@ userContents.layout = "L1";
 export default function userContents() {
     const dispatch = useDispatch();
     const router = useRouter();
-
-    const userObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
+    
+    const userObj = useSelector(({ userInfo }) => userInfo.userObj);
+    const userInfoObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
 
     const [customers, setCustomers] = useState(null);
     const [layout, setLayout] = useState('grid');
     const [loading, setLoading] = useState(true);     
 
     useEffect(() => {
+        if (!router.isReady) return; 
         dispatch(getUserInfoObjThunk(router.query.uid));
         const data = getContents();
         setCustomers(getCustomers(data).filter((d) => {
             return d.uid === router.query.uid;
         })); 
         setLoading(false);
-    }, [router.query]);
+    }, [router.isReady]);
 
     const getCustomers = (data) => {
         return [...data || []].map(d => {
@@ -108,16 +110,15 @@ export default function userContents() {
 
     return (
         <>
-            {userObj ? (
+            {userInfoObj ? (
                 <>
                     <UserHeader
-                      activeIndex={0}
-                      userObj={userObj}             
+                      activeIndex={0}            
                     />   
 
                     <div className="dataview-demo">
                         <div className="card surface-0 p-5 border-round-2xl">
-                            {userObj && userObj.uid === router.query.uid ? (
+                            {userObj && userObj.uid === userInfoObj.uid ? (
                                 <div className="flex justify-content-end">
                                     <Link 
                                       href={{
@@ -125,7 +126,6 @@ export default function userContents() {
                                         query: { uid: userObj.uid },
                                       }}
                                       as={`/user/${userObj.uid}/userCommunityCreate`}
-                                      shallow
                                     >
                                         <Button className="ml-4 w-9rem p-button-rounded p-button-info" icon="pi pi-plus" label="새 컨텐츠" />
                                     </Link>
