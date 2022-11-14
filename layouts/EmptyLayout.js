@@ -44,8 +44,10 @@ export default function EmptyLayout({ children }) {
                 </>
             ) : (
                 <>
-                    <div className="flex align-items-baseline">
-                        <i className="flex align-items-center justify-content-center pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
+                    <div className="flex justify-content-center align-content-center min-h-screen">
+                        <div>
+                            <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
+                        </div>
                     </div>
                 </>
             )}

@@ -25,7 +25,7 @@ export const NewAlbum = () => {
             <Link 
               href={{
                 pathname: `/album/${albumObj.id}`,
-                query: { id: albumObj.id },
+                query: { albumId: albumObj.id },
               }}
               as={`/album/${albumObj.id}`}
             >
@@ -55,13 +55,6 @@ export const NewAlbum = () => {
                                 {albums.slice(0,9).map((item) => {
                                     return (
                                         <div key={item.id}>
-                                            {/* <Link 
-                                              href={{
-                                                pathname: `/album/${item.id}`,
-                                                query: { id: item.id },
-                                              }}
-                                              as={`/album/${item.id}`}
-                                            > */}
                                             <Link href={`/album/${item.id}`} >
                                                 <div 
                                                   className="col-4 h-8rem w-8rem image-link"

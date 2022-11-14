@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 
 import { getCarts } from '../../../service';
 
-import { ellipsisText } from '../../../commons/functional/filters';
+import { ellipsisText, timeCounter } from '../../../commons/functional/filters';
 
 
 buyHistory.layout = "L1";
@@ -18,17 +16,37 @@ export default function buyHistory() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const data = getCarts();
-        setCustomers(getCustomers(data)); 
+        const data = getCarts().sort((a, b) => { return b.uploadDate - a.uploadDate });
+        setCustomers(data); 
         setLoading(false);
     }, []);
 
-    const getCustomers = (data) => {
-        return [...data || []].map(d => {
-            d.uploadDate = new Date(d.uploadDate);
-            return d;
-        });
+    const onRemoveBuyHistory = () => {
+        if (!selectedCustomers) {
+            alert('기록에서 삭제 하실 곡을 선택해주십시오!');
+            return;
+        }
+
+        if (confirm('정말 삭제 하시겠습니까?')) {
+            console.log("엘리먼트 삭제하고 해당 DB 수정!");
+        }
     }
+
+    const onReDownloadSongs = () => {
+        if (!customers) {
+            alert('회원님이 구입하신 곡이 없습니다!');
+            return;
+        }
+
+        if (!selectedCustomers) {
+            alert('다운로드 하실 곡을 선택해주십시오!');
+            return;
+        }
+
+        if (confirm('다시 다운로드 하시겠습니까?')) {
+            console.log('재다운로드 정보 세션에 담고 페이지로 이동!');
+        }
+    }    
 
     const renderHeader = () => {
         return (
@@ -36,11 +54,13 @@ export default function buyHistory() {
                 <div>
                     <Button 
                       className="mr-3 p-button-rounded p-button-success"
-                      label="모두 다운로드" 
+                      label="재 다운로드" 
+                      onClick={() => onReDownloadSongs()}
                     />
                     <Button 
                       className="p-button-rounded p-button-danger"
-                      label="모두 삭제" 
+                      label="기록 삭제" 
+                      onClick={() => onRemoveBuyHistory()}
                     />  
                 </div>
             </div>
@@ -64,24 +84,10 @@ export default function buyHistory() {
         return <label>{ellipsisText(rowData.albumName, 27)}</label>
     }
 
-    const buyIndividualBodyTemplate = (rowData) => {
+    const buyDateBodyTemplate = (rowData) => {
         return (
             <>
-                <Button 
-                  icon="pi pi-download"
-                  className="p-button-success"
-                />
-            </>
-        );
-    }
-
-    const removeIndividualCartBodyTemplate = (rowData) => {
-        return (
-            <>
-                <Button 
-                  icon="pi pi-trash"
-                  className="p-button-danger"
-                />
+                <label>{timeCounter(rowData.uploadDate)}</label>
             </>
         );
     }
@@ -96,14 +102,14 @@ export default function buyHistory() {
                     <DataTable 
                       value={customers} className="p-datatable-customers" header={header} rows={getCarts().length}
                       dataKey="id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)}
-                      emptyMessage="장바구니에 담긴 곡이 없습니다."
+                      emptyMessage="회원님이 구입한 곡이 없습니다."
                       loading={loading} responsiveLayout="scroll"
                     >
+                        <Column selectionMode="multiple" selectionAriaLabel="songName" headerStyle={{ minWidth: '1em' }} />
                         <Column field="thumbnail" body={thumbnailBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ minWidth: '1rem'}} />
                         <Column field="songName" header="곡정보" body={songInformationBodyTemplate} headerStyle={{ minWidth: '14rem' }} bodyStyle={{ minWidth: '14rem' }} />
                         <Column field="albumName" header="앨범" body={albumNameBodyTemplate} headerStyle={{ minWidth: '14rem' }} bodyStyle={{ minWidth: '14rem' }} />
-                        <Column header="다운로드" body={buyIndividualBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
-                        <Column header="기록삭제" body={removeIndividualCartBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
+                        <Column header="구입한 날짜" body={buyDateBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
                     </DataTable>
                 </div>
             </div>

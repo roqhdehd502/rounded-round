@@ -34,7 +34,7 @@ export default function DefaultLayout({ children }) {
             {loading ? (
                 <>
                     <NavigationBar userObj={userObj} />
-                    <div className="h-6rem"></div>
+                    <div className="h-5rem mb-4"></div>
                     <div className="content-width-padding ">
                         { children }
                     </div>
@@ -42,8 +42,10 @@ export default function DefaultLayout({ children }) {
                 </>
             ) : (
                 <>
-                    <div className="flex align-items-baseline">
-                        <i className="flex align-items-center justify-content-center pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
+                    <div className="flex justify-content-center align-content-center min-h-screen">
+                        <div>
+                            <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
+                        </div>
                     </div>
                 </>
             )}

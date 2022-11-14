@@ -23,7 +23,7 @@ export const NavigationBar = (props) => {
     const customSidebarIcons = (
         <>
             <Link href="/">
-                <img className="pt-2 mr-5" src="/img/logo.png" width='180px' />
+                <img className="pt-2 mr-5 image-link" src="/img/logo.png" width='180px' />
             </Link>
         </>
     );
@@ -218,7 +218,7 @@ export const NavigationBar = (props) => {
             </Sidebar>
             <Button className="mb-1" icon="pi pi-bars" onClick={() => setVisibleLeft(true)} />
             <Link href="/">
-                <img className="ml-3" src="/img/logo.png" width='180px' />
+                <img className="ml-3 image-link" src="/img/logo.png" width='180px' />
             </Link>
         </div>
     );
