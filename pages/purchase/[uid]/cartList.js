@@ -9,11 +9,11 @@ import { Divider } from 'primereact/divider';
 
 import { getCarts } from '../../../service';
 
-import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/filters';
+import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/Filters';
 
 
-cartList.layout = "L1";
-export default function cartList() {
+CartList.layout = "L1";
+export default function CartList() {
     const router = useRouter();
 
     const [customers, setCustomers] = useState(null);
@@ -26,7 +26,7 @@ export default function cartList() {
         const outstandingSongs = sessionStorage.getItem('rounded-round-buylist');
         if (outstandingSongs) {
             if (confirm('현재 구입 페이지에 결제하지 않은 곡이 있습니다.\n구입 페이지로 이동하시겠습니까?')) {
-                router.replace(`/purchase/${router.query.uid}/buyInfo`);
+                router.replace(`/Purchase/${router.query.uid}/BuyInfo`);
             } else {
                 sessionStorage.removeItem('rounded-round-buylist');
             }
@@ -103,7 +103,7 @@ export default function cartList() {
             sessionStorage.removeItem('rounded-round-cartlist');
             sessionStorage.setItem('rounded-round-cartlist', JSON.stringify(afterCartList));
             sessionStorage.setItem('rounded-round-buylist', JSON.stringify(selectedBuySongsList));
-            router.replace(`/purchase/${router.query.uid}/buyInfo`); 
+            router.replace(`/Purchase/${router.query.uid}/BuyInfo`); 
         }
     }
 

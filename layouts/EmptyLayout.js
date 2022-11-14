@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import * as userInfoActions from '../store/modules/userInfo';
+import * as UserInfoActions from '../store/modules/UserInfo';
 
 
 export default function EmptyLayout({ children }) {
@@ -15,15 +15,15 @@ export default function EmptyLayout({ children }) {
 
     const [loading, setLoading] = useState(true);
 
-    const userObj = useSelector(({ userInfo }) => userInfo.userObj);
+    const userObj = useSelector(({ UserInfo }) => userInfo.userObj);
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 const payload = user;
-                dispatch(userInfoActions.getUserObj(payload));
+                dispatch(UserInfoActions.getUserObj(payload));
             } else {
-                dispatch(userInfoActions.getUserObj(null));
+                dispatch(UserInfoActions.getUserObj(null));
             }
         });
         setLoading(true);

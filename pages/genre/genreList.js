@@ -10,11 +10,11 @@ import { Button } from 'primereact/button';
 import { getSongs } from '../../service';
 
 import { DialogCommon } from '../../commons/primereact/DialogCommon';
-import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../commons/functional/filters';
+import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../commons/functional/Filters';
 
 
-genreList.layout = "L1";
-export default function genreList() {
+GenreList.layout = "L1";
+export default function GenreList() {
     const [customers, setCustomers] = useState(null);
     const [selectedCustomers, setSelectedCustomers] = useState(null);
     const [filters, setFilters] = useState({

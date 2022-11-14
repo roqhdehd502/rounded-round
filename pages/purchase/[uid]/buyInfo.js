@@ -11,11 +11,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { getCarts } from '../../../service';
 
-import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/filters';
+import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/Filters';
 
 
-buyInfo.layout = "L1";
-export default function buyInfo() {
+BuyInfo.layout = "L1";
+export default function BuyInfo() {
     const router = useRouter();
 
     const [customers, setCustomers] = useState(null);
@@ -52,10 +52,10 @@ export default function buyInfo() {
             sessionStorage.removeItem('rounded-round-buylist');
             
             router.replace({
-              pathname: `/purchase/${router.query.uid}/payResult/${payId}`,
+              pathname: `/Purchase/${router.query.uid}/PayResult/${payId}`,
               query: { uid: router.query.uid, payId: payId },
             },
-            `/purchase/${router.query.uid}/payResult/${payId}`,
+            `/Purchase/${router.query.uid}/PayResult/${payId}`,
             );
         }
     }

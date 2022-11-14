@@ -6,11 +6,11 @@ import { Button } from 'primereact/button';
 
 import { getCarts } from '../../../service';
 
-import { ellipsisText, timeCounter } from '../../../commons/functional/filters';
+import { ellipsisText, timeCounter } from '../../../commons/functional/Filters';
 
 
-buyHistory.layout = "L1";
-export default function buyHistory() {
+BuyHistory.layout = "L1";
+export default function BuyHistory() {
     const [customers, setCustomers] = useState(null);
     const [selectedCustomers, setSelectedCustomers] = useState(null);
     const [loading, setLoading] = useState(true);

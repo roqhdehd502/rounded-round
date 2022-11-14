@@ -7,11 +7,11 @@ import { useRouter } from 'next/router';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 
-import * as userInfoActions from '../../store/modules/userInfo';
+import * as UserInfoActions from '../../store/modules/UserInfo';
 
 
-findPassword.layout = "L2";
-export default function findPassword() {
+FindPassword.layout = "L2";
+export default function FindPassword() {
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -19,7 +19,7 @@ export default function findPassword() {
 
     const onFindPassword = useCallback((email) => {
         try {
-            dispatch(userInfoActions.patchUserPassword(email));
+            dispatch(UserInfoActions.patchUserPassword(email));
             alert('가입하신 회원님의 이메일로 비밀번호 변경 요청을 전송하였습니다.');
             router.replace('/');
         } catch (error) {
@@ -42,12 +42,12 @@ export default function findPassword() {
                         <Button label="비밀번호 찾기" icon="pi pi-search" className="pr-5" onClick={() => onFindPassword(userEmail)} />
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Link href="/auth/signIn">
+                        <Link href="/Auth/SignIn">
                             <Button label="로그인" icon="pi pi-sign-in" className="p-button-info pr-5" />
                         </Link>
                     </div>
                     <div className="field p-fluid">
-                        <Link href="/auth/signUp">
+                        <Link href="/Auth/SignUp">
                             <Button label="회원가입" icon="pi pi-user-plus" className="p-button-info pr-5" />
                         </Link>
                     </div>

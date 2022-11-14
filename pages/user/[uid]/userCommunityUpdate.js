@@ -10,12 +10,12 @@ import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Divider } from 'primereact/divider';
 
-import { convertNewlineText } from '../../../commons/functional/filters';
+import { convertNewlineText } from '../../../commons/functional/Filters';
 
-import { getUserCommunityThunk, patchUserCommunityThunk, deleteUserCommunityThunk } from '../../../store/modules/userCommunity';
+import { getUserCommunityThunk, patchUserCommunityThunk, deleteUserCommunityThunk } from '../../../store/modules/UserCommunity';
 
 
-userCommunityUpdate.layout = "L1";
+UserCommunityUpdate.layout = "L1";
 
 export const getServerSideProps = async (context) => {
     return {
@@ -25,7 +25,7 @@ export const getServerSideProps = async (context) => {
     };
 }
 
-export default function userCommunityUpdate({ communityObj }) {
+export default function UserCommunityUpdate({ communityObj }) {
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -65,7 +65,7 @@ export default function userCommunityUpdate({ communityObj }) {
                     dispatch(patchUserCommunityThunk(updateCommunityObj));
                 }
                 
-                router.replace(`/user/${router.query.uid}/userCommunity`);
+                router.replace(`/User/${router.query.uid}/UserCommunity`);
             }
         }   catch(error) {
             console.log(error);
@@ -88,7 +88,7 @@ export default function userCommunityUpdate({ communityObj }) {
                     dispatch(deleteUserCommunityThunk(router.query.docId));
                 }
                 
-                router.replace(`/user/${router.query.uid}/userCommunity`);
+                router.replace(`/User/${router.query.uid}/UserCommunity`);
             } 
         } catch(error) {
             console.log(error);
@@ -122,7 +122,7 @@ export default function userCommunityUpdate({ communityObj }) {
                     </div>
                     <Divider />
                     <div className="field p-fluid">
-                        <Link href={`/user/${router.query.uid}/userCommunity`}>
+                        <Link href={`/User/${router.query.uid}/UserCommunity`}>
                             <Button label="돌아가기" icon="pi pi-arrow-left" className="p-button-info pr-5" />
                         </Link>
                     </div>

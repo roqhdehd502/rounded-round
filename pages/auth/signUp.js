@@ -10,17 +10,17 @@ import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 
-import { checkDuplicatedEmailThunk, createUserObjThunk } from '../../store/modules/userInfo';
+import { checkDuplicatedEmailThunk, createUserObjThunk } from '../../store/modules/UserInfo';
 
 
-signUp.layout = "L2";
-export default function signUp() {
+SignUp.layout = "L2";
+export default function SignUp() {
     const dispatch = useDispatch();
     const router = useRouter();
     const auth = getAuth();
 
-    const isDuplicatedUserEmailResult = useSelector(({ userInfo }) => userInfo.isDuplicatedUserEmailResult);
-    const duplicatedCheckLoading = useSelector(({ userInfo }) => userInfo.loading);
+    const isDuplicatedUserEmailResult = useSelector(({ UserInfo }) => UserInfo.isDuplicatedUserEmailResult);
+    const duplicatedCheckLoading = useSelector(({ UserInfo }) => UserInfo.loading);
 
     const [userId, setUserId] = useState('');
     const [userEmailAddress, setUserEmailAddress] = useState('');
@@ -152,12 +152,12 @@ export default function signUp() {
                         <Button label="회원가입" icon="pi pi-user-plus" className="pr-5" onClick={() => onSignUp(userId, userEmailAddress, userPassword, isCorrectEmail, isCorrectPassword)} />
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Link href="/auth/signIn">
+                        <Link href="/Auth/SignIn">
                             <Button label="로그인" icon="pi pi-sign-in" className="p-button-info pr-5" />
                         </Link>
                     </div>
                     <div className="field p-fluid">
-                        <Link href="/auth/findPassword">
+                        <Link href="/Auth/FindPassword">
                             <Button label="비밀번호 찾기" icon="pi pi-search" className="p-button-info pr-5" />
                         </Link>
                     </div>

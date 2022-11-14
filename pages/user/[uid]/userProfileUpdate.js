@@ -11,13 +11,13 @@ import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Divider } from 'primereact/divider';
 
-import { convertNewlineText } from '../../../commons/functional/filters';
+import { convertNewlineText } from '../../../commons/functional/Filters';
 
-import * as userInfoActions from '../../../store/modules/userInfo';
-import { getUserInfoObjThunk, patchUserInfoObjThunk } from '../../../store/modules/userInfo';
+import * as UserInfoActions from '../../../store/modules/UserInfo';
+import { getUserInfoObjThunk, patchUserInfoObjThunk } from '../../../store/modules/UserInfo';
 
 
-userProfileUpdate.layout = "L1";
+UserProfileUpdate.layout = "L1";
 
 export const getServerSideProps = async ({ query: { uid } }) => {
     return {
@@ -32,12 +32,12 @@ export const getServerSideProps = async ({ query: { uid } }) => {
     };
 }
 
-export default function userProfileUpdate({ uid }) {
+export default function UserProfileUpdate({ uid }) {
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const userObj = useSelector(({ userInfo }) => userInfo.userObj);
-    const userInfoObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
+    const userObj = useSelector(({ UserInfo }) => UserInfo.userObj);
+    const userInfoObj = useSelector(({ UserInfo }) => UserInfo.userInfoObj);
 
     const [userDisplayName, setUserDisplayName] = useState(userObj.displayName);
     const [userBio, setUserBio] = useState(userInfoObj.bio);
@@ -87,7 +87,7 @@ export default function userProfileUpdate({ uid }) {
                           firebaseStorage.getDownloadURL(storageRef)
                             .then((url) => {
                                 userPhotoURL = url;
-                                dispatch(userInfoActions.patchUserObj({updateUserObj, userPhotoURL}));
+                                dispatch(UserInfoActions.patchUserObj({updateUserObj, userPhotoURL}));
                                 dispatch(patchUserInfoObjThunk({uid, updateUserObj, userPhotoURL} ));
                             });
                       }).catch((error) => {
@@ -95,11 +95,11 @@ export default function userProfileUpdate({ uid }) {
                       });
                 } else {
                     userPhotoURL = userObj.photoURL;
-                    dispatch(userInfoActions.patchUserObj({updateUserObj, userPhotoURL}));
+                    dispatch(UserInfoActions.patchUserObj({updateUserObj, userPhotoURL}));
                     dispatch(patchUserInfoObjThunk({uid, updateUserObj, userPhotoURL} ));
                 }
 
-                router.replace(`/user/${uid}/userProfile`);
+                router.replace(`/User/${uid}/UserProfile`);
             }
         }   catch(error) {
             console.log(error);
@@ -108,9 +108,9 @@ export default function userProfileUpdate({ uid }) {
 
     const updateUserPassword = useCallback(() => {
         try {
-            dispatch(userInfoActions.patchUserPassword(userEmail));
+            dispatch(UserInfoActions.patchUserPassword(userEmail));
             alert('가입하신 회원님의 이메일로 비밀번호 변경 요청을 전송하였습니다.');
-            dispatch(userInfoActions.userLogout());
+            dispatch(UserInfoActions.logout());
             router.replace(`/`);
         } catch (error) {
             console.log(error);
@@ -176,7 +176,7 @@ export default function userProfileUpdate({ uid }) {
                             </div>
                             <Divider />
                             <div className="field p-fluid">
-                                <Link href={`/user/${userObj.uid}/userProfile`}>
+                                <Link href={`/User/${userObj.uid}/UserProfile`}>
                                     <Button label="돌아가기" icon="pi pi-arrow-left" className="p-button-info pr-5" />
                                 </Link>
                             </div>

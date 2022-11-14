@@ -12,10 +12,10 @@ import { Divider } from 'primereact/divider';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { createUserCommunityThunk } from '../../../store/modules/userCommunity';
+import { createUserCommunityThunk } from '../../../store/modules/UserCommunity';
 
 
-userCommunityCreate.layout = "L1";
+UserCommunityCreate.layout = "L1";
 
 export const getServerSideProps = async ({ query: { uid } }) => {
     return {
@@ -25,7 +25,7 @@ export const getServerSideProps = async ({ query: { uid } }) => {
     };
 }
 
-export default function userCommunityCreate({ uid }) {
+export default function UserCommunityCreate({ uid }) {
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -67,7 +67,7 @@ export default function userCommunityCreate({ uid }) {
                 dispatch(createUserCommunityThunk(createCommunityObj));
             }
 
-            router.replace(`/user/${createCommunityObj.uid}/userCommunity`);
+            router.replace(`/User/${createCommunityObj.uid}/UserCommunity`);
         }   catch(error) {
             console.log(error);
         }
@@ -100,7 +100,7 @@ export default function userCommunityCreate({ uid }) {
                     </div>
                     <Divider />
                     <div className="field p-fluid">
-                        <Link href={`/user/${router.query.uid}/userCommunity`}>
+                        <Link href={`/User/${router.query.uid}/UserCommunity`}>
                             <Button label="돌아가기" icon="pi pi-arrow-left" className="p-button-info pr-5" />
                         </Link>
                     </div>

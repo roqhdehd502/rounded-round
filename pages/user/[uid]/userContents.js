@@ -11,18 +11,18 @@ import UserHeader from '../../../components/User/UserHeader';
 
 import { getContents } from '../../../service';
 
-import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../commons/functional/filters';
+import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../commons/functional/Filters';
 
-import { getUserInfoObjThunk } from '../../../store/modules/userInfo';
+import { getUserInfoObjThunk } from '../../../store/modules/UserInfo';
 
 
-userContents.layout = "L1";
-export default function userContents() {
+UserContents.layout = "L1";
+export default function UserContents() {
     const dispatch = useDispatch();
     const router = useRouter();
     
-    const userObj = useSelector(({ userInfo }) => userInfo.userObj);
-    const userInfoObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
+    const userObj = useSelector(({ UserInfo }) => UserInfo.userObj);
+    const userInfoObj = useSelector(({ UserInfo }) => UserInfo.userInfoObj);
 
     const [customers, setCustomers] = useState(null);
     const [layout, setLayout] = useState('grid');
@@ -122,10 +122,10 @@ export default function userContents() {
                                 <div className="flex justify-content-end">
                                     <Link 
                                       href={{
-                                        pathname: `/user/${userObj.uid}/userCommunityCreate`,
+                                        pathname: `/User/${userObj.uid}/UserCommunityCreate`,
                                         query: { uid: userObj.uid },
                                       }}
-                                      as={`/user/${userObj.uid}/userCommunityCreate`}
+                                      as={`/User/${userObj.uid}/UserCommunityCreate`}
                                     >
                                         <Button className="ml-4 w-9rem p-button-rounded p-button-info" icon="pi pi-plus" label="새 컨텐츠" />
                                     </Link>

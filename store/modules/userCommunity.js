@@ -32,7 +32,7 @@ const initialState = {
 
 
 export const getUserCommunityThunk = createAsyncThunk(
-    "userInfo/getUserCommunityThunk",
+    "UserCommunity/getUserCommunityThunk",
     async (docId, thunkAPI) => {
         try {
             const docRef = doc(firestore, "userCommunity", docId);
@@ -49,7 +49,7 @@ export const getUserCommunityThunk = createAsyncThunk(
 );
 
 export const getUserCommunitiesThunk = createAsyncThunk(
-    "userInfo/getUserCommunitiesThunk",
+    "UserCommunity/getUserCommunitiesThunk",
     async (uid, thunkAPI) => {
         let datas = [];
         let q = query(
@@ -72,7 +72,7 @@ export const getUserCommunitiesThunk = createAsyncThunk(
 );
 
 export const createUserCommunityThunk = createAsyncThunk(
-    "userInfo/createUserCommunityThunk",
+    "UserCommunity/createUserCommunityThunk",
     async (payload, thunkAPI) => {
         try {
             await addDoc(collection(firestore, "userCommunity"), payload)
@@ -85,7 +85,7 @@ export const createUserCommunityThunk = createAsyncThunk(
 );
 
 export const patchUserCommunityThunk = createAsyncThunk(
-    "userInfo/patchUserCommunityThunk",
+    "UserCommunity/patchUserCommunityThunk",
     async (payload, thunkAPI) => {
         const docRef = doc(firestore, "userCommunity", payload.docId);
         try {
@@ -100,7 +100,7 @@ export const patchUserCommunityThunk = createAsyncThunk(
 );
 
 export const deleteUserCommunityThunk = createAsyncThunk(
-  "userInfo/deleteUserCommunityThunk",
+  "UserCommunity/deleteUserCommunityThunk",
   async (payload, thunkAPI) => {
       const docRef = doc(firestore, "userCommunity", payload);
       try {
@@ -112,8 +112,8 @@ export const deleteUserCommunityThunk = createAsyncThunk(
 );
 
 
-const userCommunitySlice = createSlice({
-    name: 'userCommunity',
+const UserCommunitySlice = createSlice({
+    name: 'UserCommunity',
 
     initialState,
 
@@ -194,6 +194,6 @@ const userCommunitySlice = createSlice({
 
 export const { 
     patchUserObj,
-} = userCommunitySlice.actions;
+} = UserCommunitySlice.actions;
 
-export default userCommunitySlice.reducer;
+export default UserCommunitySlice.reducer;

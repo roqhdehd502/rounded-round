@@ -32,7 +32,7 @@ const initialState = {
 
 
 export const getUserContentThunk = createAsyncThunk(
-    "userInfo/getUserContentThunk",
+    "UserContents/getUserContentThunk",
     async (uid, thunkAPI) => {
         try {
             const docRef = doc(firestore, "userContents", uid);
@@ -49,7 +49,7 @@ export const getUserContentThunk = createAsyncThunk(
 );
 
 export const getUserContentsThunk = createAsyncThunk(
-    "userInfo/getUserContentsThunk",
+    "UserContents/getUserContentsThunk",
     async (uid, thunkAPI) => {
         let datas = [];
         let q = query(
@@ -72,7 +72,7 @@ export const getUserContentsThunk = createAsyncThunk(
 );
 
 export const createUserContentThunk = createAsyncThunk(
-    "userInfo/createUserContentThunk",
+    "UserContents/createUserContentThunk",
     async (payload, thunkAPI) => {
         try {
             await addDoc(collection(firestore, "userContents"), payload)
@@ -85,7 +85,7 @@ export const createUserContentThunk = createAsyncThunk(
 );
 
 export const patchUserContentThunk = createAsyncThunk(
-    "userInfo/patchUserContentThunk",
+    "UserContents/patchUserContentThunk",
     async (payload, thunkAPI) => {
         const docRef = doc(firestore, "userContents", payload.docId);
         try {
@@ -100,7 +100,7 @@ export const patchUserContentThunk = createAsyncThunk(
 );
 
 export const deleteUserContentThunk = createAsyncThunk(
-  "userInfo/deleteUserContentThunk",
+  "UserContents/deleteUserContentThunk",
   async (payload, thunkAPI) => {
       const docRef = doc(firestore, "userContents", payload);
       try {
@@ -112,8 +112,8 @@ export const deleteUserContentThunk = createAsyncThunk(
 );
 
 
-const userContentsSlice = createSlice({
-    name: 'userContents',
+const UserContentsSlice = createSlice({
+    name: 'UserContents',
 
     initialState,
 
@@ -194,6 +194,6 @@ const userContentsSlice = createSlice({
 
 export const { 
     patchUserObj,
-} = userContentsSlice.actions;
+} = UserContentsSlice.actions;
 
-export default userContentsSlice.reducer;
+export default UserContentsSlice.reducer;

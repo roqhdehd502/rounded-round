@@ -7,11 +7,11 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 
-import { ellipsisText, formatUnitEachThousand, timeFormatting } from '../../../../commons/functional/filters';
+import { ellipsisText, formatUnitEachThousand, timeFormatting } from '../../../../commons/functional/Filters';
 
 
-payResultInfo.layout = "L1";
-export default function payResultInfo() {
+PayResultInfo.layout = "L1";
+export default function PayResultInfo() {
     const router = useRouter();
 
     const [customers, setCustomers] = useState(null);

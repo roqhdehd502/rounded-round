@@ -11,20 +11,20 @@ import { Button } from 'primereact/button';
 
 import UserHeader from '../../../components/User/UserHeader';
 
-import { timeCounter } from '../../../commons/functional/filters'
+import { timeCounter } from '../../../commons/functional/Filters'
 
-import { getUserInfoObjThunk } from '../../../store/modules/userInfo';
-import { getUserCommunitiesThunk } from '../../../store/modules/userCommunity';
+import { getUserInfoObjThunk } from '../../../store/modules/UserInfo';
+import { getUserCommunitiesThunk } from '../../../store/modules/UserCommunity';
 
 
-userCommunity.layout = "L1";
-export default function userCommunity() {
+UserCommunity.layout = "L1";
+export default function UserCommunity() {
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const userObj = useSelector(({ userInfo }) => userInfo.userObj);
-    const userInfoObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
-    const userCommunities = useSelector(({ userCommunity }) => userCommunity.userCommunities);
+    const userObj = useSelector(({ UserInfo }) => UserInfo.userObj);
+    const userInfoObj = useSelector(({ UserInfo }) => UserInfo.userInfoObj);
+    const userCommunities = useSelector(({ UserCommunity }) => UserCommunity.userCommunities);
 
     const [multiSortMeta, setMultiSortMeta] = useState([{ field: 'popularCount', order: -1 }]);
     const [loading, setLoading] = useState(true);  
@@ -45,12 +45,12 @@ export default function userCommunity() {
                             <div className="mr-3">
                                 <Link
                                   href={{
-                                    pathname: `/user/${rowData.uid}/userCommunityUpdate`,
+                                    pathname: `/User/${rowData.uid}/UserCommunityUpdate`,
                                     query: {
                                       ...rowData
                                     }
                                   }}
-                                  as={`/user/${rowData.uid}/userCommunityUpdate`}
+                                  as={`/User/${rowData.uid}/UserCommunityUpdate`}
                                 >
                                     <Button className="p-button-rounded p-button-info" icon="pi pi-pencil" />
                                 </Link>
@@ -98,10 +98,10 @@ export default function userCommunity() {
                                 <div className="flex justify-content-end">
                                     <Link 
                                       href={{
-                                        pathname: `/user/${userObj.uid}/userCommunityCreate`,
+                                        pathname: `/User/${userObj.uid}/UserCommunityCreate`,
                                         query: { uid: userObj.uid },
                                       }}
-                                      as={`/user/${userObj.uid}/userCommunityCreate`}
+                                      as={`/User/${userObj.uid}/UserCommunityCreate`}
                                     >
                                         <Button className="ml-4 w-9rem p-button-rounded p-button-info" icon="pi pi-plus" label="새 커뮤니티" />
                                     </Link>

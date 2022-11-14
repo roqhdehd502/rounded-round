@@ -5,8 +5,8 @@ const initialState = {
     value: 0,
 }; // 초기 상태 정의
 
-const counterSlice = createSlice({
-    name: 'counter',
+const CounterSlice = createSlice({
+    name: 'Counter',
 
     initialState,
 
@@ -23,6 +23,6 @@ const counterSlice = createSlice({
 export const { 
     increment, 
     decrement, 
-} = counterSlice.actions; // 액션 생성함수
+} = CounterSlice.actions; // 액션 생성함수
 
-export default counterSlice.reducer; // 리듀서
+export default CounterSlice.reducer; // 리듀서

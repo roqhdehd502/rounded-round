@@ -7,13 +7,13 @@ import { getAlbums } from '../../service';
 
 import { CarouselCommon } from '../../commons/primereact/CarouselCommon';
 
-//import * as albumActions from '../../store/modules/album';
+//import * as albumActions from '../../store/modules/Album';
 
 
 export const NewAlbum = () => {
     //const dispatch = useDispatch();
 
-    //const albums = useSelector(({ album }) => album.albums);
+    //const albums = useSelector(({ Album }) => Album.albums);
     const albums = getAlbums();
 
     useEffect(() => {
@@ -24,10 +24,10 @@ export const NewAlbum = () => {
         return (
             <Link 
               href={{
-                pathname: `/album/${albumObj.id}`,
-                query: { albumId: albumObj.id },
+                pathname: `/Album/${albumObj.id}`,
+                query: { aId: albumObj.id },
               }}
-              as={`/album/${albumObj.id}`}
+              as={`/Album/${albumObj.id}`}
             >
                 <div className="carousel-item border-round-2xl image-link">
                     <div 
@@ -55,7 +55,13 @@ export const NewAlbum = () => {
                                 {albums.slice(0,9).map((item) => {
                                     return (
                                         <div key={item.id}>
-                                            <Link href={`/album/${item.id}`} >
+                                            <Link 
+                                              href={{
+                                                pathname: `/Album/${item.id}`,
+                                                query: { aId: item.id },
+                                              }}
+                                              as={`/Album/${item.id}`}
+                                            >
                                                 <div 
                                                   className="col-4 h-8rem w-8rem image-link"
                                                   style={{backgroundImage: `url(${item.thumbnail}), url('https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', width: 'auto'}}

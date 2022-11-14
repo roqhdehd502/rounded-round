@@ -4,11 +4,11 @@ import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 
 import { getContents } from '../../../service';
 
-import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../commons/functional/filters';
+import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../commons/functional/Filters';
 
 
-userSubscribes.layout = "L1";
-export default function userSubscribes() {
+UserSubscribes.layout = "L1";
+export default function UserSubscribes() {
 
     const [customers, setCustomers] = useState(null);
     const [layout, setLayout] = useState('grid');

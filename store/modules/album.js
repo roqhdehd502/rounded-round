@@ -13,7 +13,7 @@ const initialState = {
 };
 
 export const getUserInfoObjThunk = createAsyncThunk(
-    "userInfo/getUserInfoObjThunk",
+    "Album/getUserInfoObjThunk",
     // async (uid, thunkAPI) => {
     //     try {
     //         const docRef = doc(firestore, "userInfo", uid);
@@ -30,8 +30,8 @@ export const getUserInfoObjThunk = createAsyncThunk(
 );
 
 
-const albumSlice = createSlice({
-    name: 'album',
+const AlbumSlice = createSlice({
+    name: 'Album',
 
     initialState,
 
@@ -70,7 +70,7 @@ export const {
     albumObj,
     albums,
     albumInSongs,
-} = albumSlice.actions;
+} = AlbumSlice.actions;
 
 
-export default albumSlice.reducer;
+export default AlbumSlice.reducer;

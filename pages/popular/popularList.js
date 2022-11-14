@@ -10,11 +10,11 @@ import { Button } from 'primereact/button';
 import { getSongs } from '../../service';
 
 import { DialogCommon } from '../../commons/primereact/DialogCommon';
-import { ellipsisText, formatUnitEachThousand } from '../../commons/functional/filters';
+import { ellipsisText, formatUnitEachThousand } from '../../commons/functional/Filters';
 
 
-popularList.layout = "L1";
-export default function popularList() {
+PopularList.layout = "L1";
+export default function PopularList() {
     const [customers, setCustomers] = useState(null);
     const [selectedCustomers, setSelectedCustomers] = useState(null);
     const [filters, setFilters] = useState({

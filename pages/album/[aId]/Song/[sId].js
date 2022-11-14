@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
 import { useRouter } from 'next/router';
@@ -8,87 +7,32 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 
-import { DialogCommon } from '../../../commons/primereact/DialogCommon';
-import { ellipsisText, formatUnitEachThousand, timeFormatting } from '../../../commons/functional/filters';
+import { DialogCommon } from '../../../../commons/primereact/DialogCommon';
+import { ellipsisText, formatUnitEachThousand } from '../../../../commons/functional/Filters';
 
-import { getAlbum, getSongsInAlbum } from '../../../service';
-
-// import * as albumActions from '../../store/modules/album';
+import { getSongsInAlbum, getSong } from '../../../../service';
 
 
-albumDetail.layout = "L1";
-export default function albumDetail() {
-    // const dispatch = useDispatch();
+SongDetail.layout = "L1";
+export default function SongDetail() {
     const router = useRouter();
 
-    const userObj = useSelector(({ userInfo }) => userInfo.userObj);
-
-    // const albumObj = useSelector(({ album }) => album.albumObj);
-    // const songsInAlbum = useSelector(({ album }) => album.songsInAlbum);
-    const [albumObj, setAlbumObj] = useState(null);
+    const [songObj, setSongObj] = useState();
     const [songsInAlbum, setSongsInAlbum] = useState([]);
 
-    const [selectedCustomers, setSelectedCustomers] = useState(null);
     const [multiSortMeta, setMultiSortMeta] = useState([{ field: 'cdNumber', order: 1 }]);
-    const [loading, setLoading] = useState(true);    
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        //if (!router.isReady) return; 
-
-        //dispatch(albumActions.getAlbumObj(router.query.id));
-        //dispatch(albumActions.getSongsInAlbum(router.query.id));
-        setAlbumObj(getAlbum(router.query.albumId));
-        setSongsInAlbum(getSongsInAlbum(router.query.albumId));
+        setSongObj(getSong(router.query.sId));
+        setSongsInAlbum(getSongsInAlbum(router.query.aId));
 
         setLoading(false);
-    }, [router.query, albumObj]);
-
-    const onPutInCart = () => {
-        if (!selectedCustomers || !selectedCustomers.length) {
-            alert('곡을 선택 해주십시오.');
-            return;
-        }
-
-        if (confirm('정말 장바구니에 담으시겠습니까?')) {
-            const cartList = [...selectedCustomers];
-
-            if (sessionStorage.getItem('rounded-round-cartlist')) {
-                let beforeCartList = JSON.parse(sessionStorage.getItem('rounded-round-cartlist'));
-                beforeCartList.push(...cartList);
-                const map = new Map();
-                for (const item of beforeCartList) {
-                    map.set(JSON.stringify(item), item);
-                }
-                const afterCartList = [...map.values()];
-                sessionStorage.removeItem('rounded-round-cartlist');
-                sessionStorage.setItem('rounded-round-cartlist', JSON.stringify(afterCartList));
-            } else {
-                sessionStorage.setItem('rounded-round-cartlist', JSON.stringify(cartList));
-            }
-            
-            if (confirm('장바구니에 담는 것을 성공했습니다.\n구입 페이지로 이동하시겠습니까?')) {
-                router.push(`/purchase/${userObj.uid}/cartList`);
-            }
-        }
-    }
+    }, [router.query, songObj]);
 
     const renderHeader = () => {
         return (
-            <div className="flex justify-content-between align-items-center">
-                <div>
-                    <Button 
-                      icon="pi pi-plus" 
-                      label="담기" 
-                      className="p-button-rounded p-button-outlined mr-3"
-                      onClick={() => onPutInCart()}
-                    />
-                    <Button 
-                      icon="pi pi-download" 
-                      label="다운" 
-                      className="p-button-rounded p-button-outlined"
-                    />
-                </div>
-            </div>
+            <div className="flex justify-content-between align-items-center"></div>
         )
     }
 
@@ -127,12 +71,11 @@ export default function albumDetail() {
             <>
                 <Link
                   href={{
-                    pathname: `/album/${router.query.albumId}/song/${rowData.id}`,
-                    query: { albumId: router.query.albumId, songId: rowData.id },
+                    pathname: `/Album/${router.query.aId}/Song/${rowData.id}`,
+                    query: { aId: router.query.aId, sId: rowData.id },
                   }}
-                  as={`/album/${router.query.albumId}/song/${rowData.id}`}
+                  as={`/Album/${router.query.aId}/Song/${rowData.id}`}
                 >
-
                     <Button icon="pi pi-search" />
                 </Link>
             </>
@@ -151,59 +94,67 @@ export default function albumDetail() {
         );
     }
 
-    const putInBodyTemplate = () => {
-        return <Button icon="pi pi-plus" />;
-    }
-
-    const downloadBodyTemplate = () => {
-        return <Button icon="pi pi-download" />;
-    }
-
-    const header = renderHeader();
+    const header = renderHeader();    
 
     return (
         <>
-            {albumObj ? (
+            {songObj ? (
                 <div className="card surface-0 p-5 border-round-2xl">
-                    <h2 className="mb-3">앨범 정보</h2>
+                    <h2 className="mb-3">곡 정보</h2>
                     <div className="grid">
                         <div className="col-4 md:col-4 sm:col-12">
-                            <img className="w-auto max-w-20rem" src={albumObj.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} />
+                            <img className="w-auto max-w-20rem" src="https://img.hiphople.com/files/attach/images/11972418/421/045/023/3902e6934b1f1b284bad5ff406442beb.png" />
                         </div>
                         <div className="col-8 md:col-8 sm:col-12">
                             <div className="grid">
                                 <div className="col-12">
-                                    <h3 className="mb-0">{albumObj.albumName}</h3>
+                                    <h3 className="mb-0">{songObj.songName}</h3>
                                 </div>
                                 <div className="col-12">
-                                    <h3 className="mt-0">{albumObj.artistName}</h3>
+                                    <h3 className="mt-0">{songObj.artistName}</h3>
                                 </div>
                                 <div className="col-2">
-                                    <label>발매일</label>
+                                    <label>앨범</label>
                                 </div>
                                 <div className="col-10">
-                                    <label>{timeFormatting(albumObj.uploadDate)}</label>
+                                    <label>{songObj.albumName}</label>
                                 </div>
                                 <div className="col-2">
                                     <label>장르</label>
                                 </div>
                                 <div className="col-10">
-                                    <label>{albumObj.genre}</label>
+                                    <label>{songObj.genre}</label>
                                 </div>
                                 <div className="col-2">
-                                    <label>발매사</label>
+                                    <label>작사</label>
                                 </div>
                                 <div className="col-10">
-                                    <label>{albumObj.publishingCompany}</label>
+                                    <label>{songObj.lyricistName}</label>
                                 </div>
                                 <div className="col-2">
-                                    <label>기획사</label>
+                                    <label>작곡</label>
                                 </div>
                                 <div className="col-10">
-                                    <label>{albumObj.agency}</label>
+                                    <label>{songObj.songwriterName}</label>
+                                </div>
+                                <div className="col-2">
+                                    <label>편곡</label>
+                                </div>
+                                <div className="col-10">
+                                    <label>{songObj.arrangerName}</label>
                                 </div>
                                 <div className="col-12">
-                                    <h3><i className="mr-2 pi pi-heart"></i>{albumObj.likes}</h3>
+                                    <h3><i className="mr-2 pi pi-heart"></i>{songObj.likes}</h3>
+                                    <Button 
+                                      icon="pi pi-plus" 
+                                      label="담기" 
+                                      className="p-button-rounded p-button-outlined mr-3"
+                                    />
+                                    <Button 
+                                      icon="pi pi-download" 
+                                      label="다운" 
+                                      className="p-button-rounded p-button-outlined"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -218,19 +169,18 @@ export default function albumDetail() {
             )}
 
             <div className="mt-4 mb-4"></div>
-            
+                        
             <div className="datatable-doc-demo">
                 <div className="card surface-0 p-5 border-round-2xl">
-                    <h2 className="mb-1">수록곡</h2>
+                    <h2 className="mb-1">이 앨범의 다른 곡</h2>
                     <DataTable 
                       value={songsInAlbum} className="p-datatable-customers" header={header} rows={10}
-                      dataKey="id" rowHover selection={selectedCustomers} onSelectionChange={(e) => setSelectedCustomers(e.value)}
+                      dataKey="id" rowHover
                       sortMode="multiple" removableSort multiSortMeta={multiSortMeta} onSort={(e) => setMultiSortMeta(e.multiSortMeta)}
                       paginator paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" rowsPerPageOptions={[10,25,50]}
                       currentPageReportTemplate="{first} / {last} of {totalRecords}"
                       loading={loading} responsiveLayout="scroll"
                     >
-                        <Column selectionMode="multiple" selectionAriaLabel="songName" headerStyle={{ minWidth: '1em' }} />
                         <Column field="cdNumber" header="CD" body={cdNumberBodyTemplate} headerStyle={{ minWidth: '1rem', textAlign: 'center'}} bodyStyle={{ minWidth: '1rem'}} sortable />
                         <Column field="albumTrackNumber" header="트랙" body={albumTrackNumberBodyTemplate} headerStyle={{ minWidth: '1rem', textAlign: 'center'}} bodyStyle={{ minWidth: '1rem'}} sortable />
                         <Column field="thumbnail" body={thumbnailBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ minWidth: '1rem'}} />
@@ -238,8 +188,6 @@ export default function albumDetail() {
                         <Column field="likes" body={likesBodyTemplate} header="추천수" dataType="numeric" headerStyle={{ minWidth: '5rem'}} bodyStyle={{ minWidth: '5rem'}} />
                         <Column header="상세" body={detailBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
                         <Column header="듣기" body={listenBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
-                        <Column header="담기" body={putInBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
-                        <Column header="다운" body={downloadBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
                     </DataTable>
                 </div>
             </div>

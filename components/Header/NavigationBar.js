@@ -9,14 +9,14 @@ import { Menu } from 'primereact/menu';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 
-import * as userInfoActions from '../../store/modules/userInfo';
+import * as UserInfoActions from '../../store/modules/UserInfo';
 
 
 export const NavigationBar = (props) => {
     const dispatch = useDispatch();
     const router = useRouter();
     
-    const userProfileItem = useRef(null);
+    const UserProfileItem = useRef(null);
 
     const [visibleLeft, setVisibleLeft] = useState(false);
 
@@ -28,14 +28,14 @@ export const NavigationBar = (props) => {
         </>
     );
 
-    const userProfileItems = [
+    const UserProfileItems = [
         {
               items: [
                   {
                       label: '로그아웃',
                       icon: 'pi pi-lock',
                       command:(e) => {
-                          dispatch(userInfoActions.userLogout());
+                          dispatch(UserInfoActions.logout());
                           router.replace('/');
                       },
                   },
@@ -49,10 +49,10 @@ export const NavigationBar = (props) => {
                       icon: 'pi pi-shopping-cart',
                       command:(e) => {
                           router.push({
-                            pathname: `/purchase/${props.userObj.uid}/cartList`,
+                            pathname: `/Purchase/${props.userObj.uid}/CartList`,
                             query: { uid: props.userObj.uid },
                           },
-                          `/purchase/${props.userObj.uid}/cartList`,
+                          `/Purchase/${props.userObj.uid}/CartList`,
                           );
                       },
                   },
@@ -61,10 +61,10 @@ export const NavigationBar = (props) => {
                       icon: 'pi pi-wallet',
                       command:(e) => {
                           router.push({
-                            pathname: `/purchase/${props.userObj.uid}/buyHistory`,
+                            pathname: `/Purchase/${props.userObj.uid}/BuyHistory`,
                             query: { uid: props.userObj.uid },
                           },
-                          `/purchase/${props.userObj.uid}/buyHistory`,
+                          `/Purchase/${props.userObj.uid}/BuyHistory`,
                           );
                       },
                   },
@@ -78,10 +78,10 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-user',
                     command:(e) => {
                         router.push({
-                          pathname: `/user/${props.userObj.uid}/userProfile`,
+                          pathname: `/User/${props.userObj.uid}/UserProfile`,
                           query: { uid: props.userObj.uid },
                         },
-                        `/user/${props.userObj.uid}/userProfile`,
+                        `/User/${props.userObj.uid}/UserProfile`,
                         );
                     },
                 },
@@ -90,10 +90,10 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-comments',
                     command:(e) => {
                         router.push({
-                          pathname: `/user/${props.userObj.uid}/userCommunity`,
+                          pathname: `/User/${props.userObj.uid}/UserCommunity`,
                           query: { uid: props.userObj.uid },
                         },
-                        `/user/${props.userObj.uid}/userCommunity`,
+                        `/User/${props.userObj.uid}/UserCommunity`,
                         );
                     },
                 },
@@ -102,10 +102,10 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-folder',
                     command:(e) => {
                         router.push({
-                          pathname: `/user/${props.userObj.uid}/userContents`,
+                          pathname: `/User/${props.userObj.uid}/UserContents`,
                           query: { uid: props.userObj.uid },
                         },
-                        `/user/${props.userObj.uid}/userContents`,
+                        `/User/${props.userObj.uid}/UserContents`,
                         );
                     },
                 },
@@ -130,7 +130,7 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-chart-bar',
                     command:(e) => {
                         setVisibleLeft(false);
-                        router.push('/popular/popularList');
+                        router.push('/Popular/PopularList');
                     }
                 },
                 {
@@ -138,7 +138,7 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-plus',
                     command:(e) => {
                         setVisibleLeft(false);
-                        router.push('/new/newList');
+                        router.push('/New/NewList');
                     }                    
                 },
                 {
@@ -146,7 +146,7 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-users',
                     command:(e) => {
                         setVisibleLeft(false);
-                        router.push('/genre/genreList');
+                        router.push('/Genre/GenreList');
                     }                    
                 },
             ]
@@ -163,10 +163,10 @@ export const NavigationBar = (props) => {
                     command:(e) => {
                         setVisibleLeft(false);
                         router.push({
-                          pathname: `/user/${props.userObj.uid}/userHistory`,
+                          pathname: `/User/${props.userObj.uid}/UserHistory`,
                           query: { uid: props.userObj.uid },
                         },
-                        `/user/${props.userObj.uid}/userHistory`,
+                        `/User/${props.userObj.uid}/UserHistory`,
                         );
                     } 
                 },
@@ -176,10 +176,10 @@ export const NavigationBar = (props) => {
                     command:(e) => {
                         setVisibleLeft(false);
                         router.push({
-                          pathname: `/user/${props.userObj.uid}/userSubscribes`,
+                          pathname: `/User/${props.userObj.uid}/UserSubscribes`,
                           query: { uid: props.userObj.uid },
                         },
-                        `/user/${props.userObj.uid}/userSubscribes`,
+                        `/User/${props.userObj.uid}/UserSubscribes`,
                         );
                     }
                 }
@@ -194,10 +194,10 @@ export const NavigationBar = (props) => {
                     command:(e) => {
                         setVisibleLeft(false);
                         router.push({
-                          pathname: `/user/wODlzR5zAjZobEl2vpNkkyihHIj1/userProfile`,
+                          pathname: `/User/wODlzR5zAjZobEl2vpNkkyihHIj1/UserProfile`,
                           query: { uid: "wODlzR5zAjZobEl2vpNkkyihHIj1" },
                         },
-                        `/user/wODlzR5zAjZobEl2vpNkkyihHIj1/userProfile`,
+                        `/User/wODlzR5zAjZobEl2vpNkkyihHIj1/UserProfile`,
                         );
                     }
                 },
@@ -234,14 +234,14 @@ export const NavigationBar = (props) => {
     
     const rightContents = props.userObj ? (
         <div className="ml-0 mr-0">
-            <Menu model={userProfileItems} popup ref={userProfileItem} id="popup_menu" />
-            <Button className="p-button-rounded p-button-text" onClick={(event) => userProfileItem.current.toggle(event)} aria-controls="popup_menu" aria-haspopup>
+            <Menu model={UserProfileItems} popup ref={UserProfileItem} id="popup_menu" />
+            <Button className="p-button-rounded p-button-text" onClick={(event) => UserProfileItem.current.toggle(event)} aria-controls="popup_menu" aria-haspopup>
                 <img className="border-circle" width={35} alt={props.userObj.displayName} src={props.userObj.photoURL ? props.userObj.photoURL : '/img/anonymous-user-logo.png'} onError={(e) => e.target.src = '/img/anonymous-user-logo.png'} />
             </Button>
         </div>
     ) : (
         <div className="ml-0 mr-0">
-            <Link href="/auth/signIn">
+            <Link href="/Auth/SignIn">
                 <Button label="로그인" icon="pi pi-unlock" />
             </Link>
         </div>

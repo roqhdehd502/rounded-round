@@ -9,11 +9,11 @@ import { Button } from 'primereact/button';
 
 import { getSongs } from '../../../service';
 
-import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../commons/functional/filters';
+import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../commons/functional/Filters';
 
 
-userHistory.layout = "L1";
-export default function userHistory() {
+UserHistory.layout = "L1";
+export default function UserHistory() {
     const [customers, setCustomers] = useState(null);
     const [selectedCustomers, setSelectedCustomers] = useState(null);
     const [filters, setFilters] = useState({

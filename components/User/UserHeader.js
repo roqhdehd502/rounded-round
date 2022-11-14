@@ -7,8 +7,8 @@ import { useRouter } from 'next/router';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 
-import * as userInfoActions from '../../store/modules/userInfo';
-import { getUserInfoObjThunk } from '../../store/modules/userInfo';
+import * as UserInfoActions from '../../store/modules/UserInfo';
+import { getUserInfoObjThunk } from '../../store/modules/UserInfo';
 
 
 export default function UserHeader(props) {
@@ -16,8 +16,8 @@ export default function UserHeader(props) {
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const userObj = useSelector(({ userInfo }) => userInfo.userObj);
-    const userInfoObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
+    const userObj = useSelector(({ UserInfo }) => UserInfo.userObj);
+    const userInfoObj = useSelector(({ UserInfo }) => UserInfo.userInfoObj);
     
     useEffect(() => {
         if (!router.isReady) return; 
@@ -25,9 +25,9 @@ export default function UserHeader(props) {
     }, [router.isReady]);
 
     const onEmailVerificationSend = useCallback(() => {
-        dispatch(userInfoActions.sendUserEmailVerification());
+        dispatch(UserInfoActions.sendUserEmailVerification());
         alert('가입하신 회원님의 이메일로 계정 인증 요청 메일을 전송하였습니다.');
-        dispatch(userInfoActions.userLogout());
+        dispatch(UserInfoActions.logout());
         router.replace('/');
     }, [dispatch]);
 
@@ -57,7 +57,7 @@ export default function UserHeader(props) {
                                     )}
                                     <Link 
                                       href={{
-                                        pathname: `/user/${userObj.uid}/userProfileUpdate`,
+                                        pathname: `/User/${userObj.uid}/UserProfileUpdate`,
                                         query: { 
                                           uid: userInfoObj.uid,
                                           displayName: userInfoObj.displayName,
@@ -67,7 +67,7 @@ export default function UserHeader(props) {
                                           link: JSON.stringify(userInfoObj.link),
                                         }
                                       }}
-                                      as={`/user/${userObj.uid}/userProfileUpdate`}
+                                      as={`/User/${userObj.uid}/UserProfileUpdate`}
                                     >
                                         <Button className="ml-4 w-8rem p-button-rounded p-button-warning" icon="pi pi-pencil" label="수정하기" />
                                     </Link>
@@ -97,28 +97,28 @@ export default function UserHeader(props) {
                         <div className="flex align-items-center">
                             <Link 
                               href={{
-                                pathname: `/user/${userInfoObj.uid}/userContents`,
+                                pathname: `/User/${userInfoObj.uid}/UserContents`,
                                 query: { ...userInfoObj },
                               }}
-                              as={`/user/${userInfoObj.uid}/userContents`}
+                              as={`/User/${userInfoObj.uid}/UserContents`}
                             >
                                 <Button className={`w-8rem p-button-rounded${activeUserIndex === 0 ? '' : ' p-button-outlined'}`} icon="pi pi-folder" label="컨텐츠" />
                             </Link>
                             <Link 
                               href={{
-                                pathname: `/user/${userInfoObj.uid}/userCommunity`,
+                                pathname: `/User/${userInfoObj.uid}/UserCommunity`,
                                 query: { ...userInfoObj },
                               }}
-                              as={`/user/${userInfoObj.uid}/userCommunity`}
+                              as={`/User/${userInfoObj.uid}/UserCommunity`}
                             >
                                 <Button className={`ml-4 mr-4 w-8rem p-button-rounded${activeUserIndex === 1 ? '' : ' p-button-outlined'}`} icon="pi pi-comments" label="커뮤니티" />
                             </Link>
                             <Link 
                               href={{
-                                pathname: `/user/${userInfoObj.uid}/userProfile`,
+                                pathname: `/User/${userInfoObj.uid}/UserProfile`,
                                 query: { ...userInfoObj },
                               }}
-                              as={`/user/${userInfoObj.uid}/userProfile`}
+                              as={`/User/${userInfoObj.uid}/UserProfile`}
                             >
                                 <Button className={`w-8rem p-button-rounded${activeUserIndex === 2 ? '' : ' p-button-outlined'}`} icon="pi pi-user" label="정보" />
                             </Link>

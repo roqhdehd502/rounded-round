@@ -7,17 +7,17 @@ import { Button } from 'primereact/button';
 
 import UserHeader from '../../../components/User/UserHeader';
 
-import { formatUnitEachThousand, timeFormatting } from '../../../commons/functional/filters'
+import { formatUnitEachThousand, timeFormatting } from '../../../commons/functional/Filters'
 
-import { getUserInfoObjThunk } from '../../../store/modules/userInfo';
+import { getUserInfoObjThunk } from '../../../store/modules/UserInfo';
 
 
-userProfile.layout = "L1";
-export default function userProfile() {
+UserProfile.layout = "L1";
+export default function UserProfile() {
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const userInfoObj = useSelector(({ userInfo }) => userInfo.userInfoObj);
+    const userInfoObj = useSelector(({ UserInfo }) => UserInfo.userInfoObj);
 
     useEffect(() => {
         if (!router.isReady) return; 

@@ -1,8 +1,8 @@
-import { albumData } from '../data/albumData';
-import { songData } from '../data/songData';
-import { cartData } from '../data/cartData';
-import { contentsData } from '../data/contentsData';
-import { communityData } from '../data/communityData';
+import { albumData } from '../data/AlbumData';
+import { songData } from '../data/SongData';
+import { cartData } from '../data/CartData';
+import { contentsData } from '../data/ContentsData';
+import { communityData } from '../data/CommunityData';
 
 
 export const getAlbums = () => {

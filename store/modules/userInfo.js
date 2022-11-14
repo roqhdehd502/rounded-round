@@ -41,7 +41,7 @@ const initialState = {
 };
 
 export const checkDuplicatedEmailThunk = createAsyncThunk(
-    "userInfo/checkDuplicatedEmailThunk",
+    "UserInfo/checkDuplicatedEmailThunk",
     async (confirmEmailAddress, thunkAPI) => {
         let users = [];
         let q = query(
@@ -63,7 +63,7 @@ export const checkDuplicatedEmailThunk = createAsyncThunk(
 );
 
 export const createUserObjThunk = createAsyncThunk(
-    "userInfo/createUserObjThunk",
+    "UserInfo/createUserObjThunk",
     async (userObj, thunkAPI) => {
         try {
             await setDoc(doc(firestore, "userInfo", userObj.uid), userObj)
@@ -76,7 +76,7 @@ export const createUserObjThunk = createAsyncThunk(
 );
 
 export const getUserInfoObjThunk = createAsyncThunk(
-    "userInfo/getUserInfoObjThunk",
+    "UserInfo/getUserInfoObjThunk",
     async (uid, thunkAPI) => {
         try {
             const docRef = doc(firestore, "userInfo", uid);
@@ -93,7 +93,7 @@ export const getUserInfoObjThunk = createAsyncThunk(
 );
 
 export const patchUserInfoObjThunk = createAsyncThunk(
-    "userInfo/patchUserInfoObjThunk",
+    "UserInfo/patchUserInfoObjThunk",
     async (payload, thunkAPI) => {
         const docRef = doc(firestore, "userInfo", payload.uid);
         console.log("payload.userPhotoURL", payload.userPhotoURL);
@@ -112,8 +112,8 @@ export const patchUserInfoObjThunk = createAsyncThunk(
 );
 
 
-const userInfoSlice = createSlice({
-    name: 'userInfo',
+const UserInfoSlice = createSlice({
+    name: 'UserInfo',
 
     initialState,
 
@@ -122,24 +122,24 @@ const userInfoSlice = createSlice({
             state.userObj = action.payload ? action.payload : null;
             state.loginAccess = state.userObj ? true : false;
         },
-        userLogin(state, action) {
+        emailLogin(state, action) {
             action.userObj = action.payload;
             state.loginAccess = true;
             console.log("LOGIN SUCCESS.");
         },
-        userGoogleLogin(state, action) {
+        googleLogin(state, action) {
             action.userObj = action.payload;
             state.loginAccess = true;
             console.log("GOOGLE LOGIN SUCCESS.");
         },
-        userLogout(state) {
+        logout(state) {
             signOut(getAuth())
               .then(() => { console.log("LOGOUT SUCCESS."); })
               .catch((error) => { console.log("LOGOUT FAILED!", error); });
             state.userObj = null;
             state.loginAccess = false;   
         },
-        userSignUp(state, action) {
+        signUp(state, action) {
             createUserWithEmailAndPassword(getAuth(), action.payload.userEmail, action.payload.userPassword)
               .then(() => { console.log("SIGN UP SUCCESS.") })
               .catch((error) => { console.log("SIGN UP FAILED!", error) });
@@ -230,14 +230,14 @@ const userInfoSlice = createSlice({
 
 export const { 
     getUserObj,
-    userLogin,
-    userGoogleLogin,
-    userLogout,
-    userSignUp,
+    emailLogin,
+    googleLogin,
+    logout,
+    signUp,
     patchUserObj,
     patchUserPassword,
     sendUserEmailVerification,
     removeUserInfo,
-} = userInfoSlice.actions;
+} = UserInfoSlice.actions;
 
-export default userInfoSlice.reducer;
+export default UserInfoSlice.reducer;

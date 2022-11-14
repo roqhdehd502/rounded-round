@@ -10,17 +10,17 @@ import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 
-import * as userInfoActions from '../../store/modules/userInfo';
-import { checkDuplicatedEmailThunk, createUserObjThunk } from '../../store/modules/userInfo';
+import * as UserInfoActions from '../../store/modules/UserInfo';
+import { checkDuplicatedEmailThunk, createUserObjThunk } from '../../store/modules/UserInfo';
 
 
-signIn.layout = "L2";
-export default function signIn() {
+SignIn.layout = "L2";
+export default function SignIn() {
     const dispatch = useDispatch();
     const router = useRouter();
     const auth = getAuth();
 
-    const isDuplicatedUserEmailResult = useSelector(({ userInfo }) => userInfo.loading);
+    const isDuplicatedUserEmailResult = useSelector(({ UserInfo }) => UserInfo.loading);
 
     const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPassword] = useState('');
@@ -39,7 +39,7 @@ export default function signIn() {
         signInWithEmailAndPassword(auth, payload.userEmail, payload.userPassword)
           .then((result) => {
               const payload = result.user;
-              dispatch(userInfoActions.userLogin(payload));
+              dispatch(UserInfoActions.emailLogin(payload));
               router.replace('/');
           })
           .catch((error) => { 
@@ -53,7 +53,7 @@ export default function signIn() {
         signInWithPopup(auth, provider)
           .then((payload) => { 
               setUserObj(payload.user);
-              dispatch(userInfoActions.userGoogleLogin(payload.user));
+              dispatch(UserInfoActions.googleLogin(payload.user));
               dispatch(checkDuplicatedEmailThunk(payload.user.uid));
           })
           .catch((error) => { 
@@ -110,12 +110,12 @@ export default function signIn() {
                         <Button label="구글 로그인" icon="pi pi-google" className="pr-5" onClick={() => googleLogin()} />
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Link href="/auth/signUp">
+                        <Link href="/Auth/SignUp">
                             <Button label="회원가입" icon="pi pi-user-plus" className="p-button-info pr-5" />
                         </Link>
                     </div>
                     <div className="field p-fluid">
-                        <Link href="/auth/findPassword">
+                        <Link href="/Auth/FindPassword">
                             <Button label="비밀번호 찾기" icon="pi pi-search" className="p-button-info pr-5" />
                         </Link>
                     </div>
