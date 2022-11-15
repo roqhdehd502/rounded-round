@@ -57,7 +57,7 @@ export default function UserHeader(props) {
                                     )}
                                     <Link 
                                       href={{
-                                        pathname: `/User/${userObj.uid}/UserProfileUpdate`,
+                                        pathname: `/User/${userObj.uid}/UserProfile/Update`,
                                         query: { 
                                           uid: userInfoObj.uid,
                                           displayName: userInfoObj.displayName,
@@ -67,7 +67,7 @@ export default function UserHeader(props) {
                                           link: JSON.stringify(userInfoObj.link),
                                         }
                                       }}
-                                      as={`/User/${userObj.uid}/UserProfileUpdate`}
+                                      as={`/User/${userObj.uid}/UserProfile/Update`}
                                     >
                                         <Button className="ml-4 w-8rem p-button-rounded p-button-warning" icon="pi pi-pencil" label="수정하기" />
                                     </Link>

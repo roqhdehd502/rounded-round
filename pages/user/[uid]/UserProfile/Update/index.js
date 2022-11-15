@@ -11,58 +11,33 @@ import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Divider } from 'primereact/divider';
 
-import { convertNewlineText } from '../../../commons/functional/Filters';
+import { convertNewlineText } from '../../../../../commons/functional/Filters';
 
-import * as UserInfoActions from '../../../store/modules/UserInfo';
-import { getUserInfoObjThunk, patchUserInfoObjThunk } from '../../../store/modules/UserInfo';
+import * as UserInfoActions from '../../../../../store/modules/UserInfo';
+import { getUserInfoObjThunk, patchUserInfoObjThunk } from '../../../../../store/modules/UserInfo';
 
 
 UserProfileUpdate.layout = "L1";
-
-export const getServerSideProps = async ({ query: { uid } }) => {
-    return {
-        props: {
-            uid,
-            // displayName,
-            // photoURL,
-            // bio,
-            // infoDetail,
-            // link: link ? JSON.parse(link) : '',
-        },
-    };
-}
-
-export default function UserProfileUpdate({ uid }) {
+export default function UserProfileUpdate() {
     const dispatch = useDispatch();
     const router = useRouter();
 
     const userObj = useSelector(({ UserInfo }) => UserInfo.userObj);
     const userInfoObj = useSelector(({ UserInfo }) => UserInfo.userInfoObj);
 
-    const [userDisplayName, setUserDisplayName] = useState(userObj.displayName);
-    const [userBio, setUserBio] = useState(userInfoObj.bio);
-    const [userInfoDetail, setUserInfoDetail] = useState(convertNewlineText(userInfoObj.infoDetail));
-    const [userLink, setUserLink] = useState(userInfoObj.link);
+    const [userDisplayName, setUserDisplayName] = useState('');
+    const [userBio, setUserBio] = useState('');
+    const [userInfoDetail, setUserInfoDetail] = useState('');
+    const [userLink, setUserLink] = useState(null);
 
     useEffect(() => {
-        if (!router.isReady) return; 
-        dispatch(getUserInfoObjThunk(uid));
-    }, [router.isReady]);
+        dispatch(getUserInfoObjThunk(router.query.uid));
 
-    const addUserLink = () => {
-        return (
-            <>
-                {addLink.map((item, index) => {
-                    return (
-                      <div key={index} className="p-inputgroup">
-                          <InputText value={item.linkName} onChange={(e) => setLink(e.target.value)} />
-                          <InputText value={item.linkAddress} onChange={(e) => setLink(e.target.value)} />
-                      </div>
-                    )
-                })}
-            </>
-        );
-    }
+        setUserDisplayName(userObj ? userObj.displayName : '');
+        setUserBio(userInfoObj ? userInfoObj.bio : '');
+        setUserInfoDetail(userInfoObj ? convertNewlineText(userInfoObj.infoDetail) : '');
+        setUserLink(userInfoObj ? userInfoObj.link : null);
+    }, [router.query, userObj ? userObj.uid : null, userInfoObj ? userInfoObj.uid : null]);
 
     const updateUser = useCallback(async (userInfo) => {
         try {
@@ -78,7 +53,7 @@ export default function UserProfileUpdate({ uid }) {
                 let userPhotoURL = null;
                 const photoFile = document.querySelector('#photo-file').files[0];
                 const storage = firebaseStorage.getStorage();
-                const storageRef = firebaseStorage.ref(storage, `userimages/${uid}`);
+                const storageRef = firebaseStorage.ref(storage, `userimages/${router.query.uid}`);
 
                 if (photoFile) {
                     firebaseStorage.uploadBytes(storageRef, photoFile)
@@ -88,18 +63,18 @@ export default function UserProfileUpdate({ uid }) {
                             .then((url) => {
                                 userPhotoURL = url;
                                 dispatch(UserInfoActions.patchUserObj({updateUserObj, userPhotoURL}));
-                                dispatch(patchUserInfoObjThunk({uid, updateUserObj, userPhotoURL} ));
+                                dispatch(patchUserInfoObjThunk({uid: router.query.uid, updateUserObj, userPhotoURL} ));
                             });
                       }).catch((error) => {
                           console.log(error);
                       });
                 } else {
-                    userPhotoURL = userObj.photoURL;
+                    userPhotoURL = userObj ? userObj.photoURL : '';
                     dispatch(UserInfoActions.patchUserObj({updateUserObj, userPhotoURL}));
-                    dispatch(patchUserInfoObjThunk({uid, updateUserObj, userPhotoURL} ));
+                    dispatch(patchUserInfoObjThunk({uid: router.query.uid, updateUserObj, userPhotoURL} ));
                 }
 
-                router.replace(`/User/${uid}/UserProfile`);
+                router.replace(`/User/${router.query.uid}/UserProfile`);
             }
         }   catch(error) {
             console.log(error);
@@ -129,7 +104,7 @@ export default function UserProfileUpdate({ uid }) {
 
     return (
         <>
-            {userInfoObj ? (
+            {userObj ? (
                 <>
                     <div className="flex align-content-center align-items-center justify-content-center form-vertical-align-center">
                         <div className="card surface-0 p-5 border-round-2xl w-8">
@@ -166,8 +141,8 @@ export default function UserProfileUpdate({ uid }) {
                             <div className="field p-fluid mt-6">
                                 <label>링크</label>
                                 <div className="p-inputgroup">
-                                    <InputText value={userLink.linkName} onChange={(e) => setUserLink(e.target.value)} />
-                                    <InputText value={userLink.linkAddress} onChange={(e) => setUserLink(e.target.value)} />
+                                    <InputText value={userLink ? userLink.linkName : ''} onChange={(e) => setUserLink(e.target.value)} />
+                                    <InputText value={userLink ? userLink.linkAddress : ''} onChange={(e) => setUserLink(e.target.value)} />
                                 </div>
                             </div>
                             <Divider />

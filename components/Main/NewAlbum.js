@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+//import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+// import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
 
@@ -7,7 +8,7 @@ import { getAlbums } from '../../service';
 
 import { CarouselCommon } from '../../commons/primereact/CarouselCommon';
 
-//import * as albumActions from '../../store/modules/Album';
+//import * as AlbumActions from '../../store/modules/Album';
 
 
 export const NewAlbum = () => {
@@ -17,7 +18,7 @@ export const NewAlbum = () => {
     const albums = getAlbums();
 
     useEffect(() => {
-        //dispatch(albumActions.getAlbums());
+        //dispatch(AlbumActions.getAlbums());
     }, []);
 
     const rightNewAlbumsTemplate = (albumObj) => {

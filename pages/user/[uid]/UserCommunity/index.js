@@ -9,12 +9,12 @@ import { Column } from 'primereact/column';
 import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 
-import UserHeader from '../../../components/User/UserHeader';
+import UserHeader from '../../../../components/User/UserHeader';
 
-import { timeCounter } from '../../../commons/functional/Filters'
+import { timeCounter } from '../../../../commons/functional/Filters'
 
-import { getUserInfoObjThunk } from '../../../store/modules/UserInfo';
-import { getUserCommunitiesThunk } from '../../../store/modules/UserCommunity';
+import { getUserInfoObjThunk } from '../../../../store/modules/UserInfo';
+import { getUserCommunitiesThunk } from '../../../../store/modules/UserCommunity';
 
 
 UserCommunity.layout = "L1";
@@ -30,11 +30,10 @@ export default function UserCommunity() {
     const [loading, setLoading] = useState(true);  
 
     useEffect(() => {
-        if (!router.isReady) return; 
         dispatch(getUserInfoObjThunk(router.query.uid));
         dispatch(getUserCommunitiesThunk(router.query.uid));
         setLoading(false);
-    }, [router.isReady]);
+    }, [router.query, userObj ? userObj.uid : null, , userInfoObj ? userInfoObj.uid : null]);
 
     const contentBodyTemplate = (rowData) => {
         return (
@@ -45,12 +44,13 @@ export default function UserCommunity() {
                             <div className="mr-3">
                                 <Link
                                   href={{
-                                    pathname: `/User/${rowData.uid}/UserCommunityUpdate`,
+                                    pathname: `/User/${rowData.uid}/UserCommunity/Update/${rowData.docId}`,
                                     query: {
-                                      ...rowData
+                                      uid: rowData.uid,
+                                      docId: rowData.docId,
                                     }
                                   }}
-                                  as={`/User/${rowData.uid}/UserCommunityUpdate`}
+                                  as={`/User/${rowData.uid}/UserCommunity/Update/${rowData.docId}`}
                                 >
                                     <Button className="p-button-rounded p-button-info" icon="pi pi-pencil" />
                                 </Link>
@@ -98,10 +98,10 @@ export default function UserCommunity() {
                                 <div className="flex justify-content-end">
                                     <Link 
                                       href={{
-                                        pathname: `/User/${userObj.uid}/UserCommunityCreate`,
+                                        pathname: `/User/${userObj.uid}/UserCommunity/Create`,
                                         query: { uid: userObj.uid },
                                       }}
-                                      as={`/User/${userObj.uid}/UserCommunityCreate`}
+                                      as={`/User/${userObj.uid}/UserCommunity/Create`}
                                     >
                                         <Button className="ml-4 w-9rem p-button-rounded p-button-info" icon="pi pi-plus" label="새 커뮤니티" />
                                     </Link>

@@ -7,13 +7,13 @@ import { useRouter } from 'next/router';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Button } from 'primereact/button';
 
-import UserHeader from '../../../components/User/UserHeader';
+import UserHeader from '../../../../components/User/UserHeader';
 
-import { getContents } from '../../../service';
+import { getContents } from '../../../../service';
 
-import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../commons/functional/Filters';
+import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../../commons/functional/Filters';
 
-import { getUserInfoObjThunk } from '../../../store/modules/UserInfo';
+import { getUserInfoObjThunk } from '../../../../store/modules/UserInfo';
 
 
 UserContents.layout = "L1";
@@ -29,14 +29,13 @@ export default function UserContents() {
     const [loading, setLoading] = useState(true);     
 
     useEffect(() => {
-        if (!router.isReady) return; 
         dispatch(getUserInfoObjThunk(router.query.uid));
         const data = getContents();
         setCustomers(getCustomers(data).filter((d) => {
             return d.uid === router.query.uid;
         })); 
         setLoading(false);
-    }, [router.isReady]);
+    }, [router.query, userObj ? userObj.uid : null, , userInfoObj ? userInfoObj.uid : null]);
 
     const getCustomers = (data) => {
         return [...data || []].map(d => {
@@ -120,7 +119,7 @@ export default function UserContents() {
                         <div className="card surface-0 p-5 border-round-2xl">
                             {userObj && userObj.uid === userInfoObj.uid ? (
                                 <div className="flex justify-content-end">
-                                    <Link 
+                                    {/* <Link 
                                       href={{
                                         pathname: `/User/${userObj.uid}/UserCommunityCreate`,
                                         query: { uid: userObj.uid },
@@ -128,7 +127,8 @@ export default function UserContents() {
                                       as={`/User/${userObj.uid}/UserCommunityCreate`}
                                     >
                                         <Button className="ml-4 w-9rem p-button-rounded p-button-info" icon="pi pi-plus" label="새 컨텐츠" />
-                                    </Link>
+                                    </Link> */}
+                                    <Button className="ml-4 w-9rem p-button-rounded p-button-info" icon="pi pi-plus" label="새 컨텐츠" />
                                 </div>
                             ) : (
                                 <div></div>

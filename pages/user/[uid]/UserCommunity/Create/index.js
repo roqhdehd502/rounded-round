@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import Link from "next/Link";
 import { useRouter } from 'next/router';
@@ -12,7 +12,7 @@ import { Divider } from 'primereact/divider';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { createUserCommunityThunk } from '../../../store/modules/UserCommunity';
+import { createUserCommunityThunk } from '../../../../../store/modules/UserCommunity';
 
 
 UserCommunityCreate.layout = "L1";

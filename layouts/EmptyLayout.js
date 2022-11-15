@@ -15,7 +15,7 @@ export default function EmptyLayout({ children }) {
 
     const [loading, setLoading] = useState(true);
 
-    const userObj = useSelector(({ UserInfo }) => userInfo.userObj);
+    const userObj = useSelector(({ UserInfo }) => UserInfo.userObj);
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {

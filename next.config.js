@@ -2,6 +2,9 @@
 const nextConfig = {
     reactStrictMode: false,
     swcMinify: true,
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
     // domains: [
     //   'https://img.hiphople.com',
     // ]

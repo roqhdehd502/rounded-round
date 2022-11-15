@@ -17,14 +17,14 @@ import {
     getDocs,
     query,
     where,
-    addDoc,
+    //addDoc,
     setDoc,
     updateDoc, 
 } from "firebase/firestore";
 
 import { firestore } from '../../firebaseConfiguration';
 
-import * as firebaseStorage from "firebase/storage";
+//import * as firebaseStorage from "firebase/storage";
 
 
 const initialState = { 
@@ -96,7 +96,6 @@ export const patchUserInfoObjThunk = createAsyncThunk(
     "UserInfo/patchUserInfoObjThunk",
     async (payload, thunkAPI) => {
         const docRef = doc(firestore, "userInfo", payload.uid);
-        console.log("payload.userPhotoURL", payload.userPhotoURL);
         try {
             await updateDoc(docRef, {
                 displayName: payload.updateUserObj.displayName,
@@ -204,6 +203,7 @@ const UserInfoSlice = createSlice({
             state.loading = false;
             state.error = action.error;
         },
+
         [getUserInfoObjThunk.pending]: (state, action) => {
             state.loading = true;
         },
@@ -215,11 +215,14 @@ const UserInfoSlice = createSlice({
             state.loading = false;
             state.error = action.error;
         },
+
         [patchUserInfoObjThunk.pending]: (state, action) => {
             state.loading = true;
         },
         [patchUserInfoObjThunk.fulfilled]: (state, action) => {
             state.loading = false;
+            state.userObj = null;
+            state.userInfoObj = null;
         },
         [patchUserInfoObjThunk.rejected]: (state, action) => {
             state.loading = false;

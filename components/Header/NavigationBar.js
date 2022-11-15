@@ -78,7 +78,7 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-user',
                     command:(e) => {
                         router.push({
-                          pathname: `/User/${props.userObj.uid}/UserProfile`,
+                          pathname: `/User${props.userObj.uid}/UserProfile`,
                           query: { uid: props.userObj.uid },
                         },
                         `/User/${props.userObj.uid}/UserProfile`,

@@ -7,7 +7,7 @@ import * as CounterActions from '../../store/modules/Counter';
 Counter.layout = "L1";
 export default function Counter() {
     const dispatch = useDispatch();
-    const value = useSelector(({ counter }) => counter.value);
+    const value = useSelector(({ Counter }) => Counter.value);
 
     const plus = useCallback(( value ) => {
         dispatch(CounterActions.increment());

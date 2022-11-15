@@ -5,11 +5,11 @@ import { useRouter } from 'next/router';
 
 import { Button } from 'primereact/button';
 
-import UserHeader from '../../../components/User/UserHeader';
+import UserHeader from '../../../../components/User/UserHeader';
 
-import { formatUnitEachThousand, timeFormatting } from '../../../commons/functional/Filters'
+import { formatUnitEachThousand, timeFormatting } from '../../../../commons/functional/Filters'
 
-import { getUserInfoObjThunk } from '../../../store/modules/UserInfo';
+import { getUserInfoObjThunk } from '../../../../store/modules/UserInfo';
 
 
 UserProfile.layout = "L1";
@@ -20,9 +20,8 @@ export default function UserProfile() {
     const userInfoObj = useSelector(({ UserInfo }) => UserInfo.userInfoObj);
 
     useEffect(() => {
-        if (!router.isReady) return; 
         dispatch(getUserInfoObjThunk(router.query.uid));
-    }, [router.isReady]);
+    }, [router.query, userInfoObj ? userInfoObj.uid : null]);
 
     return (
         <>

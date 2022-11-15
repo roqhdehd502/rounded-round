@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
 
-import { Dropdown } from 'primereact/dropdown';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 
-import { getSongs } from '../../../service';
+import { getSongs } from '../../../../service';
 
-import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../commons/functional/Filters';
+import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../../commons/functional/Filters';
 
 
 UserHistory.layout = "L1";

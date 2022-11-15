@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 
 import { ellipsisText, formatUnitEachThousand, timeFormatting } from '../../../../commons/functional/Filters';

@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 
-import { getContents } from '../../../service';
+import { getContents } from '../../../../service';
 
-import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../commons/functional/Filters';
+import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../../commons/functional/Filters';
 
 
 UserSubscribes.layout = "L1";
