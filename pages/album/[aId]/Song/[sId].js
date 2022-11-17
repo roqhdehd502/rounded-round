@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import Link from "next/Link";
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -45,7 +46,9 @@ export default function SongDetail() {
     }
 
     const thumbnailBodyTemplate = (rowData) => {
-        return <img alt={rowData.albumName} src={rowData.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'}  width={50} height={50} />;
+        return (
+            <Image alt={rowData.albumName} src={rowData.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} width={50} height={50} quality={50} />
+        ); 
     }
 
     const songInformationBodyTemplate = (rowData) => {
@@ -103,7 +106,7 @@ export default function SongDetail() {
                     <h2 className="mb-3">곡 정보</h2>
                     <div className="grid">
                         <div className="col-4 md:col-4 sm:col-12">
-                            <img className="w-auto max-w-20rem" src="https://img.hiphople.com/files/attach/images/11972418/421/045/023/3902e6934b1f1b284bad5ff406442beb.png" />
+                            <Image alt={songObj.albumName} src={songObj.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} width={320} height={320} quality={100} />
                         </div>
                         <div className="col-8 md:col-8 sm:col-12">
                             <div className="grid">

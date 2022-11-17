@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -73,7 +74,7 @@ export default function UserCommunity() {
                         </div>                    
                         <div className="field p-fluid w-full">
                             {rowData.thumbnail ? (
-                                <img className="border-round-2xl w-full" src={rowData.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} />
+                                <Image className="border-round-2xl" src={rowData.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} width={500} height={500} quality={100} />
                             ) : (
                                 <div className="h-16rem"></div>
                             )}

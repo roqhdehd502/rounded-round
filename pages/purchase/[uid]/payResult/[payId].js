@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -43,7 +44,9 @@ export default function PayResultInfo() {
     }
 
     const thumbnailBodyTemplate = (rowData) => {
-        return <img alt={rowData.albumName} src={rowData.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} width={50} height={50} />;
+        return (
+            <Image alt={rowData.albumName} src={rowData.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} width={50} height={50} quality={50} />
+        );
     }
 
     const songInformationBodyTemplate = (rowData) => {

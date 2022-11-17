@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import Link from "next/Link";
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -101,7 +102,9 @@ export default function AlbumDetail() {
     }
 
     const thumbnailBodyTemplate = (rowData) => {
-        return <img alt={rowData.albumName} src={rowData.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'}  width={50} height={50} />;
+        return (
+            <Image alt={rowData.albumName} src={rowData.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} width={50} height={50} quality={50} />
+        ); 
     }
 
     const songInformationBodyTemplate = (rowData) => {
@@ -168,7 +171,7 @@ export default function AlbumDetail() {
                     <h2 className="mb-3">앨범 정보</h2>
                     <div className="grid">
                         <div className="col-4 md:col-4 sm:col-12">
-                            <img className="w-auto max-w-20rem" src={albumObj.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} />
+                            <Image alt={albumObj.albumName} src={albumObj.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} width={320} height={320} quality={100} />
                         </div>
                         <div className="col-8 md:col-8 sm:col-12">
                             <div className="grid">

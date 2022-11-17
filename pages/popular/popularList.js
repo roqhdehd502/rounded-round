@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+import Image from 'next/image';
+
 import { Dropdown } from 'primereact/dropdown';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
@@ -91,7 +93,9 @@ export default function PopularList() {
     }
 
     const thumbnailBodyTemplate = (rowData) => {
-        return <img alt={rowData.albumName} src={rowData.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} width={50} height={50} />;
+        return (
+            <Image alt={rowData.albumName} src={rowData.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} width={50} height={50} quality={50} />
+        );
     }
 
     const songInformationBodyTemplate = (rowData) => {

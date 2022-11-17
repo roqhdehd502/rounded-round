@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
@@ -39,8 +40,8 @@ export default function UserHeader(props) {
             <div className="card surface-0 p-5 border-round-2xl">
                 <div className="flex align-content-center align-items-center justify-content-center">
                     <div className="card w-30rem">
-                        <div className="field p-fluid">
-                            <img className="border-circle w-15rem h-15rem image-align-center" alt={userInfoObj.displayName} src={userInfoObj.photoURL ? userInfoObj.photoURL : `${prefix}/img/anonymous-user-logo.png`} onError={(e) => e.target.src = `${prefix}/img/anonymous-user-logo.png`} />
+                        <div className="flex justify-content-center">
+                            <Image className="border-circle image-align-center" alt={userInfoObj.displayName} src={userInfoObj.photoURL ? userInfoObj.photoURL : `${prefix}/img/anonymous-user-logo.png`} onError={(e) => e.target.src = `${prefix}/img/anonymous-user-logo.png`} width={240} height={240} quality={100} />
                         </div>
                         <h1 className="flex justify-content-center">
                             {userInfoObj.displayName ? userInfoObj.displayName : userInfoObj.userEmail}

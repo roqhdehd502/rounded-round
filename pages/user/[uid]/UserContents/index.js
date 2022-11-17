@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Button } from 'primereact/button';
@@ -49,9 +50,11 @@ export default function UserContents() {
             <>
                 <div className="col-12">
                     <div className="product-list-item">
-                        <img src={`${data.thumbnail}`} onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} />
-                        <div className="product-list-detail">
-                            <div className="product-description">{ellipsisText(data.title, 27)}</div>
+                        <Image className="border-round-2xl" src={data.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} width={100} height={100} quality={75} />
+                        <div className="product-list-detail ml-3">
+                            <div className="product-description">
+                                <h4>{ellipsisText(data.title, 27)}</h4>
+                            </div>
                         </div>
                         <div className="product-list-action">
                             <span className="product-price">조회수 {formatUnitEachThousand(data.views)}회 • {timeCounter(data.uploadDate)}</span>
@@ -69,8 +72,10 @@ export default function UserContents() {
                 <div className="col-12 md:col-4">
                     <div className="product-grid-item card surface-0 border-round-2xl">
                         <div className="product-grid-item-content">
-                            <img src={`${data.thumbnail}`} onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} />
-                            <div className="product-description">{ellipsisText(data.title, 27)}</div>
+                            <Image className="border-round-2xl" src={data.thumbnail} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} width={300} height={300} quality={100} />
+                            <div className="product-description">
+                                <h4>{ellipsisText(data.title, 27)}</h4>
+                            </div>
                             <span className="product-price">조회수 {formatUnitEachThousand(data.views)}회 • {timeCounter(data.uploadDate)}</span>
                         </div>
                     </div>

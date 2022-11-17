@@ -1,8 +1,9 @@
-import { useState, useRef, useContext } from 'react';
+import { useState, useRef, forwardRef, useContext } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Link from "next/Link";
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 import { Sidebar } from 'primereact/sidebar';
 import { Menu } from 'primereact/menu';
@@ -26,8 +27,9 @@ export const NavigationBar = (props) => {
     const customSidebarIcons = (
         <>
             <Link href="/">
-                <img className="pt-2 mr-5 image-link" src={`${prefix}/img/logo.png`} width='180px' />
+                <Image className="pt-2 image-link" src={`${prefix}/img/logo.png`} width={180} height={40} quality={100} />
             </Link>
+            <span className="mr-5"></span>
         </>
     );
 
@@ -217,11 +219,12 @@ export const NavigationBar = (props) => {
                     <InputText placeholder="검색" />
                     <Button icon="pi pi-search" className="p-button-primary"/>
                 </div>  
-                <Menu className="border-0 w-auto"  model={sideMenuItems} />
+                <Menu className="border-0 w-auto" model={sideMenuItems} />
             </Sidebar>
             <Button className="mb-1" icon="pi pi-bars" onClick={() => setVisibleLeft(true)} />
+            <span className="ml-3"></span>
             <Link href="/">
-                <img className="ml-3 image-link" src={`${prefix}/img/logo.png`} width='180px' />
+                <Image className="image-link" src={`${prefix}/img/logo.png`} width={180} height={35} quality={100} />
             </Link>
         </div>
     );
@@ -239,7 +242,7 @@ export const NavigationBar = (props) => {
         <div className="ml-0 mr-0">
             <Menu model={UserProfileItems} popup ref={UserProfileItem} id="popup_menu" />
             <Button className="p-button-rounded p-button-text" onClick={(event) => UserProfileItem.current.toggle(event)} aria-controls="popup_menu" aria-haspopup>
-                <img className="border-circle" width={35} alt={props.userObj.displayName} src={props.userObj.photoURL ? props.userObj.photoURL : `${prefix}/img/anonymous-user-logo.png`} onError={(e) => e.target.src = `${prefix}/img/anonymous-user-logo.png`} />
+                <Image className="border-circle" alt={props.userObj.displayName} src={props.userObj.photoURL ? props.userObj.photoURL : `${prefix}/img/anonymous-user-logo.png`} onError={(e) => e.target.src = `${prefix}/img/anonymous-user-logo.png`} width={35} height={35} quality={75} />
             </Button>
         </div>
     ) : (
