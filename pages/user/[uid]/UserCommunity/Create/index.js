@@ -16,16 +16,7 @@ import { createUserCommunityThunk } from '../../../../../store/modules/UserCommu
 
 
 UserCommunityCreate.layout = "L1";
-
-export const getServerSideProps = async ({ query: { uid } }) => {
-    return {
-        props: {
-            uid,
-        },
-    };
-}
-
-export default function UserCommunityCreate({ uid }) {
+export default function UserCommunityCreate() {
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -39,12 +30,11 @@ export default function UserCommunityCreate({ uid }) {
         try {
             const thumbnailUuid = uuidv4();
             const createCommunityObj = {
-                uid,
+                uid: router.query.uid,
                 contents: communityContents.replaceAll("\n", "\\n"),
                 uploadDate: Date.now(),
                 thumbnailUuid,      
             }
-            console.log("createCommunityObj", createCommunityObj);
 
             const photoFile = document.querySelector('#photo-file').files[0];
             const storage = firebaseStorage.getStorage();

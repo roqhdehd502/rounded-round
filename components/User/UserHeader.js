@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -7,12 +7,15 @@ import { useRouter } from 'next/router';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 
+import ProjectContext from '../../context';
+
 import * as UserInfoActions from '../../store/modules/UserInfo';
 import { getUserInfoObjThunk } from '../../store/modules/UserInfo';
 
 
 export default function UserHeader(props) {
     const activeUserIndex = props.activeIndex;
+    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -37,7 +40,7 @@ export default function UserHeader(props) {
                 <div className="flex align-content-center align-items-center justify-content-center">
                     <div className="card w-30rem">
                         <div className="field p-fluid">
-                            <img className="border-circle w-15rem h-15rem image-align-center" alt={userInfoObj.displayName} src={userInfoObj.photoURL ? userInfoObj.photoURL : '/img/anonymous-user-logo.png'} onError={(e) => e.target.src = '/img/anonymous-user-logo.png'} />
+                            <img className="border-circle w-15rem h-15rem image-align-center" alt={userInfoObj.displayName} src={userInfoObj.photoURL ? userInfoObj.photoURL : `${prefix}/img/anonymous-user-logo.png`} onError={(e) => e.target.src = `${prefix}/img/anonymous-user-logo.png`} />
                         </div>
                         <h1 className="flex justify-content-center">
                             {userInfoObj.displayName ? userInfoObj.displayName : userInfoObj.userEmail}

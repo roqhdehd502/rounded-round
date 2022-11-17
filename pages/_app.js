@@ -7,7 +7,11 @@ import 'primeflex/primeflex.css';
 
 import { Provider } from 'react-redux';
 
-import Head from 'next/head'
+import Head from 'next/head';
+
+import { ProjectProvider } from '../context';
+
+import { prefix } from '../config';
 
 import { wrapper } from "../store";
 
@@ -33,17 +37,19 @@ function MyApp({ Component, ...rest }) {
 
     return (
         <>
-            <Provider store={store}>
-                <Head>
-                    <title>Rounded Round</title>
-                    {/* <meta name="referrer" content="no-referrer" /> */}
-                    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-                    <link rel="icon" href="/favicon.ico" />
-                </Head>
-                <Layout>
-                    <Component {...props.pageProps} />
-                </Layout>
-            </Provider>
+            <ProjectProvider value={{ prefix }}>
+                <Provider store={store}>
+                    <Head>
+                        <title>Rounded Round</title>
+                        {/* <meta name="referrer" content="no-referrer" /> */}
+                        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+                        <link rel="icon" href="/favicon.ico" />
+                    </Head>
+                    <Layout>
+                        <Component {...props.pageProps} />
+                    </Layout>
+                </Provider>
+            </ProjectProvider>
         </>
     ); 
 }

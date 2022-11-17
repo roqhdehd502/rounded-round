@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -9,10 +9,13 @@ import { Menu } from 'primereact/menu';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 
+import ProjectContext from '../../context';
+
 import * as UserInfoActions from '../../store/modules/UserInfo';
 
 
 export const NavigationBar = (props) => {
+    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
     
@@ -23,7 +26,7 @@ export const NavigationBar = (props) => {
     const customSidebarIcons = (
         <>
             <Link href="/">
-                <img className="pt-2 mr-5 image-link" src="/img/logo.png" width='180px' />
+                <img className="pt-2 mr-5 image-link" src={`${prefix}/img/logo.png`} width='180px' />
             </Link>
         </>
     );
@@ -218,7 +221,7 @@ export const NavigationBar = (props) => {
             </Sidebar>
             <Button className="mb-1" icon="pi pi-bars" onClick={() => setVisibleLeft(true)} />
             <Link href="/">
-                <img className="ml-3 image-link" src="/img/logo.png" width='180px' />
+                <img className="ml-3 image-link" src={`${prefix}/img/logo.png`} width='180px' />
             </Link>
         </div>
     );
@@ -236,7 +239,7 @@ export const NavigationBar = (props) => {
         <div className="ml-0 mr-0">
             <Menu model={UserProfileItems} popup ref={UserProfileItem} id="popup_menu" />
             <Button className="p-button-rounded p-button-text" onClick={(event) => UserProfileItem.current.toggle(event)} aria-controls="popup_menu" aria-haspopup>
-                <img className="border-circle" width={35} alt={props.userObj.displayName} src={props.userObj.photoURL ? props.userObj.photoURL : '/img/anonymous-user-logo.png'} onError={(e) => e.target.src = '/img/anonymous-user-logo.png'} />
+                <img className="border-circle" width={35} alt={props.userObj.displayName} src={props.userObj.photoURL ? props.userObj.photoURL : `${prefix}/img/anonymous-user-logo.png`} onError={(e) => e.target.src = `${prefix}/img/anonymous-user-logo.png`} />
             </Button>
         </div>
     ) : (
