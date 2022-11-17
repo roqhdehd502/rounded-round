@@ -147,7 +147,7 @@ export const NavigationBar = (props) => {
                     }                    
                 },
                 {
-                    label: '장르 음악',
+                    label: '장르별 음악',
                     icon: 'pi pi-users',
                     command:(e) => {
                         setVisibleLeft(false);

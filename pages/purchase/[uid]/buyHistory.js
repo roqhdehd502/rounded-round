@@ -55,13 +55,15 @@ export default function BuyHistory() {
             <div className="flex justify-content-between align-items-center">
                 <div>
                     <Button 
-                      className="mr-3 p-button-rounded p-button-success"
+                      icon="pi pi-download" 
                       label="재 다운로드" 
+                      className="mr-3 p-button-rounded p-button-outlined mr-3 p-button-success"
                       onClick={() => onReDownloadSongs()}
                     />
                     <Button 
-                      className="p-button-rounded p-button-danger"
+                      icon="pi pi-trash" 
                       label="기록 삭제" 
+                      className="p-button-rounded p-button-outlined mr-3 p-button-danger"
                       onClick={() => onRemoveBuyHistory()}
                     />  
                 </div>

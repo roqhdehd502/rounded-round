@@ -149,7 +149,7 @@ export default function SongDetail() {
                                 <div className="col-12">
                                     <h3><i className="mr-2 pi pi-heart"></i>{songObj.likes}</h3>
                                     <Button 
-                                      icon="pi pi-plus" 
+                                      icon="pi pi-shopping-cart" 
                                       label="담기" 
                                       className="p-button-rounded p-button-outlined mr-3"
                                     />

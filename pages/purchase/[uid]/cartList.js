@@ -111,13 +111,15 @@ export default function CartList() {
             <div className="flex justify-content-between align-items-center">
                 <div>
                     <Button 
-                      className="mr-3 p-button-rounded p-button-success"
-                      label="구입" 
+                      icon="pi pi-shopping-bag" 
+                      label="구입"
+                      className="mr-3 p-button-rounded p-button-outlined mr-3 p-button-success"
                       onClick={() => onBuySongs()}
                     />
                     <Button 
-                      className="p-button-rounded p-button-danger"
+                      icon="pi pi-trash" 
                       label="장바구니 삭제"
+                      className="p-button-rounded p-button-outlined mr-3 p-button-danger"
                       onClick={() => onRemoveCart()} 
                     />  
                 </div>

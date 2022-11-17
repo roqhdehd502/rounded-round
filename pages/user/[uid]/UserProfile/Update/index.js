@@ -25,6 +25,7 @@ export default function UserProfileUpdate() {
     const userObj = useSelector(({ UserInfo }) => UserInfo.userObj);
     const userInfoObj = useSelector(({ UserInfo }) => UserInfo.userInfoObj);
 
+    const [newAttachment, setNewAttachment] = useState("");
     const [userDisplayName, setUserDisplayName] = useState('');
     const [userBio, setUserBio] = useState('');
     const [userInfoDetail, setUserInfoDetail] = useState('');
@@ -38,6 +39,19 @@ export default function UserProfileUpdate() {
         setUserInfoDetail(userInfoObj ? convertNewlineText(userInfoObj.infoDetail) : '');
         setUserLink(userInfoObj ? userInfoObj.link : null);
     }, [router.query, userObj ? userObj.uid : null, userInfoObj ? userInfoObj.uid : null]);
+
+    const onNewFileChange = (event) => {
+        const { target: { files } } = event;
+        const theFile = files[0];
+        const reader = new FileReader();
+        reader.onloadend = (finishedEvent) => {
+            const { currentTarget: { result }} = finishedEvent;
+            setNewAttachment(result);
+        };
+        reader.readAsDataURL(theFile);
+    };
+
+    const onClearNewAttachment = () => setNewAttachment("");
 
     const updateUser = useCallback(async (userInfo) => {
         try {
@@ -112,12 +126,25 @@ export default function UserProfileUpdate() {
                             <div className="field p-fluid mt-6">
                                 <label>프로필 사진</label>
                                 <span className="p-inputgroup">
+                                    <label htmlFor="photo-file" className="file-label"><i className="pi pi-image pr-2"></i>이미지 파일</label>
                                     <input
                                       id="photo-file"
                                       type="file"
                                       accept="image/*"
-                                      placeholder="이미지를 업로드 하세요"
+                                      onChange={onNewFileChange}
+                                      style={{opacity: 0}}
                                     />
+                                    {newAttachment && (
+                                        <div className="file-newAttachment">
+                                            <img
+                                              src={newAttachment}
+                                              style={{backgroundImage: newAttachment}}
+                                            />
+                                            <span className="file-clear" onClick={onClearNewAttachment}>
+                                                <i className="pi pi-times" style={{'fontSize': '1.5em'}}></i>
+                                            </span>
+                                        </div>
+                                    )}
                                 </span>
                             </div>
                             <div className="field p-fluid mt-6">

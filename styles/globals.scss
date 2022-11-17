@@ -259,3 +259,43 @@
         display: none;
     }
 }
+
+
+/** custom-file-upload */
+.file {
+    &-newAttachment {
+        flex-direction: column;
+        text-align: center; 
+        justify-content: center;
+        vertical-align: baseline;
+    }
+
+    &-newAttachment img {
+        width: 60px; height: 60px;
+        border-radius: 30px;
+    }
+
+    &-label {
+        color: #7249BC;
+        cursor: pointer;
+        text-align: center; 
+        padding: 20px 20px 20px 20px;
+        height: 60px;
+        border: 1px solid #7249BC;
+        background-color: white;
+        border-radius: 5px;
+    }
+
+    &-label:active {
+        color: white;
+        border: 1px solid #7249BC;
+        background-color: #7249BC;
+    }
+
+    &-clear {
+        color: #7249BC;
+        cursor: pointer;
+        text-align: center;
+    }
+}
+

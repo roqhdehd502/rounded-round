@@ -71,13 +71,30 @@ export default function PopularList() {
 
     const renderHeader = () => {
         return (
-            <div className="flex justify-content-between align-items-center">
-                <Dropdown value={selectedTimeZone} options={timeZone} onChange={onTimeZoneChange} optionLabel="name" placeholder="시간대 별 선택" />
-                <span className="p-input-icon-left">
-                    <i className="pi pi-search" />
-                    <InputText className="w-20rem" value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="가수 / 곡 / 앨범 명 검색" />
-                </span>
-            </div>
+            <>
+                <div className="flex justify-content-between align-items-center mb-4">
+                    <Dropdown value={selectedTimeZone} options={timeZone} onChange={onTimeZoneChange} optionLabel="name" placeholder="시간대 별 선택" />
+                    <span className="p-input-icon-left">
+                        <i className="pi pi-search" />
+                        <InputText className="w-20rem" value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="가수 / 곡 / 앨범 명 검색" />
+                    </span>
+                </div>
+
+                <div className="flex justify-content-between align-items-center">
+                    <div>
+                        <Button 
+                          icon="pi pi-shopping-cart" 
+                          label="담기" 
+                          className="p-button-rounded p-button-outlined mr-3"
+                        />
+                        <Button 
+                          icon="pi pi-download" 
+                          label="다운" 
+                          className="p-button-rounded p-button-outlined"
+                        /> 
+                    </div>
+                </div>
+            </>
         )
     }
 
@@ -120,6 +137,14 @@ export default function PopularList() {
         );
     }
 
+    const detailBodyTemplate = (rowData) => {
+        return (
+            <>
+                <Button icon="pi pi-search" />
+            </>
+        );
+    }
+
     const listenBodyTemplate = (rowData) => {
         return (
             <>
@@ -130,14 +155,6 @@ export default function PopularList() {
                 />
             </>
         );
-    }
-
-    const putInBodyTemplate = () => {
-        return <Button icon="pi pi pi-plus"></Button>;
-    }
-
-    const downloadBodyTemplate = () => {
-        return <Button icon="pi pi-download"></Button>;
     }
 
     const header = renderHeader();
@@ -162,9 +179,8 @@ export default function PopularList() {
                         <Column field="songName" header="곡정보" body={songInformationBodyTemplate} headerStyle={{ minWidth: '14rem' }} bodyStyle={{ minWidth: '14rem' }} />
                         <Column field="albumName" header="앨범" body={albumNameBodyTemplate} headerStyle={{ minWidth: '14rem' }} bodyStyle={{ minWidth: '14rem' }} />
                         <Column field="likes" body={likesBodyTemplate} header="추천수" dataType="numeric" headerStyle={{ minWidth: '5rem'}} bodyStyle={{ minWidth: '5rem'}} />
+                        <Column header="상세" body={detailBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
                         <Column header="듣기" body={listenBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
-                        <Column header="담기" body={putInBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
-                        <Column header="다운" body={downloadBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
                     </DataTable>
                 </div>
             </div>

@@ -78,7 +78,7 @@ export default function AlbumDetail() {
             <div className="flex justify-content-between align-items-center">
                 <div>
                     <Button 
-                      icon="pi pi-plus" 
+                      icon="pi pi-shopping-cart" 
                       label="담기" 
                       className="p-button-rounded p-button-outlined mr-3"
                       onClick={() => onPutInCart()}
@@ -241,8 +241,6 @@ export default function AlbumDetail() {
                         <Column field="likes" body={likesBodyTemplate} header="추천수" dataType="numeric" headerStyle={{ minWidth: '5rem'}} bodyStyle={{ minWidth: '5rem'}} />
                         <Column header="상세" body={detailBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
                         <Column header="듣기" body={listenBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
-                        <Column header="담기" body={putInBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
-                        <Column header="다운" body={downloadBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
                     </DataTable>
                 </div>
             </div>
