@@ -5,15 +5,10 @@ const debug = process.env.NODE_ENV !== "production";
 const repository = "https://roqhdehd502.github.io/rounded-round";
 
 const nextConfig = {
-    reactStrictMode: false,
-    swcMinify: true,
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
-    assetPrefix: !debug ? `/${repository}/` : "",
     images: {
+        unoptimized: true,
         domains: [
-            'localhost:3000',
+            'localhost',
             'roqhdehd502.github.io/rounded-round',
             'firebasestorage.googleapis.com',
             'img.hiphople.com',
@@ -21,6 +16,12 @@ const nextConfig = {
             'image.bugsm.co.kr',
         ]
     },
+    reactStrictMode: false,
+    swcMinify: true,
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
+    assetPrefix: !debug ? `/${repository}/` : "",
 }
 
 module.exports = nextConfig
