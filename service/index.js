@@ -1,8 +1,6 @@
 import { albumData } from '../data/AlbumData';
 import { songData } from '../data/SongData';
-import { cartData } from '../data/CartData';
 import { contentsData } from '../data/ContentsData';
-import { communityData } from '../data/CommunityData';
 
 
 export const getAlbums = () => {
@@ -34,14 +32,6 @@ export const getSong = (stringTypeId) => {
     return res[0];
 }
 
-export const getCarts = () => {
-    return cartData;
-}
-
 export const getContents = () => {
     return contentsData;
-}
-
-export const getCommunityData = () => {
-    return communityData;
 }

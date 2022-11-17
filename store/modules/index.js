@@ -1,7 +1,6 @@
 import { HYDRATE } from "next-redux-wrapper";
 import { combineReducers } from "@reduxjs/toolkit";
 
-import Counter from './Counter';
 import Toast from './Toast';
 import UserInfo from "./UserInfo";
 import UserCommunity from "./UserCommunity";
@@ -18,7 +17,6 @@ const reducer = (state, action) => {
         };
     }
     return combineReducers({
-        Counter,
         Toast,
         UserInfo,
         UserCommunity,
