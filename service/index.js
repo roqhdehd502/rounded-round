@@ -1,4 +1,5 @@
 import { albumData } from '../data/AlbumData';
+import { buyHistoryData } from '../data/BuyHistoryData';
 import { songData } from '../data/SongData';
 import { contentsData } from '../data/ContentsData';
 
@@ -30,6 +31,10 @@ export const getSong = (stringTypeId) => {
     const res = songData.filter(d => d.id === id);
 
     return res[0];
+}
+
+export const getBuyHistories = () => {
+    return buyHistoryData;
 }
 
 export const getContents = () => {

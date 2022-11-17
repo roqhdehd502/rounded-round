@@ -8,8 +8,6 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 
-import { getCarts } from '../../../service';
-
 import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/Filters';
 
 
@@ -170,7 +168,7 @@ export default function CartList() {
                     <div className="mt-4 mb-4"></div>
                     <div className="card surface-0 p-5 border-round-2xl">
                         <DataTable 
-                          value={customers} className="p-datatable-customers" header={header} rows={getCarts().length}
+                          value={customers} className="p-datatable-customers" header={header} rows={customers ? customers.length : 0}
                           dataKey="id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)}
                           emptyMessage="장바구니에 담긴 곡이 없습니다."
                           loading={loading} responsiveLayout="scroll"

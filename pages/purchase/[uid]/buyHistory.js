@@ -6,7 +6,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 
-import { getCarts } from '../../../service';
+import { getBuyHistories } from '../../../service';
 
 import { ellipsisText, timeCounter } from '../../../commons/functional/Filters';
 
@@ -18,7 +18,7 @@ export default function BuyHistory() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const data = getCarts().sort((a, b) => { return b.uploadDate - a.uploadDate });
+        const data = getBuyHistories().sort((a, b) => { return b.uploadDate - a.uploadDate });
         setCustomers(data); 
         setLoading(false);
     }, []);
@@ -104,7 +104,7 @@ export default function BuyHistory() {
                 <div className="card surface-0 p-5 border-round-2xl">
                     <h1 className="ml-3 mt-0 mb-0">내가 구입한 노래</h1>
                     <DataTable 
-                      value={customers} className="p-datatable-customers" header={header} rows={getCarts().length}
+                      value={customers} className="p-datatable-customers" header={header} rows={customers ? customers.length : 0}
                       dataKey="id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)}
                       emptyMessage="회원님이 구입한 곡이 없습니다."
                       loading={loading} responsiveLayout="scroll"
