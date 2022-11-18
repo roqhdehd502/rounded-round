@@ -62,11 +62,19 @@ export default function UserHistory() {
 
     const renderHeader = () => {
         return (
-            <div className="flex justify-content-end align-items-center">
-                <span className="p-input-icon-left">
+            <div className="flex justify-content-between align-items-center">
+                <div>
+                    <Button 
+                      icon="pi pi-trash" 
+                      label="기록 삭제" 
+                      className="p-button-rounded p-button-outlined mr-3 p-button-danger"
+                      onClick={() => onRemoveBuyHistory()}
+                    />  
+                </div>
+                <div className="p-input-icon-left">
                     <i className="pi pi-search" />
                     <InputText className="w-20rem" value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="가수 / 곡 / 앨범 명 검색" />
-                </span>
+                </div>
             </div>
         )
     }
@@ -103,13 +111,10 @@ export default function UserHistory() {
         );
     }
 
-    const removeHistoryBodyTemplate = (rowData) => {
+    const detailBodyTemplate = (rowData) => {
         return (
             <>
-                <Button 
-                  icon="pi pi-trash"
-                  className="p-button-danger"
-                />
+                <Button icon="pi pi-search" />
             </>
         );
     }
@@ -135,7 +140,7 @@ export default function UserHistory() {
                         <Column field="songName" header="곡정보" body={songInformationBodyTemplate} headerStyle={{ minWidth: '14rem' }} bodyStyle={{ minWidth: '14rem' }} />
                         <Column field="albumName" header="앨범" body={albumNameBodyTemplate} headerStyle={{ minWidth: '14rem' }} bodyStyle={{ minWidth: '14rem' }} />
                         <Column field="likes" body={likesBodyTemplate} header="추천수" dataType="numeric" headerStyle={{ minWidth: '5rem'}} bodyStyle={{ minWidth: '5rem'}} />
-                        <Column header="기록삭제" body={removeHistoryBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
+                        <Column header="상세" body={detailBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
                     </DataTable>
                 </div>
             </div>

@@ -154,14 +154,6 @@ export default function AlbumDetail() {
         );
     }
 
-    const putInBodyTemplate = () => {
-        return <Button icon="pi pi-plus" />;
-    }
-
-    const downloadBodyTemplate = () => {
-        return <Button icon="pi pi-download" />;
-    }
-
     const header = renderHeader();
 
     return (
