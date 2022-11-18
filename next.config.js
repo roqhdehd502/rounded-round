@@ -5,7 +5,7 @@ const debug = process.env.NODE_ENV !== "production";
 const productionURL = "https://roqhdehd502.github.io/rounded-round";
 
 const nextConfig = {
-    basePath: '/rounded-round',
+    // basePath: '/rounded-round',
     images: {
         unoptimized: true,
         domains: [
