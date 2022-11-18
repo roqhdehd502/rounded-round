@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
-import { NewAlbum } from '../components/Main/NewAlbum';
-import { PopularContent } from '../components/Main/PopularContent';
+import { NewAlbum } from '../components/main/newAlbum';
+import { PopularContent } from '../components/main/popularContent';
 
 
 Home.layout = "L1";

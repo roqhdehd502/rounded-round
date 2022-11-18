@@ -10,7 +10,7 @@ import { Button } from 'primereact/button';
 
 import ProjectContext from '../../../../context';
 
-import UserHeader from '../../../../components/User/UserHeader';
+import UserHeader from '../../../../components/user/userHeader';
 
 import { getContents } from '../../../../service';
 

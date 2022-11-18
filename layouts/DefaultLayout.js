@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import { NavigationBar } from '../components/Header/NavigationBar';
-import { Footer } from '../components/Footer/Footer';
+import { NavigationBar } from '../components/header/navigationBar';
+import { Footer } from '../components/footer/footer';
 
 import * as UserInfoActions from '../store/modules/UserInfo';
 
