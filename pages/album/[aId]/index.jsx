@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useSelector } from 'react-redux';
 
 import Link from "next/Link";
@@ -8,6 +8,8 @@ import Image from 'next/image';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+
+import ProjectContext from '../../../context';
 
 import { DialogCommon } from '../../../commons/primereact/DialogCommon';
 import { ellipsisText, formatUnitEachThousand, timeFormatting } from '../../../commons/functional/Filters';
@@ -19,6 +21,7 @@ import { getAlbum, getSongsInAlbum } from '../../../service';
 
 AlbumDetail.layout = "L1";
 export default function AlbumDetail() {
+    const { prefix } = useContext(ProjectContext);
     // const dispatch = useDispatch();
     const router = useRouter();
 

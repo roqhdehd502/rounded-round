@@ -1,14 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { useRouter } from 'next/router';
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
+import ProjectContext from '../context';
+
 import * as UserInfoActions from '../store/modules/UserInfo';
 
 
 export default function EmptyLayout({ children }) {
+    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
     const auth = getAuth();
@@ -31,7 +34,7 @@ export default function EmptyLayout({ children }) {
 
     if (userObj) {
         console.log("YOU ALREADY LOGINED!");
-        router.replace('/');
+        router.replace(`/`);
     }
 
     return (

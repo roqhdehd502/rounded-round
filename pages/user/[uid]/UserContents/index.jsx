@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -7,6 +7,8 @@ import Image from 'next/image';
 
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Button } from 'primereact/button';
+
+import ProjectContext from '../../../../context';
 
 import UserHeader from '../../../../components/User/UserHeader';
 
@@ -19,6 +21,7 @@ import { getUserInfoObjThunk } from '../../../../store/modules/UserInfo';
 
 UserContents.layout = "L1";
 export default function UserContents() {
+    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
     

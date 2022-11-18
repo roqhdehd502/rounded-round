@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useContext } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -7,11 +7,14 @@ import { useRouter } from 'next/router';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 
+import ProjectContext from '../../context';
+
 import * as UserInfoActions from '../../store/modules/UserInfo';
 
 
 FindPassword.layout = "L2";
 export default function FindPassword() {
+    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -21,7 +24,7 @@ export default function FindPassword() {
         try {
             dispatch(UserInfoActions.patchUserPassword(email));
             alert('가입하신 회원님의 이메일로 비밀번호 변경 요청을 전송하였습니다.');
-            router.replace('/');
+            router.replace(`/`);
         } catch (error) {
             console.log(error);
         }
@@ -42,17 +45,17 @@ export default function FindPassword() {
                         <Button label="비밀번호 찾기" icon="pi pi-search" className="pr-5" onClick={() => onFindPassword(userEmail)} />
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Link href="/Auth/SignIn">
+                        <Link href={`/Auth/SignIn`}>
                             <Button label="로그인" icon="pi pi-sign-in" className="p-button-info pr-5" />
                         </Link>
                     </div>
                     <div className="field p-fluid">
-                        <Link href="/Auth/SignUp">
+                        <Link href={`/Auth/SignUp`}>
                             <Button label="회원가입" icon="pi pi-user-plus" className="p-button-info pr-5" />
                         </Link>
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Link href="/">
+                        <Link href={`/`}>
                             <Button label="메인으로" icon="pi pi-home" className="p-button-info pr-5" />
                         </Link>
                     </div>

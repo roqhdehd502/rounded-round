@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -10,6 +10,8 @@ import { Divider } from 'primereact/divider';
 
 import { v4 as uuidv4 } from 'uuid';
 
+import ProjectContext from '../../../context';
+
 import { getCarts } from '../../../service';
 
 import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/Filters';
@@ -17,6 +19,7 @@ import { ellipsisText, formatUnitEachThousand } from '../../../commons/functiona
 
 BuyInfo.layout = "L1";
 export default function BuyInfo() {
+    const { prefix } = useContext(ProjectContext);
     const router = useRouter();
 
     const [customers, setCustomers] = useState(null);

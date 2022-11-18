@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -8,11 +8,14 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 
+import ProjectContext from '../../../context';
+
 import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/Filters';
 
 
 CartList.layout = "L1";
 export default function CartList() {
+    const { prefix } = useContext(ProjectContext);
     const router = useRouter();
 
     const [customers, setCustomers] = useState(null);

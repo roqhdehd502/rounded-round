@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -10,6 +10,8 @@ import { Column } from 'primereact/column';
 import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 
+import ProjectContext from '../../../../context';
+
 import UserHeader from '../../../../components/User/UserHeader';
 
 import { timeCounter } from '../../../../commons/functional/Filters'
@@ -20,6 +22,7 @@ import { getUserCommunitiesThunk } from '../../../../store/modules/UserCommunity
 
 UserCommunity.layout = "L1";
 export default function UserCommunity() {
+    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
 

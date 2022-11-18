@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import Link from "next/Link";
 import { useRouter } from 'next/router';
@@ -8,6 +8,8 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 
+import ProjectContext from '../../../../context';
+
 import { DialogCommon } from '../../../../commons/primereact/DialogCommon';
 import { ellipsisText, formatUnitEachThousand } from '../../../../commons/functional/Filters';
 
@@ -16,6 +18,7 @@ import { getSongsInAlbum, getSong } from '../../../../service';
 
 SongDetail.layout = "L1";
 export default function SongDetail() {
+    const { prefix } = useContext(ProjectContext);
     const router = useRouter();
 
     const [songObj, setSongObj] = useState();

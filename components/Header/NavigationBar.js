@@ -1,4 +1,4 @@
-import { useState, useRef, forwardRef, useContext } from 'react';
+import { useState, useRef, useContext } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -26,7 +26,7 @@ export const NavigationBar = (props) => {
 
     const customSidebarIcons = (
         <>
-            <Link href="/">
+            <Link href={`/`}>
                 <Image className="pt-2 image-link" src={`${prefix}/img/logo.png`} width={180} height={40} quality={100} />
             </Link>
             <span className="mr-5"></span>
@@ -41,7 +41,7 @@ export const NavigationBar = (props) => {
                       icon: 'pi pi-lock',
                       command:(e) => {
                           dispatch(UserInfoActions.logout());
-                          router.replace('/');
+                          router.replace(`/`);
                       },
                   },
               ]
@@ -127,7 +127,7 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-home',
                     command:(e) => {
                         setVisibleLeft(false);
-                        router.push('/');
+                        router.push(`/`);
                     },
                 },
                 {
@@ -135,7 +135,7 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-chart-bar',
                     command:(e) => {
                         setVisibleLeft(false);
-                        router.push('/Popular/PopularList');
+                        router.push(`/Popular/PopularList`);
                     }
                 },
                 {
@@ -143,7 +143,7 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-plus',
                     command:(e) => {
                         setVisibleLeft(false);
-                        router.push('/New/NewList');
+                        router.push(`/New/NewList`);
                     }                    
                 },
                 {
@@ -151,7 +151,7 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-users',
                     command:(e) => {
                         setVisibleLeft(false);
-                        router.push('/Genre/GenreList');
+                        router.push(`/Genre/GenreList`);
                     }                    
                 },
             ]
@@ -223,7 +223,7 @@ export const NavigationBar = (props) => {
             </Sidebar>
             <Button className="mb-1" icon="pi pi-bars" onClick={() => setVisibleLeft(true)} />
             <span className="ml-3"></span>
-            <Link href="/">
+            <Link href={`/`}>
                 <Image className="image-link" src={`${prefix}/img/logo.png`} width={180} height={35} quality={100} />
             </Link>
         </div>
@@ -247,7 +247,7 @@ export const NavigationBar = (props) => {
         </div>
     ) : (
         <div className="ml-0 mr-0">
-            <Link href="/Auth/SignIn">
+            <Link href={`/Auth/SignIn`}>
                 <Button label="로그인" icon="pi pi-unlock" />
             </Link>
         </div>

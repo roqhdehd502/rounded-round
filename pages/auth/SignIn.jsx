@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -10,12 +10,15 @@ import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 
+import ProjectContext from '../../context';
+
 import * as UserInfoActions from '../../store/modules/UserInfo';
 import { checkDuplicatedEmailThunk, createUserObjThunk } from '../../store/modules/UserInfo';
 
 
 SignIn.layout = "L2";
 export default function SignIn() {
+    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
     const auth = getAuth();
@@ -40,7 +43,7 @@ export default function SignIn() {
           .then((result) => {
               const payload = result.user;
               dispatch(UserInfoActions.emailLogin(payload));
-              router.replace('/');
+              router.replace(`/`);
           })
           .catch((error) => { 
               console.log("LOGIN FAILED!", error);
@@ -110,17 +113,17 @@ export default function SignIn() {
                         <Button label="구글 로그인" icon="pi pi-google" className="pr-5" onClick={() => googleLogin()} />
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Link href="/Auth/SignUp">
+                        <Link href={`/Auth/SignUp`}>
                             <Button label="회원가입" icon="pi pi-user-plus" className="p-button-info pr-5" />
                         </Link>
                     </div>
                     <div className="field p-fluid">
-                        <Link href="/Auth/FindPassword">
+                        <Link href={`/Auth/FindPassword`}>
                             <Button label="비밀번호 찾기" icon="pi pi-search" className="p-button-info pr-5" />
                         </Link>
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Link href="/">
+                        <Link href={`/`}>
                             <Button label="메인으로" icon="pi pi-home" className="p-button-info pr-5" />
                         </Link>
                     </div>

@@ -32,7 +32,7 @@ export default function UserHeader(props) {
         dispatch(UserInfoActions.sendUserEmailVerification());
         alert('가입하신 회원님의 이메일로 계정 인증 요청 메일을 전송하였습니다.');
         dispatch(UserInfoActions.logout());
-        router.replace('/');
+        router.replace(`/`);
     }, [dispatch]);
 
     return (

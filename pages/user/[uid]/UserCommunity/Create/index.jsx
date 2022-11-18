@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -12,11 +12,14 @@ import { Divider } from 'primereact/divider';
 
 import { v4 as uuidv4 } from 'uuid';
 
+import ProjectContext from '../../../../../context';
+
 import { createUserCommunityThunk } from '../../../../../store/modules/UserCommunity';
 
 
 UserCommunityCreate.layout = "L1";
 export default function UserCommunityCreate() {
+    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -95,7 +98,7 @@ export default function UserCommunityCreate() {
                         </Link>
                     </div>
                     <div className="field p-fluid">
-                        <Link href="/">
+                        <Link href={`/`}>
                             <Button label="메인으로" icon="pi pi-home" className="p-button-info pr-5" />
                         </Link>
                     </div>

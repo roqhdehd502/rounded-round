@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -10,6 +10,8 @@ import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Divider } from 'primereact/divider';
 
+import ProjectContext from '../../../../../context';
+
 import { convertNewlineText } from '../../../../../commons/functional/Filters';
 
 import { getUserCommunityThunk, patchUserCommunityThunk, deleteUserCommunityThunk } from '../../../../../store/modules/UserCommunity';
@@ -17,6 +19,7 @@ import { getUserCommunityThunk, patchUserCommunityThunk, deleteUserCommunityThun
 
 UserCommunityUpdate.layout = "L1";
 export default function UserCommunityUpdate() {
+    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -124,7 +127,7 @@ export default function UserCommunityUpdate() {
                                 </Link>
                             </div>
                             <div className="field p-fluid">
-                                <Link href="/">
+                                <Link href={`/`}>
                                     <Button label="메인으로" icon="pi pi-home" className="p-button-info pr-5" />
                                 </Link>
                             </div>
