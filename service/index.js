@@ -1,6 +1,6 @@
 import { albumData } from '../data/AlbumData';
 import { buyHistoryData } from '../data/buyHistoryData';
-import { songData } from '../data/SongData';
+import { songData } from '../data/songData';
 import { contentsData } from '../data/contentsData';
 import { advertisementData } from '../data/advertisementData';
 

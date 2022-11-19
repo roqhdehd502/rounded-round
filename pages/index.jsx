@@ -1,6 +1,6 @@
-import { NewAlbum } from '../components/main/NewAlbum';
-import { Advertisement } from '../components/main/Advertisement';
-import { PopularContent } from '../components/main/PopularContent';
+import { NewAlbum } from '../components/main/newAlbum';
+import { Advertisement } from '../components/main/advertisement';
+import { PopularContent } from '../components/main/popularContent';
 
 
 Home.layout = "L1";

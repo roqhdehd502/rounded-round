@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import { Button } from 'primereact/button';
 
-import CustomerHeader from '../../../../components/customer/CustomerHeader';
+import CustomerHeader from '../../../../components/customer/customerHeader';
 
 import { formatUnitEachThousand, timeFormatting } from '../../../../commons/functional/filters'
 
