@@ -44,6 +44,5 @@ export const getContents = () => {
 
 export const getAdvertisement = () => {
     const res = advertisementData[Math.floor(Math.random() * advertisementData.length)];
-    console.log("res", res);
     return res;
 }
