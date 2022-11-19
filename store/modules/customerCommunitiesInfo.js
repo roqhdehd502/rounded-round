@@ -14,7 +14,6 @@ import {
     where,
     orderBy,
     addDoc,
-    //setDoc,
     updateDoc,
     deleteDoc, 
 } from "firebase/firestore";
@@ -23,19 +22,19 @@ import { firestore } from '../../firebaseConfiguration';
 
 
 const initialState = {
-    userCommunity: null, 
-    userCommunities: [],
+    customerCommunityObj: null, 
+    customerCommunities: [],
 
     loading: false,
     error: null,
 };
 
 
-export const getUserCommunityThunk = createAsyncThunk(
-    "UserCommunity/getUserCommunityThunk",
+export const getCustomerCommunityThunk = createAsyncThunk(
+    "customerCommunitiesInfo/getCustomerCommunityThunk",
     async (docId, thunkAPI) => {
         try {
-            const docRef = doc(firestore, "userCommunity", docId);
+            const docRef = doc(firestore, "customerCommunity", docId);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 return docSnap.data();
@@ -48,12 +47,12 @@ export const getUserCommunityThunk = createAsyncThunk(
     }
 );
 
-export const getUserCommunitiesThunk = createAsyncThunk(
-    "UserCommunity/getUserCommunitiesThunk",
+export const getCustomerCommunitiesThunk = createAsyncThunk(
+    "customerCommunitiesInfo/getCustomerCommunitiesThunk",
     async (uid, thunkAPI) => {
         let datas = [];
         let q = query(
-            collection(firestore, "userCommunity"),
+            collection(firestore, "customerCommunity"),
             where("uid", "==", uid),
             orderBy("uploadDate", "desc")
         );
@@ -71,11 +70,11 @@ export const getUserCommunitiesThunk = createAsyncThunk(
     }
 );
 
-export const createUserCommunityThunk = createAsyncThunk(
-    "UserCommunity/createUserCommunityThunk",
+export const createCustomerCommunityThunk = createAsyncThunk(
+    "customerCommunitiesInfo/createCustomerCommunityThunk",
     async (payload, thunkAPI) => {
         try {
-            await addDoc(collection(firestore, "userCommunity"), payload)
+            await addDoc(collection(firestore, "customerCommunity"), payload)
               .then((docRef) => { return docRef })
               .catch((error) => { console.log(error) });
         } catch (error) {
@@ -84,10 +83,10 @@ export const createUserCommunityThunk = createAsyncThunk(
     }
 );
 
-export const patchUserCommunityThunk = createAsyncThunk(
-    "UserCommunity/patchUserCommunityThunk",
+export const patchCustomerCommunityThunk = createAsyncThunk(
+    "customerCommunitiesInfo/patchCustomerCommunityThunk",
     async (payload, thunkAPI) => {
-        const docRef = doc(firestore, "userCommunity", payload.docId);
+        const docRef = doc(firestore, "customerCommunity", payload.docId);
         try {
             await updateDoc(docRef, {
                 thumbnail: payload.thumbnail,
@@ -99,10 +98,10 @@ export const patchUserCommunityThunk = createAsyncThunk(
     }
 );
 
-export const deleteUserCommunityThunk = createAsyncThunk(
-  "UserCommunity/deleteUserCommunityThunk",
+export const deleteCustomerCommunityThunk = createAsyncThunk(
+  "customerCommunitiesInfo/deleteCustomerCommunityThunk",
   async (payload, thunkAPI) => {
-      const docRef = doc(firestore, "userCommunity", payload);
+      const docRef = doc(firestore, "customerCommunity", payload);
       try {
           await deleteDoc(docRef);
       } catch (error) {
@@ -112,16 +111,16 @@ export const deleteUserCommunityThunk = createAsyncThunk(
 );
 
 
-const UserCommunitySlice = createSlice({
-    name: 'UserCommunity',
+const customerCommunitiesInfoSlice = createSlice({
+    name: 'customerCommunitiesInfo',
 
     initialState,
 
     reducers: {
-        patchUserObj(state, action) { 
+        patchCustomerObj(state, action) { 
             updateProfile(getAuth().currentUser, {
-                displayName: action.payload.updateUserObj.displayName,
-                photoURL: action.payload.photoURL,
+                displayName: action.payload.updateCustomerObj.displayName,
+                photoURL: action.payload.customerPhotoURL,
             }).then(() => {
                 console.log("UPDATE SUCCESS!");
             }).catch((error) => {
@@ -131,61 +130,61 @@ const UserCommunitySlice = createSlice({
     },
 
     extraReducers: {
-        [getUserCommunityThunk.pending]: (state, action) => {
+        [getCustomerCommunityThunk.pending]: (state, action) => {
             state.loading = true;
         },
-        [getUserCommunityThunk.fulfilled]: (state, action) => {
+        [getCustomerCommunityThunk.fulfilled]: (state, action) => {
             state.loading = false;
-            state.userCommunity = action.payload;
+            state.customerCommunityObj = action.payload;
         },
-        [getUserCommunityThunk.rejected]: (state, action) => {
+        [getCustomerCommunityThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },
 
-        [getUserCommunitiesThunk.pending]: (state, action) => {
+        [getCustomerCommunitiesThunk.pending]: (state, action) => {
             state.loading = true;
         },
-        [getUserCommunitiesThunk.fulfilled]: (state, action) => {
+        [getCustomerCommunitiesThunk.fulfilled]: (state, action) => {
             state.loading = false;
-            state.userCommunities = action.payload;
+            state.customerCommunities = action.payload;
         },
-        [getUserCommunitiesThunk.rejected]: (state, action) => {
+        [getCustomerCommunitiesThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },
 
-        [createUserCommunityThunk.pending]: (state, action) => {
+        [createCustomerCommunityThunk.pending]: (state, action) => {
             state.loading = true;
         },
-        [createUserCommunityThunk.fulfilled]: (state, action) => {
+        [createCustomerCommunityThunk.fulfilled]: (state, action) => {
             state.loading = false;
             console.log("CREATE SUCCESS.", action.payload);
         },
-        [createUserCommunityThunk.rejected]: (state, action) => {
+        [createCustomerCommunityThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },
 
-        [patchUserCommunityThunk.pending]: (state, action) => {
+        [patchCustomerCommunityThunk.pending]: (state, action) => {
             state.loading = true;
         },
-        [patchUserCommunityThunk.fulfilled]: (state, action) => {
+        [patchCustomerCommunityThunk.fulfilled]: (state, action) => {
             state.loading = false;
         },
-        [patchUserCommunityThunk.rejected]: (state, action) => {
+        [patchCustomerCommunityThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },
 
-        [deleteUserCommunityThunk.pending]: (state, action) => {
+        [deleteCustomerCommunityThunk.pending]: (state, action) => {
             state.loading = true;
         },
-        [deleteUserCommunityThunk.fulfilled]: (state, action) => {
+        [deleteCustomerCommunityThunk.fulfilled]: (state, action) => {
             state.loading = false;
-            state.userCommunities = [];
+            state.customerCommunities = [];
         },
-        [deleteUserCommunityThunk.rejected]: (state, action) => {
+        [deleteCustomerCommunityThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },
@@ -193,7 +192,7 @@ const UserCommunitySlice = createSlice({
 });
 
 export const { 
-    patchUserObj,
-} = UserCommunitySlice.actions;
+    patchCustomerObj,
+} = customerCommunitiesInfoSlice.actions;
 
-export default UserCommunitySlice.reducer;
+export default customerCommunitiesInfoSlice.reducer;

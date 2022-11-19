@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import { NavigationBar } from '../components/header/navigationBar';
-import { Footer } from '../components/footer/footer';
+import { NavigationBar } from '../components/header/NavigationBar';
+import { Footer } from '../components/footer/Footer';
 
-import * as UserInfoActions from '../store/modules/UserInfo';
+import * as customerInfoActions from '../store/modules/customerInfo';
 
 
 export default function DefaultLayout({ children }) {
@@ -15,25 +15,25 @@ export default function DefaultLayout({ children }) {
 
     const [loading, setLoading] = useState(true);
 
-    const userObj = useSelector(({ UserInfo }) => UserInfo.userObj);
+    const customerObj = useSelector(({ customerInfo }) => customerInfo.customerObj);
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 const payload = user;
-                dispatch(UserInfoActions.getUserObj(payload));
+                dispatch(customerInfoActions.getCustomerObj(payload));
             } else {
-                dispatch(UserInfoActions.getUserObj(null));
+                dispatch(customerInfoActions.getCustomerObj(null));
             }
         });
         setLoading(true);
-    }, [userObj]);
+    }, [customerObj]);
     
     return (
         <>
             {loading ? (
                 <>
-                    <NavigationBar userObj={userObj} />
+                    <NavigationBar customerObj={customerObj} />
                     <div className="h-5rem mb-4"></div>
                     <div className="content-width-padding ">
                         { children }

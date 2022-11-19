@@ -1,4 +1,4 @@
-export default function ErrorLayout({ children }) {
+export default function errorLayout({ children }) {
     return (
         <>
             <div className="content-width-padding ">

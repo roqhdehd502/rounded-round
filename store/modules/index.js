@@ -1,12 +1,11 @@
 import { HYDRATE } from "next-redux-wrapper";
 import { combineReducers } from "@reduxjs/toolkit";
 
-import Toast from './Toast';
-import UserInfo from "./UserInfo";
-import UserCommunity from "./UserCommunity";
-import userContents from "./UserContents";
-import Album from "./Album";
-import Song from "./Song";
+import customerInfo from "./customerInfo";
+import customerCommunitiesInfo from "./customerCommunitiesInfo";
+import customerContentsInfo from "./customerContentsInfo";
+import albumsInfo from "./albumsInfo";
+import songsInfo from "./songsInfo";
 
  
 const reducer = (state, action) => {
@@ -17,12 +16,11 @@ const reducer = (state, action) => {
         };
     }
     return combineReducers({
-        Toast,
-        UserInfo,
-        UserCommunity,
-        userContents,
-        Album,
-        Song,
+        customerInfo,
+        customerCommunitiesInfo,
+        customerContentsInfo,
+        albumsInfo,
+        songsInfo,
     })(state, action);
 }
 

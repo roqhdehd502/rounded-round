@@ -7,8 +7,8 @@ import { Button } from 'primereact/button';
 import ProjectContext from '../context';
 
 
-NotFound.layout = "L3";
-export default function NotFound() {
+notFound.layout = "L3";
+export default function notFound() {
     const { prefix } = useContext(ProjectContext);
     
     return (

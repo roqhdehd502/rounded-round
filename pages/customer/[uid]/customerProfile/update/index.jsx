@@ -13,35 +13,35 @@ import { Divider } from 'primereact/divider';
 
 import ProjectContext from '../../../../../context';
 
-import { convertNewlineText } from '../../../../../commons/functional/Filters';
+import { convertNewlineText } from '../../../../../commons/functional/filters';
 
-import * as UserInfoActions from '../../../../../store/modules/UserInfo';
-import { getUserInfoObjThunk, patchUserInfoObjThunk } from '../../../../../store/modules/UserInfo';
+import * as customerInfoActions from '../../../../../store/modules/customerInfo';
+import { getCustomerInfoObjThunk, patchCustomerInfoObjThunk } from '../../../../../store/modules/customerInfo';
 
 
-UserProfileUpdate.layout = "L1";
-export default function UserProfileUpdate() {
+customerProfileUpdate.layout = "L1";
+export default function customerProfileUpdate() {
     const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const userObj = useSelector(({ UserInfo }) => UserInfo.userObj);
-    const userInfoObj = useSelector(({ UserInfo }) => UserInfo.userInfoObj);
+    const customerObj = useSelector(({ customerInfo }) => customerInfo.customerObj);
+    const customerInfoObj = useSelector(({ customerInfo }) => customerInfo.customerInfoObj);
 
     const [newAttachment, setNewAttachment] = useState("");
-    const [userDisplayName, setUserDisplayName] = useState('');
-    const [userBio, setUserBio] = useState('');
-    const [userInfoDetail, setUserInfoDetail] = useState('');
-    const [userLink, setUserLink] = useState(null);
+    const [customerDisplayName, setCustomerDisplayName] = useState('');
+    const [customerBio, setCustomerBio] = useState('');
+    const [customerInfoDetail, setCustomerInfoDetail] = useState('');
+    const [customerLink, setCustomerLink] = useState(null);
 
     useEffect(() => {
-        dispatch(getUserInfoObjThunk(router.query.uid));
+        dispatch(getCustomerInfoObjThunk(router.query.uid));
 
-        setUserDisplayName(userObj ? userObj.displayName : '');
-        setUserBio(userInfoObj ? userInfoObj.bio : '');
-        setUserInfoDetail(userInfoObj ? convertNewlineText(userInfoObj.infoDetail) : '');
-        setUserLink(userInfoObj ? userInfoObj.link : null);
-    }, [router.query, userObj ? userObj.uid : null, userInfoObj ? userInfoObj.uid : null]);
+        setCustomerDisplayName(customerObj ? customerObj.displayName : '');
+        setCustomerBio(customerInfoObj ? customerInfoObj.bio : '');
+        setCustomerInfoDetail(customerInfoObj ? convertNewlineText(customerInfoObj.infoDetail) : '');
+        setCustomerLink(customerInfoObj ? customerInfoObj.link : null);
+    }, [router.query, customerObj ? customerObj.uid : null, customerInfoObj ? customerInfoObj.uid : null]);
 
     const onNewFileChange = (event) => {
         const { target: { files } } = event;
@@ -56,21 +56,21 @@ export default function UserProfileUpdate() {
 
     const onClearNewAttachment = () => setNewAttachment("");
 
-    const updateUser = useCallback(async (userInfo) => {
+    const updateCustomer = useCallback(async (customerInfo) => {
         try {
             if (confirm('정말 변경하시겠습니까?')) {
-                const updateUserObj = {
-                    displayName: userInfo.userDisplayName,
-                    bio: userInfo.userBio,
-                    infoDetail: userInfo.userInfoDetail.replaceAll("\n", "\\n"), 
-                    link: userInfo.userLink,        
+                const updateCustomerObj = {
+                    displayName: customerInfo.customerDisplayName,
+                    bio: customerInfo.customerBio,
+                    infoDetail: customerInfo.customerInfoDetail.replaceAll("\n", "\\n"), 
+                    link: customerInfo.customerLink,        
                 }
-                console.log("updateUserObj", updateUserObj);
+                console.log("updateCustomerObj", updateCustomerObj);
                 
-                let userPhotoURL = null;
+                let customerPhotoURL = null;
                 const photoFile = document.querySelector('#photo-file').files[0];
                 const storage = firebaseStorage.getStorage();
-                const storageRef = firebaseStorage.ref(storage, `userimages/${router.query.uid}`);
+                const storageRef = firebaseStorage.ref(storage, `customerimages/${router.query.uid}`);
 
                 if (photoFile) {
                     firebaseStorage.uploadBytes(storageRef, photoFile)
@@ -78,38 +78,38 @@ export default function UserProfileUpdate() {
                           console.log("upload image", snapshot);
                           firebaseStorage.getDownloadURL(storageRef)
                             .then((url) => {
-                                userPhotoURL = url;
-                                dispatch(UserInfoActions.patchUserObj({updateUserObj, userPhotoURL}));
-                                dispatch(patchUserInfoObjThunk({uid: router.query.uid, updateUserObj, userPhotoURL} ));
+                                customerPhotoURL = url;
+                                dispatch(customerInfoActions.patchCustomerObj({updateCustomerObj, customerPhotoURL}));
+                                dispatch(patchCustomerInfoObjThunk({uid: router.query.uid, updateCustomerObj, customerPhotoURL} ));
                             });
                       }).catch((error) => {
                           console.log(error);
                       });
                 } else {
-                    userPhotoURL = userObj ? userObj.photoURL : '';
-                    dispatch(UserInfoActions.patchUserObj({updateUserObj, userPhotoURL}));
-                    dispatch(patchUserInfoObjThunk({uid: router.query.uid, updateUserObj, userPhotoURL} ));
+                    customerPhotoURL = customerObj ? customerObj.photoURL : '';
+                    dispatch(customerInfoActions.patchCustomerObj({updateCustomerObj, customerPhotoURL}));
+                    dispatch(patchCustomerInfoObjThunk({uid: router.query.uid, updateCustomerObj, customerPhotoURL} ));
                 }
 
-                router.replace(`/User/${router.query.uid}/UserProfile`);
+                router.replace(`/customer/${router.query.uid}/customerProfile`);
             }
         }   catch(error) {
             console.log(error);
         }
     }, [dispatch]);
 
-    const updateUserPassword = useCallback(() => {
+    const updateCustomerPassword = useCallback(() => {
         try {
-            dispatch(UserInfoActions.patchUserPassword(userEmail));
+            dispatch(customerInfoActions.patchCustomerPassword(customerEmail));
             alert('가입하신 회원님의 이메일로 비밀번호 변경 요청을 전송하였습니다.');
-            dispatch(UserInfoActions.logout());
+            dispatch(customerInfoActions.logout());
             router.replace(`/`);
         } catch (error) {
             console.log(error);
         }
     }, [dispatch]);
 
-    const deleteUserObj = useCallback(() => {
+    const deletecustomerObj = useCallback(() => {
         try {
             if(confirm('정말 회원님의 계정을 삭제하시겠습니까?')) {
                 console.log("추후 구현할 것");
@@ -121,7 +121,7 @@ export default function UserProfileUpdate() {
 
     return (
         <>
-            {userObj ? (
+            {customerObj ? (
                 <>
                     <div className="flex align-content-center align-items-center justify-content-center form-vertical-align-center">
                         <div className="card surface-0 p-5 border-round-2xl w-8">
@@ -153,35 +153,35 @@ export default function UserProfileUpdate() {
                             <div className="field p-fluid mt-6">
                                 <label>이름</label>
                                 <span className="p-inputgroup">
-                                    <InputText value={userDisplayName} onChange={(e) => setUserDisplayName(e.target.value)} />
+                                    <InputText value={customerDisplayName} onChange={(e) => setCustomerDisplayName(e.target.value)} />
                                 </span>
                             </div>
                             <div className="field p-fluid mt-6">
                                 <label>설명</label>
                                 <span className="p-inputgroup">
-                                    <InputText value={userBio} onChange={(e) => setUserBio(e.target.value)} />
+                                    <InputText value={customerBio} onChange={(e) => setCustomerBio(e.target.value)} />
                                 </span>
                             </div>
                             <div className="field p-fluid mt-6">
                                 <label>세부정보</label>
                                 <span className="p-inputgroup">
-                                    <InputTextarea value={userInfoDetail} onChange={(e) => setUserInfoDetail(e.target.value)} rows={5} cols={30} autoResize />
+                                    <InputTextarea value={customerInfoDetail} onChange={(e) => setCustomerInfoDetail(e.target.value)} rows={5} cols={30} autoResize />
                                 </span>
                             </div>
                             <div className="field p-fluid mt-6">
                                 <label>링크</label>
                                 <div className="p-inputgroup">
-                                    <InputText value={userLink ? userLink.linkName : ''} onChange={(e) => setUserLink(e.target.value)} />
-                                    <InputText value={userLink ? userLink.linkAddress : ''} onChange={(e) => setUserLink(e.target.value)} />
+                                    <InputText value={customerLink ? customerLink.linkName : ''} onChange={(e) => setCustomerLink(e.target.value)} />
+                                    <InputText value={customerLink ? customerLink.linkAddress : ''} onChange={(e) => setCustomerLink(e.target.value)} />
                                 </div>
                             </div>
                             <Divider />
                             <div className="field p-fluid mt-6">
-                                <Button label="변경하기" icon="pi pi-user-edit" className="pr-5" onClick={()=> updateUser({userDisplayName, userBio, userInfoDetail, userLink})} />
+                                <Button label="변경하기" icon="pi pi-user-edit" className="pr-5" onClick={()=> updateCustomer({customerDisplayName, customerBio, customerInfoDetail, customerLink})} />
                             </div>
                             <Divider />
                             <div className="field p-fluid">
-                                <Link href={`/User/${userObj.uid}/UserProfile`}>
+                                <Link href={`/customer/${customerObj.uid}/customerProfile`}>
                                     <Button label="돌아가기" icon="pi pi-arrow-left" className="p-button-info pr-5" />
                                 </Link>
                             </div>
@@ -191,15 +191,15 @@ export default function UserProfileUpdate() {
                                 </Link>
                             </div>
                             <Divider />
-                            { userObj.providerData[0].providerId !== 'google.com' ? (
+                            { customerObj.providerData[0].providerId !== 'google.com' ? (
                                 <div className="field p-fluid">
-                                    <Button label="비밀번호 변경" icon="pi pi-user-edit" className="pr-5 p-button-warning" onClick={()=> updateUserPassword()} />
+                                    <Button label="비밀번호 변경" icon="pi pi-user-edit" className="pr-5 p-button-warning" onClick={()=> updateCustomerPassword()} />
                                 </div>
                             ) : (
                                 <div></div>
                             ) }
                             <div className="field p-fluid">
-                                <Button label="계정삭제" icon="pi pi-user-minus" className="pr-5 p-button-danger" onClick={()=> deleteUserObj()}  />
+                                <Button label="계정삭제" icon="pi pi-user-minus" className="pr-5 p-button-danger" onClick={()=> deletecustomerObj()}  />
                             </div> 
                         </div>
                     </div>

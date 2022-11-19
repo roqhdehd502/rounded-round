@@ -12,40 +12,43 @@ import { Divider } from 'primereact/divider';
 
 import ProjectContext from '../../../../../context';
 
-import { convertNewlineText } from '../../../../../commons/functional/Filters';
+import { convertNewlineText } from '../../../../../commons/functional/filters';
 
-import { getUserCommunityThunk, patchUserCommunityThunk, deleteUserCommunityThunk } from '../../../../../store/modules/UserCommunity';
+import { getCustomerCommunityThunk, patchCustomerCommunityThunk, deleteCustomerCommunityThunk } from '../../../../../store/modules/customerCommunitiesInfo';
 
 
-UserCommunityUpdate.layout = "L1";
-export default function UserCommunityUpdate() {
+customerCommunityUpdate.layout = "L1";
+export default function customerCommunityUpdate() {
     const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const userCommunityObj = useSelector(({ UserCommunity }) => UserCommunity.userCommunity);
+    const customerCommunityObj = useSelector(({ customerCommunitiesInfo }) => customerCommunitiesInfo.customerCommunityObj);
     
+    const [communityThumbnail, setCommunityThumbnail] = useState('');
+    const [communityThumbnailUuid, setCommunityThumbnailUuid] = useState('');
     const [communityContents, setCommunityContents] = useState(convertNewlineText(''));
 
     useEffect(() => {
-        dispatch(getUserCommunityThunk(router.query.docId));
+        dispatch(getCustomerCommunityThunk(router.query.docId));
 
-        setCommunityContents(userCommunityObj ? convertNewlineText(userCommunityObj.contents) : '');
-    }, [router.query, userCommunityObj ? userCommunityObj.docId : null]);
+        setCommunityThumbnail(customerCommunityObj ? customerCommunityObj.thumbnail : '');
+        setCommunityThumbnailUuid(customerCommunityObj ? customerCommunityObj.thumbnailUuid : '');
+        setCommunityContents(customerCommunityObj ? convertNewlineText(customerCommunityObj.contents) : '');
+    }, [router.query, customerCommunityObj ? customerCommunityObj.docId : null]);
 
-    const updateCommunity = useCallback(async (updateContents) => {
+    const updateCommunity = useCallback(async (communityObj) => {
         try {
             if (confirm('정말 수정하시겠습니까?')) {
                 const updateCommunityObj = {
                     docId: router.query.docId,
-                    contents: updateContents.replaceAll("\n", "\\n"),  
-                    thumbnail: userCommunityObj.thumbnail, 
+                    thumbnail: communityObj.communityThumbnail, 
+                    contents: communityObj.communityContents.replaceAll("\n", "\\n"),  
                 }
-                console.log("updateCommunityObj", updateCommunityObj);
 
                 const photoFile = document.querySelector('#photo-file').files[0];
                 const storage = firebaseStorage.getStorage();
-                const storageRef = firebaseStorage.ref(storage, `usercommunityimages/${router.query.uid}/${userCommunityObj.thumbnailUuid}`);
+                const storageRef = firebaseStorage.ref(storage, `customercommunityimages/${router.query.uid}/${communityObj.communityThumbnailUuid}`);
 
                 if (photoFile) {
                     firebaseStorage.uploadBytes(storageRef, photoFile)
@@ -54,16 +57,16 @@ export default function UserCommunityUpdate() {
                           firebaseStorage.getDownloadURL(storageRef)
                             .then((url) => {
                                 updateCommunityObj.thumbnail = url;
-                                dispatch(patchUserCommunityThunk(updateCommunityObj));
+                                dispatch(patchCustomerCommunityThunk(updateCommunityObj));
                             });
                       }).catch((error) => {
                           console.log(error);
                       });
                 } else {
-                    dispatch(patchUserCommunityThunk(updateCommunityObj));
+                    dispatch(patchCustomerCommunityThunk(updateCommunityObj));
                 }
                 
-                router.replace(`/User/${router.query.uid}/UserCommunity`);
+                router.replace(`/customer/${router.query.uid}/customerCommunity`);
             }
         }   catch(error) {
             console.log(error);
@@ -75,18 +78,18 @@ export default function UserCommunityUpdate() {
             if (confirm('정말 삭제하시겠습니까?')) {
                 if (router.query.thumbnail) {
                     const storage = firebaseStorage.getStorage();
-                    const storageRef = firebaseStorage.ref(storage, `usercommunityimages/${router.query.uid}/${userCommunityObj.thumbnailUuid}`);
+                    const storageRef = firebaseStorage.ref(storage, `customercommunityimages/${router.query.uid}/${customerCommunityObj.thumbnailUuid}`);
 
                     firebaseStorage.deleteObject(storageRef).then(() => {
-                        dispatch(deleteUserCommunityThunk(router.query.docId));
+                        dispatch(deleteCustomerCommunityThunk(router.query.docId));
                     }).catch((error) => {
                         console.log(error);
                     });
                 } else {
-                    dispatch(deleteUserCommunityThunk(router.query.docId));
+                    dispatch(deleteCustomerCommunityThunk(router.query.docId));
                 }
                 
-                router.replace(`/User/${router.query.uid}/UserCommunity`);
+                router.replace(`/customer/${router.query.uid}/customerCommunity`);
             } 
         } catch(error) {
             console.log(error);
@@ -95,7 +98,7 @@ export default function UserCommunityUpdate() {
 
     return (
         <>
-            {userCommunityObj ? (
+            {customerCommunityObj ? (
                 <>
                     <div className="flex align-content-center align-items-center justify-content-center form-vertical-align-center">
                         <div className="card surface-0 p-5 border-round-2xl w-8">
@@ -118,11 +121,11 @@ export default function UserCommunityUpdate() {
                                 </span>
                             </div>
                             <div className="field p-fluid mt-6">
-                                <Button label="수정하기" icon="pi pi-user-edit" className="pr-5" onClick={()=> updateCommunity(communityContents)} />
+                                <Button label="수정하기" icon="pi pi-user-edit" className="pr-5" onClick={()=> updateCommunity({communityThumbnail, communityThumbnailUuid, communityContents})} />
                             </div>
                             <Divider />
                             <div className="field p-fluid">
-                                <Link href={`/User/${router.query.uid}/UserCommunity`}>
+                                <Link href={`/customer/${router.query.uid}/customerCommunity`}>
                                     <Button label="돌아가기" icon="pi pi-arrow-left" className="p-button-info pr-5" />
                                 </Link>
                             </div>

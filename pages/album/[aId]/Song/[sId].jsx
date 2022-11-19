@@ -11,13 +11,13 @@ import { Button } from 'primereact/button';
 import ProjectContext from '../../../../context';
 
 import { DialogCommon } from '../../../../commons/primereact/DialogCommon';
-import { ellipsisText, formatUnitEachThousand } from '../../../../commons/functional/Filters';
+import { ellipsisText, formatUnitEachThousand } from '../../../../commons/functional/filters';
 
 import { getSongsInAlbum, getSong } from '../../../../service';
 
 
-SongDetail.layout = "L1";
-export default function SongDetail() {
+songDetail.layout = "L1";
+export default function songDetail() {
     const { prefix } = useContext(ProjectContext);
     const router = useRouter();
 
@@ -77,10 +77,10 @@ export default function SongDetail() {
             <>
                 <Link
                   href={{
-                    pathname: `/Album/${router.query.aId}/Song/${rowData.id}`,
+                    pathname: `/album/${router.query.aId}/song/${rowData.id}`,
                     query: { aId: router.query.aId, sId: rowData.id },
                   }}
-                  as={`/Album/${router.query.aId}/Song/${rowData.id}`}
+                  as={`/album/${router.query.aId}/song/${rowData.id}`}
                 >
                     <Button icon="pi pi-search" />
                 </Link>

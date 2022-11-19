@@ -10,36 +10,36 @@ import { Button } from 'primereact/button';
 
 import ProjectContext from '../../../../context';
 
-import UserHeader from '../../../../components/user/userHeader';
+import CustomerHeader from '../../../../components/customer/CustomerHeader';
 
 import { getContents } from '../../../../service';
 
-import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../../commons/functional/Filters';
+import { ellipsisText, formatUnitEachThousand, timeCounter } from '../../../../commons/functional/filters';
 
-import { getUserInfoObjThunk } from '../../../../store/modules/UserInfo';
+import { getCustomerInfoObjThunk } from '../../../../store/modules/customerInfo';
 
 
-UserContents.layout = "L1";
-export default function UserContents() {
+customerContents.layout = "L1";
+export default function customerContents() {
     const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
     
-    const userObj = useSelector(({ UserInfo }) => UserInfo.userObj);
-    const userInfoObj = useSelector(({ UserInfo }) => UserInfo.userInfoObj);
+    const customerObj = useSelector(({ customerInfo }) => customerInfo.customerObj);
+    const customerInfoObj = useSelector(({ customerInfo }) => customerInfo.customerInfoObj);
 
     const [customers, setCustomers] = useState(null);
     const [layout, setLayout] = useState('grid');
     const [loading, setLoading] = useState(true);     
 
     useEffect(() => {
-        dispatch(getUserInfoObjThunk(router.query.uid));
+        dispatch(getCustomerInfoObjThunk(router.query.uid));
         const data = getContents();
         setCustomers(getCustomers(data).filter((d) => {
             return d.uid === router.query.uid;
         })); 
         setLoading(false);
-    }, [router.query, userObj ? userObj.uid : null, , userInfoObj ? userInfoObj.uid : null]);
+    }, [router.query, customerObj ? customerObj.uid : null, , customerInfoObj ? customerInfoObj.uid : null]);
 
     const getCustomers = (data) => {
         return [...data || []].map(d => {
@@ -117,22 +117,22 @@ export default function UserContents() {
 
     return (
         <>
-            {userInfoObj ? (
+            {customerInfoObj ? (
                 <>
-                    <UserHeader
+                    <CustomerHeader
                       activeIndex={0}            
                     />   
 
                     <div className="dataview-demo">
                         <div className="card surface-0 p-5 border-round-2xl">
-                            {userObj && userObj.uid === userInfoObj.uid ? (
+                            {customerObj && customerObj.uid === customerInfoObj.uid ? (
                                 <div className="flex justify-content-end">
                                     {/* <Link 
                                       href={{
-                                        pathname: `/User/${userObj.uid}/UserCommunityCreate`,
-                                        query: { uid: userObj.uid },
+                                        pathname: `/customer/${customerObj.uid}/customerContentsCreate`,
+                                        query: { uid: customerObj.uid },
                                       }}
-                                      as={`/User/${userObj.uid}/UserCommunityCreate`}
+                                      as={`/customer/${customerObj.uid}/customerContentsCreate`}
                                     >
                                         <Button className="ml-4 w-9rem p-button-rounded p-button-info" icon="pi pi-plus" label="새 컨텐츠" />
                                     </Link> */}

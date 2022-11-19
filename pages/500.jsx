@@ -7,8 +7,8 @@ import { Button } from 'primereact/button';
 import ProjectContext from '../context';
 
 
-CanNotFindTheCauseError.layout = "L3";
-export default function CanNotFindTheCauseError() {
+canNotFindTheCauseError.layout = "L3";
+export default function canNotFindTheCauseError() {
     const { prefix } = useContext(ProjectContext);
     
     return (

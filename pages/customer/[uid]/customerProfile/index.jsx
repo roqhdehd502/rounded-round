@@ -5,29 +5,29 @@ import { useRouter } from 'next/router';
 
 import { Button } from 'primereact/button';
 
-import UserHeader from '../../../../components/user/userHeader';
+import CustomerHeader from '../../../../components/customer/CustomerHeader';
 
-import { formatUnitEachThousand, timeFormatting } from '../../../../commons/functional/Filters'
+import { formatUnitEachThousand, timeFormatting } from '../../../../commons/functional/filters'
 
-import { getUserInfoObjThunk } from '../../../../store/modules/UserInfo';
+import { getCustomerInfoObjThunk } from '../../../../store/modules/customerInfo';
 
 
-UserProfile.layout = "L1";
-export default function UserProfile() {
+customerProfile.layout = "L1";
+export default function customerProfile() {
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const userInfoObj = useSelector(({ UserInfo }) => UserInfo.userInfoObj);
+    const customerInfoObj = useSelector(({ customerInfo }) => customerInfo.customerInfoObj);
 
     useEffect(() => {
-        dispatch(getUserInfoObjThunk(router.query.uid));
-    }, [router.query, userInfoObj ? userInfoObj.uid : null]);
+        dispatch(getCustomerInfoObjThunk(router.query.uid));
+    }, [router.query, customerInfoObj ? customerInfoObj.uid : null]);
 
     return (
         <>
-            {userInfoObj ? (
+            {customerInfoObj ? (
                 <>
-                    <UserHeader
+                    <CustomerHeader
                       activeIndex={2}          
                     />
                                  
@@ -38,19 +38,19 @@ export default function UserProfile() {
                                 <div className="col-4 text-500"><h3 className="mb-0">구독자 수</h3></div>
                                 <div className="col-4 text-500"><h3 className="mb-0">가입일</h3></div>
                                 <div className="col-4 text-700"><h3 className="mt-0">{formatUnitEachThousand(1230)}개</h3></div>
-                                <div className="col-4 text-700"><h3 className="mt-0">{formatUnitEachThousand(userInfoObj.subscribes)}명</h3></div>
-                                <div className="col-4 text-700"><h3 className="mt-0">{timeFormatting(userInfoObj.createdAt)}</h3></div>
+                                <div className="col-4 text-700"><h3 className="mt-0">{formatUnitEachThousand(customerInfoObj.subscribes)}명</h3></div>
+                                <div className="col-4 text-700"><h3 className="mt-0">{timeFormatting(customerInfoObj.createdAt)}</h3></div>
                             </div>
                             <div className="field text-center p-fluid mt-4 p-1 pl-3 pr-3 border-round-3xl">
                                 <h3>설명</h3>
                                 <p className="white-space-normal">
-                                    {userInfoObj.bio}
+                                    {customerInfoObj.bio}
                                 </p>
                             </div>
                             <div className="field text-center p-fluid mt-4 p-1 border-round-3xl">
                                 <h3>세부정보</h3>
                                 <p className="white-space-normal">
-                                    {userInfoObj.infoDetail.split('\\n').map((line, index) => {
+                                    {customerInfoObj.infoDetail.split('\\n').map((line, index) => {
                                         return (
                                             <span key={index}>
                                                 {line}<br />
@@ -63,10 +63,10 @@ export default function UserProfile() {
                                 <h3>링크</h3>
                                 <div>
                                     <Button 
-                                      label={userInfoObj.link.linkName} 
+                                      label={customerInfoObj.link.linkName} 
                                       icon="pi pi-external-link" 
                                       className="p-button-text pr-5"
-                                      onClick={() => window.open(userInfoObj.link.linkAddress)}
+                                      onClick={() => window.open(customerInfoObj.link.linkAddress)}
                                     />
                                 </div>
                             </div>

@@ -1,5 +1,4 @@
-//import { useState, useEffect } from 'react';
-import { useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 // import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -10,28 +9,29 @@ import { getAlbums } from '../../service';
 
 import { CarouselCommon } from '../../commons/primereact/CarouselCommon';
 
-//import * as AlbumActions from '../../store/modules/Album';
+//import * as albumsInfoActions from '../../store/modules/albumsInfo';
 
 
 export const NewAlbum = () => {
     const { prefix } = useContext(ProjectContext);
     //const dispatch = useDispatch();
 
-    //const albums = useSelector(({ Album }) => Album.albums);
-    const albums = getAlbums();
+    //const albums = useSelector(({ albumsInfo }) => albumsInfo.albums);
+    const [albums, setAlbums] = useState([]);
 
     useEffect(() => {
-        //dispatch(AlbumActions.getAlbums());
-    }, []);
+        setAlbums(getAlbums());
+        //dispatch(albumsInfoActions.getAlbums());
+    }, [albums]);
 
     const rightNewAlbumsTemplate = (albumObj) => {
         return (
             <Link 
               href={{
-                pathname: `/Album/${albumObj.id}`,
+                pathname: `/album/${albumObj.id}`,
                 query: { aId: albumObj.id },
               }}
-              as={`/Album/${albumObj.id}`}
+              as={`/album/${albumObj.id}`}
             >
                 <div className="carousel-item border-round-2xl image-link">
                     <div 
@@ -61,10 +61,10 @@ export const NewAlbum = () => {
                                         <div key={item.id}>
                                             <Link 
                                               href={{
-                                                pathname: `/Album/${item.id}`,
+                                                pathname: `/album/${item.id}`,
                                                 query: { aId: item.id },
                                               }}
-                                              as={`/Album/${item.id}`}
+                                              as={`/album/${item.id}`}
                                             >
                                                 <div 
                                                   className="col-4 h-8rem w-8rem image-link"

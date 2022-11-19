@@ -9,20 +9,20 @@ import { Button } from 'primereact/button';
 
 import ProjectContext from '../../context';
 
-import * as UserInfoActions from '../../store/modules/UserInfo';
+import * as customerInfoActions from '../../store/modules/customerInfo';
 
 
-FindPassword.layout = "L2";
-export default function FindPassword() {
+findPassword.layout = "L2";
+export default function findPassword() {
     const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const [userEmail, setUserEmail] = useState('');
+    const [customerEmail, setCustomerEmail] = useState('');
 
     const onFindPassword = useCallback((email) => {
         try {
-            dispatch(UserInfoActions.patchUserPassword(email));
+            dispatch(customerInfoActions.patchCustomerPassword(email));
             alert('가입하신 회원님의 이메일로 비밀번호 변경 요청을 전송하였습니다.');
             router.replace(`/`);
         } catch (error) {
@@ -37,20 +37,20 @@ export default function FindPassword() {
                     <h1 className="flex justify-content-center">비밀번호 찾기</h1>
                     <div className="field p-fluid mt-6">
                         <span className="p-float-label">
-                            <InputText id="userEmail" value={userEmail} onChange={(e) => setUserEmail(e.target.value)} />
-                            <label htmlFor="userEmail">이메일</label>
+                            <InputText id="customerEmail" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} />
+                            <label htmlFor="customerEmail">이메일</label>
                         </span>
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Button label="비밀번호 찾기" icon="pi pi-search" className="pr-5" onClick={() => onFindPassword(userEmail)} />
+                        <Button label="비밀번호 찾기" icon="pi pi-search" className="pr-5" onClick={() => onFindPassword(customerEmail)} />
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Link href={`/Auth/SignIn`}>
+                        <Link href={`/auth/signIn`}>
                             <Button label="로그인" icon="pi pi-sign-in" className="p-button-info pr-5" />
                         </Link>
                     </div>
                     <div className="field p-fluid">
-                        <Link href={`/Auth/SignUp`}>
+                        <Link href={`/auth/signUp`}>
                             <Button label="회원가입" icon="pi pi-user-plus" className="p-button-info pr-5" />
                         </Link>
                     </div>

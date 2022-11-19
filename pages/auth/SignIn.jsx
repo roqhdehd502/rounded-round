@@ -12,37 +12,37 @@ import { Button } from 'primereact/button';
 
 import ProjectContext from '../../context';
 
-import * as UserInfoActions from '../../store/modules/UserInfo';
-import { checkDuplicatedEmailThunk, createUserObjThunk } from '../../store/modules/UserInfo';
+import * as customerInfoActions from '../../store/modules/customerInfo';
+import { checkDuplicatedEmailThunk, createCustomerObjThunk } from '../../store/modules/customerInfo';
 
 
-SignIn.layout = "L2";
-export default function SignIn() {
+signIn.layout = "L2";
+export default function signIn() {
     const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
     const auth = getAuth();
 
-    const isDuplicatedUserEmailResult = useSelector(({ UserInfo }) => UserInfo.loading);
+    const isDuplicatedEmailResult = useSelector(({ customerInfo }) => customerInfo.loading);
 
-    const [userEmail, setUserEmail] = useState('');
-    const [userPassword, setUserPassword] = useState('');
-    const [userObj, setUserObj] = useState(null);
+    const [customerEmail, setCustomerEmail] = useState('');
+    const [customerPassword, setCustomerPassword] = useState('');
+    const [customerObj, setCustomerObj] = useState(null);
 
     useEffect(() => {
-        if (isDuplicatedUserEmailResult) createGoogleNewUserObj(isDuplicatedUserEmailResult, userObj);
-    }, [isDuplicatedUserEmailResult]);    
+        if (isDuplicatedEmailResult) createGoogleNewCustomerObj(isDuplicatedEmailResult, customerObj);
+    }, [isDuplicatedEmailResult]);    
 
     const emailLogin = useCallback((payload) => {
-        if(!payload.userEmail || !payload.userPassword) {
+        if(!payload.customerEmail || !payload.customerPassword) {
             alert('올바른 계정이 아닙니다.');
             return;
         } 
 
-        signInWithEmailAndPassword(auth, payload.userEmail, payload.userPassword)
+        signInWithEmailAndPassword(auth, payload.customerEmail, payload.customerPassword)
           .then((result) => {
               const payload = result.user;
-              dispatch(UserInfoActions.emailLogin(payload));
+              dispatch(customerInfoActions.emailLogin(payload));
               router.replace(`/`);
           })
           .catch((error) => { 
@@ -55,8 +55,8 @@ export default function SignIn() {
         auth.languageCode = 'ko';
         signInWithPopup(auth, provider)
           .then((payload) => { 
-              setUserObj(payload.user);
-              dispatch(UserInfoActions.googleLogin(payload.user));
+              setCustomerObj(payload.user);
+              dispatch(customerInfoActions.googleLogin(payload.user));
               dispatch(checkDuplicatedEmailThunk(payload.user.uid));
           })
           .catch((error) => { 
@@ -64,19 +64,18 @@ export default function SignIn() {
           });
     }, [dispatch]);
 
-    const createGoogleNewUserObj = useCallback((emailExist, userInfo) => {
+    const createGoogleNewCustomerObj = useCallback((emailExist, customerInfo) => {
         switch(emailExist) {
             case 'Y':
                 console.log("이미 있는 계정이지롱", emailExist);
-                console.log("없는 계정이지롱", emailExist);
                 break;
             case 'N':
                 console.log("없는 계정이지롱", emailExist);
-                const user = {
-                    displayName: userInfo.displayName,
-                    userEmail: userInfo.email,
-                    photoURL: userInfo.photoURL,
-                    uid: userInfo.uid,
+                const customer = {
+                    displayName: customerInfo.displayName,
+                    customerEmail: customerInfo.email,
+                    photoURL: customerInfo.photoURL,
+                    uid: customerInfo.uid,
                     createdAt: Date.now(),
                     subscribes: 0,
                     bio: '',
@@ -84,7 +83,7 @@ export default function SignIn() {
                     link: {linkName: '', linkAddress: ''},
                     enabled: true,
                 }
-                dispatch(createUserObjThunk(user));
+                dispatch(createCustomerObjThunk(customer));
                 break;
         }
     }, [dispatch]);
@@ -96,29 +95,29 @@ export default function SignIn() {
                     <h1 className="flex justify-content-center">로그인</h1>
                     <div className="field p-fluid mt-6">
                         <span className="p-float-label">
-                            <InputText id="userEmail" value={userEmail} onChange={(e) => setUserEmail(e.target.value)} />
-                            <label htmlFor="userEmail">이메일</label>
+                            <InputText id="customerEmail" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} />
+                            <label htmlFor="customerEmail">이메일</label>
                         </span>
                     </div>
                     <div className="field p-fluid">
                         <span className="p-float-label">
-                            <Password id="userPassword" value={userPassword} onChange={(e) => setUserPassword(e.target.value)} feedback={false} toggleMask />
-                            <label htmlFor="userPassword">비밀번호</label>
+                            <Password id="customerPassword" value={customerPassword} onChange={(e) => setCustomerPassword(e.target.value)} feedback={false} toggleMask />
+                            <label htmlFor="customerPassword">비밀번호</label>
                         </span>
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Button label="이메일 로그인" icon="pi pi-sign-in" className="pr-5" onClick={() => emailLogin({userEmail, userPassword})} />
+                        <Button label="이메일 로그인" icon="pi pi-sign-in" className="pr-5" onClick={() => emailLogin({customerEmail, customerPassword})} />
                     </div>
                     <div className="field p-fluid">
                         <Button label="구글 로그인" icon="pi pi-google" className="pr-5" onClick={() => googleLogin()} />
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Link href={`/Auth/SignUp`}>
+                        <Link href={`/auth/signUp`}>
                             <Button label="회원가입" icon="pi pi-user-plus" className="p-button-info pr-5" />
                         </Link>
                     </div>
                     <div className="field p-fluid">
-                        <Link href={`/Auth/FindPassword`}>
+                        <Link href={`/auth/findPassword`}>
                             <Button label="비밀번호 찾기" icon="pi pi-search" className="p-button-info pr-5" />
                         </Link>
                     </div>

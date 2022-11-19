@@ -17,7 +17,6 @@ const nextConfig = {
         ],
         formats: ['image/avif', 'image/webp'],
     },
-    poweredByHeader: process.env.NODE_ENV === "development",
     reactStrictMode: false,
     swcMinify: true,
     eslint: { ignoreDuringBuilds: true },

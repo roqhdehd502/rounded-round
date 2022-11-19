@@ -12,23 +12,23 @@ import { Button } from 'primereact/button';
 import ProjectContext from '../../../context';
 
 import { DialogCommon } from '../../../commons/primereact/DialogCommon';
-import { ellipsisText, formatUnitEachThousand, timeFormatting } from '../../../commons/functional/Filters';
+import { ellipsisText, formatUnitEachThousand, timeFormatting } from '../../../commons/functional/filters';
 
 import { getAlbum, getSongsInAlbum } from '../../../service';
 
-// import * as AlbumActions from '../../store/modules/Album';
+// import * as AlbumActions from '../../store/modules/AlbumsInfo';
 
 
-AlbumDetail.layout = "L1";
-export default function AlbumDetail() {
+albumDetail.layout = "L1";
+export default function albumDetail() {
     const { prefix } = useContext(ProjectContext);
     // const dispatch = useDispatch();
     const router = useRouter();
 
-    const userObj = useSelector(({ UserInfo }) => UserInfo.userObj);
+    const customerObj = useSelector(({ customerInfo }) => customerInfo.customerObj);
 
-    // const albumObj = useSelector(({ Album }) => Album.albumObj);
-    // const songsInAlbum = useSelector(({ Album }) => Album.songsInAlbum);
+    // const albumObj = useSelector(({ AlbumsInfo }) => AlbumsInfo.albumObj);
+    // const songsInAlbum = useSelector(({ AlbumsInfo }) => AlbumsInfo.songsInAlbum);
     const [albumObj, setAlbumObj] = useState(null);
     const [songsInAlbum, setSongsInAlbum] = useState([]);
 
@@ -71,7 +71,7 @@ export default function AlbumDetail() {
             }
             
             if (confirm('장바구니에 담는 것을 성공했습니다.\n구입 페이지로 이동하시겠습니까?')) {
-                router.push(`/Purchase/${userObj.uid}/CartList`);
+                router.push(`/purchase/${customerObj.uid}/cartList`);
             }
         }
     }
@@ -133,10 +133,10 @@ export default function AlbumDetail() {
             <>
                 <Link
                   href={{
-                    pathname: `/Album/${router.query.aId}/Song/${rowData.id}`,
+                    pathname: `/album/${router.query.aId}/song/${rowData.id}`,
                     query: { aId: router.query.aId, sId: rowData.id },
                   }}
-                  as={`/Album/${router.query.aId}/Song/${rowData.id}`}
+                  as={`/album/${router.query.aId}/song/${rowData.id}`}
                 >
 
                     <Button icon="pi pi-search" />

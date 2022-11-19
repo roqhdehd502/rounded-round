@@ -23,19 +23,19 @@ import { firestore } from '../../firebaseConfiguration';
 
 
 const initialState = {
-    userContent: null, 
-    userContents: [],
+    customerContentObj: null, 
+    customerContents: [],
 
     loading: false,
     error: null,
 };
 
 
-export const getUserContentThunk = createAsyncThunk(
-    "UserContents/getUserContentThunk",
+export const getCustomerContentThunk = createAsyncThunk(
+    "customerContentsInfo/getCustomerContentThunk",
     async (uid, thunkAPI) => {
         try {
-            const docRef = doc(firestore, "userContents", uid);
+            const docRef = doc(firestore, "customerContents", uid);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 return docSnap.data();
@@ -48,12 +48,12 @@ export const getUserContentThunk = createAsyncThunk(
     }
 );
 
-export const getUserContentsThunk = createAsyncThunk(
-    "UserContents/getUserContentsThunk",
+export const getCustomerContentsThunk = createAsyncThunk(
+    "customerContentsInfo/getCustomerContentsThunk",
     async (uid, thunkAPI) => {
         let datas = [];
         let q = query(
-            collection(firestore, "userContents"),
+            collection(firestore, "customerContents"),
             where("uid", "==", uid),
             orderBy("uploadDate", "desc")
         );
@@ -71,11 +71,11 @@ export const getUserContentsThunk = createAsyncThunk(
     }
 );
 
-export const createUserContentThunk = createAsyncThunk(
-    "UserContents/createUserContentThunk",
+export const createCustomerContentThunk = createAsyncThunk(
+    "customerContentsInfo/createCustomerContentThunk",
     async (payload, thunkAPI) => {
         try {
-            await addDoc(collection(firestore, "userContents"), payload)
+            await addDoc(collection(firestore, "customerContents"), payload)
               .then((docRef) => { return docRef })
               .catch((error) => { console.log(error) });
         } catch (error) {
@@ -84,10 +84,10 @@ export const createUserContentThunk = createAsyncThunk(
     }
 );
 
-export const patchUserContentThunk = createAsyncThunk(
-    "UserContents/patchUserContentThunk",
+export const patchCustomerContentThunk = createAsyncThunk(
+    "customerContentsInfo/patchCustomerContentThunk",
     async (payload, thunkAPI) => {
-        const docRef = doc(firestore, "userContents", payload.docId);
+        const docRef = doc(firestore, "customerContents", payload.docId);
         try {
             await updateDoc(docRef, {
                 thumbnail: payload.thumbnail,
@@ -99,10 +99,10 @@ export const patchUserContentThunk = createAsyncThunk(
     }
 );
 
-export const deleteUserContentThunk = createAsyncThunk(
-  "UserContents/deleteUserContentThunk",
+export const deleteCustomerContentThunk = createAsyncThunk(
+  "customerContentsInfo/deleteCustomerContentThunk",
   async (payload, thunkAPI) => {
-      const docRef = doc(firestore, "userContents", payload);
+      const docRef = doc(firestore, "customerContents", payload);
       try {
           await deleteDoc(docRef);
       } catch (error) {
@@ -112,15 +112,15 @@ export const deleteUserContentThunk = createAsyncThunk(
 );
 
 
-const UserContentsSlice = createSlice({
-    name: 'UserContents',
+const customerContentsInfoSlice = createSlice({
+    name: 'customerContentsInfo',
 
     initialState,
 
     reducers: {
-        patchUserObj(state, action) { 
+        patchCustomerObj(state, action) { 
             updateProfile(getAuth().currentUser, {
-                displayName: action.payload.updateUserObj.displayName,
+                displayName: action.payload.updateCustomerObj.displayName,
                 photoURL: action.payload.photoURL,
             }).then(() => {
                 console.log("UPDATE SUCCESS!");
@@ -131,61 +131,61 @@ const UserContentsSlice = createSlice({
     },
 
     extraReducers: {
-        [getUserContentThunk.pending]: (state, action) => {
+        [getCustomerContentThunk.pending]: (state, action) => {
             state.loading = true;
         },
-        [getUserContentThunk.fulfilled]: (state, action) => {
+        [getCustomerContentThunk.fulfilled]: (state, action) => {
             state.loading = false;
-            state.userCommunity = action.payload;
+            state.customerContentObj = action.payload;
         },
-        [getUserContentThunk.rejected]: (state, action) => {
+        [getCustomerContentThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },
 
-        [getUserContentsThunk.pending]: (state, action) => {
+        [getCustomerContentsThunk.pending]: (state, action) => {
             state.loading = true;
         },
-        [getUserContentsThunk.fulfilled]: (state, action) => {
+        [getCustomerContentsThunk.fulfilled]: (state, action) => {
             state.loading = false;
-            state.userCommunities = action.payload;
+            state.customerContents = action.payload;
         },
-        [getUserContentsThunk.rejected]: (state, action) => {
+        [getCustomerContentsThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },
 
-        [createUserContentThunk.pending]: (state, action) => {
+        [createCustomerContentThunk.pending]: (state, action) => {
             state.loading = true;
         },
-        [createUserContentThunk.fulfilled]: (state, action) => {
+        [createCustomerContentThunk.fulfilled]: (state, action) => {
             state.loading = false;
             console.log("CREATE SUCCESS.", action.payload);
         },
-        [createUserContentThunk.rejected]: (state, action) => {
+        [createCustomerContentThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },
 
-        [patchUserContentThunk.pending]: (state, action) => {
+        [patchCustomerContentThunk.pending]: (state, action) => {
             state.loading = true;
         },
-        [patchUserContentThunk.fulfilled]: (state, action) => {
+        [patchCustomerContentThunk.fulfilled]: (state, action) => {
             state.loading = false;
         },
-        [patchUserContentThunk.rejected]: (state, action) => {
+        [patchCustomerContentThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },
 
-        [deleteUserContentThunk.pending]: (state, action) => {
+        [deleteCustomerContentThunk.pending]: (state, action) => {
             state.loading = true;
         },
-        [deleteUserContentThunk.fulfilled]: (state, action) => {
+        [deleteCustomerContentThunk.fulfilled]: (state, action) => {
             state.loading = false;
-            state.userCommunities = [];
+            state.customerContents = [];
         },
-        [deleteUserContentThunk.rejected]: (state, action) => {
+        [deleteCustomerContentThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },
@@ -194,6 +194,6 @@ const UserContentsSlice = createSlice({
 
 export const { 
     patchUserObj,
-} = UserContentsSlice.actions;
+} = customerContentsInfoSlice.actions;
 
-export default UserContentsSlice.reducer;
+export default customerContentsInfoSlice.reducer;

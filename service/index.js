@@ -1,7 +1,8 @@
 import { albumData } from '../data/AlbumData';
-import { buyHistoryData } from '../data/BuyHistoryData';
+import { buyHistoryData } from '../data/buyHistoryData';
 import { songData } from '../data/SongData';
-import { contentsData } from '../data/ContentsData';
+import { contentsData } from '../data/contentsData';
+import { advertisementData } from '../data/advertisementData';
 
 
 export const getAlbums = () => {
@@ -39,4 +40,10 @@ export const getBuyHistories = () => {
 
 export const getContents = () => {
     return contentsData;
+}
+
+export const getAdvertisement = () => {
+    const res = advertisementData[Math.floor(Math.random() * advertisementData.length)];
+    console.log("res", res);
+    return res;
 }

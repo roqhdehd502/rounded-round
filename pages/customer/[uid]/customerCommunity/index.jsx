@@ -12,32 +12,32 @@ import { Button } from 'primereact/button';
 
 import ProjectContext from '../../../../context';
 
-import UserHeader from '../../../../components/user/userHeader';
+import CustomerHeader from '../../../../components/customer/CustomerHeader';
 
-import { timeCounter } from '../../../../commons/functional/Filters'
+import { timeCounter } from '../../../../commons/functional/filters'
 
-import { getUserInfoObjThunk } from '../../../../store/modules/UserInfo';
-import { getUserCommunitiesThunk } from '../../../../store/modules/UserCommunity';
+import { getCustomerInfoObjThunk } from '../../../../store/modules/customerInfo';
+import { getCustomerCommunitiesThunk } from '../../../../store/modules/customerCommunitiesInfo';
 
 
-UserCommunity.layout = "L1";
-export default function UserCommunity() {
+customerCommunity.layout = "L1";
+export default function customerCommunity() {
     const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const userObj = useSelector(({ UserInfo }) => UserInfo.userObj);
-    const userInfoObj = useSelector(({ UserInfo }) => UserInfo.userInfoObj);
-    const userCommunities = useSelector(({ UserCommunity }) => UserCommunity.userCommunities);
+    const customerObj = useSelector(({ customerInfo }) => customerInfo.customerObj);
+    const customerInfoObj = useSelector(({ customerInfo }) => customerInfo.customerInfoObj);
+    const customerCommunities = useSelector(({ customerCommunitiesInfo }) => customerCommunitiesInfo.customerCommunities);
 
     const [multiSortMeta, setMultiSortMeta] = useState([{ field: 'popularCount', order: -1 }]);
     const [loading, setLoading] = useState(true);  
 
     useEffect(() => {
-        dispatch(getUserInfoObjThunk(router.query.uid));
-        dispatch(getUserCommunitiesThunk(router.query.uid));
+        dispatch(getCustomerInfoObjThunk(router.query.uid));
+        dispatch(getCustomerCommunitiesThunk(router.query.uid));
         setLoading(false);
-    }, [router.query, userObj ? userObj.uid : null, , userInfoObj ? userInfoObj.uid : null]);
+    }, [router.query, customerObj ? customerObj.uid : null, , customerInfoObj ? customerInfoObj.uid : null]);
 
     const contentBodyTemplate = (rowData) => {
         return (
@@ -48,13 +48,13 @@ export default function UserCommunity() {
                             <div className="mr-3">
                                 <Link
                                   href={{
-                                    pathname: `/User/${rowData.uid}/UserCommunity/Update/${rowData.docId}`,
+                                    pathname: `/customer/${rowData.uid}/customerCommunity/update/${rowData.docId}`,
                                     query: {
                                       uid: rowData.uid,
                                       docId: rowData.docId,
                                     }
                                   }}
-                                  as={`/User/${rowData.uid}/UserCommunity/Update/${rowData.docId}`}
+                                  as={`/customer/${rowData.uid}/customerCommunity/update/${rowData.docId}`}
                                 >
                                     <Button className="p-button-rounded p-button-info" icon="pi pi-pencil" />
                                 </Link>
@@ -90,22 +90,22 @@ export default function UserCommunity() {
 
     return (
         <>
-            {userInfoObj ? (
+            {customerInfoObj ? (
                 <>
-                    <UserHeader
+                    <CustomerHeader
                       activeIndex={1}           
                     />    
 
                     <div className="flex align-content-center align-items-center justify-content-center">
                         <div className="card surface-0 p-5 border-round-2xl w-auto">
-                            {userObj && userObj.uid === userInfoObj.uid ? (
+                            {customerObj && customerObj.uid === customerInfoObj.uid ? (
                                 <div className="flex justify-content-end">
                                     <Link 
                                       href={{
-                                        pathname: `/User/${userObj.uid}/UserCommunity/Create`,
-                                        query: { uid: userObj.uid },
+                                        pathname: `/customer/${customerObj.uid}/customerCommunity/create`,
+                                        query: { uid: customerObj.uid },
                                       }}
-                                      as={`/User/${userObj.uid}/UserCommunity/Create`}
+                                      as={`/customer/${customerObj.uid}/customerCommunity/create`}
                                     >
                                         <Button className="ml-4 w-9rem p-button-rounded p-button-info" icon="pi pi-plus" label="새 커뮤니티" />
                                     </Link>
@@ -115,7 +115,7 @@ export default function UserCommunity() {
                             )}
                             
                             <DataTable 
-                              value={userCommunities} className="p-datatable-customers" rows={10}
+                              value={customerCommunities} className="p-datatable-customers" rows={10}
                               dataKey="id" rowHover
                               paginator paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                               currentPageReportTemplate="{first} / {last} of {totalRecords}"

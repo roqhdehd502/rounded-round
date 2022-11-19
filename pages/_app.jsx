@@ -17,9 +17,9 @@ import { wrapper } from "../store";
 
 import { firestore, firebaseStorage } from '../firebaseConfiguration';
 
-import DefaultLayout from '../layouts/DefaultLayout';
-import EmptyLayout from '../layouts/EmptyLayout';
-import ErrorLayout from '../layouts/ErrorLayout';
+import DefaultLayout from '../layouts/defaultLayout';
+import EmptyLayout from '../layouts/emptyLayout';
+import ErrorLayout from '../layouts/errorLayout';
 
 
 const layouts = {

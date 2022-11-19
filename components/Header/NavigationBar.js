@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from 'react';
+import { useState, forwardRef, useRef, useContext } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -12,7 +12,19 @@ import { InputText } from 'primereact/inputtext';
 
 import ProjectContext from '../../context';
 
-import * as UserInfoActions from '../../store/modules/UserInfo';
+import * as customerInfoActions from '../../store/modules/customerInfo';
+
+
+const MenuRef = forwardRef((props, ref) => {
+    return (
+        <Menu 
+          id="popup_menu" 
+          model={props.model} 
+          ref={ref}  
+          popup 
+        />
+    ); 
+})
 
 
 export const NavigationBar = (props) => {
@@ -20,7 +32,7 @@ export const NavigationBar = (props) => {
     const dispatch = useDispatch();
     const router = useRouter();
     
-    const UserProfileItem = useRef(null);
+    const customerProfileItem = useRef(null);
 
     const [visibleLeft, setVisibleLeft] = useState(false);
 
@@ -33,14 +45,14 @@ export const NavigationBar = (props) => {
         </>
     );
 
-    const UserProfileItems = [
+    const customerProfileItems = [
         {
               items: [
                   {
                       label: '로그아웃',
                       icon: 'pi pi-lock',
                       command:(e) => {
-                          dispatch(UserInfoActions.logout());
+                          dispatch(customerInfoActions.logout());
                           router.replace(`/`);
                       },
                   },
@@ -54,10 +66,10 @@ export const NavigationBar = (props) => {
                       icon: 'pi pi-shopping-cart',
                       command:(e) => {
                           router.push({
-                            pathname: `/Purchase/${props.userObj.uid}/CartList`,
-                            query: { uid: props.userObj.uid },
+                            pathname: `/purchase/${props.customerObj.uid}/cartList`,
+                            query: { uid: props.customerObj.uid },
                           },
-                          `/Purchase/${props.userObj.uid}/CartList`,
+                          `/purchase/${props.customerObj.uid}/cartList`,
                           );
                       },
                   },
@@ -66,10 +78,10 @@ export const NavigationBar = (props) => {
                       icon: 'pi pi-wallet',
                       command:(e) => {
                           router.push({
-                            pathname: `/Purchase/${props.userObj.uid}/BuyHistory`,
-                            query: { uid: props.userObj.uid },
+                            pathname: `/purchase/${props.customerObj.uid}/buyHistory`,
+                            query: { uid: props.customerObj.uid },
                           },
-                          `/Purchase/${props.userObj.uid}/BuyHistory`,
+                          `/purchase/${props.customerObj.uid}/buyHistory`,
                           );
                       },
                   },
@@ -83,10 +95,10 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-user',
                     command:(e) => {
                         router.push({
-                          pathname: `/User${props.userObj.uid}/UserProfile`,
-                          query: { uid: props.userObj.uid },
+                          pathname: `/customer/${props.customerObj.uid}/customerProfile`,
+                          query: { uid: props.customerObj.uid },
                         },
-                        `/User/${props.userObj.uid}/UserProfile`,
+                        `/customer/${props.customerObj.uid}/customerProfile`,
                         );
                     },
                 },
@@ -95,10 +107,10 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-comments',
                     command:(e) => {
                         router.push({
-                          pathname: `/User/${props.userObj.uid}/UserCommunity`,
-                          query: { uid: props.userObj.uid },
+                          pathname: `/customer/${props.customerObj.uid}/customerCommunity`,
+                          query: { uid: props.customerObj.uid },
                         },
-                        `/User/${props.userObj.uid}/UserCommunity`,
+                        `/customer/${props.customerObj.uid}/customerCommunity`,
                         );
                     },
                 },
@@ -107,10 +119,10 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-folder',
                     command:(e) => {
                         router.push({
-                          pathname: `/User/${props.userObj.uid}/UserContents`,
-                          query: { uid: props.userObj.uid },
+                          pathname: `/customer/${props.customerObj.uid}/customerContents`,
+                          query: { uid: props.customerObj.uid },
                         },
-                        `/User/${props.userObj.uid}/UserContents`,
+                        `/customer/${props.customerObj.uid}/customerContents`,
                         );
                     },
                 },
@@ -135,7 +147,7 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-chart-bar',
                     command:(e) => {
                         setVisibleLeft(false);
-                        router.push(`/Popular/PopularList`);
+                        router.push(`/popular/popularList`);
                     }
                 },
                 {
@@ -143,7 +155,7 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-plus',
                     command:(e) => {
                         setVisibleLeft(false);
-                        router.push(`/New/NewList`);
+                        router.push(`/new/newList`);
                     }                    
                 },
                 {
@@ -151,7 +163,7 @@ export const NavigationBar = (props) => {
                     icon: 'pi pi-users',
                     command:(e) => {
                         setVisibleLeft(false);
-                        router.push(`/Genre/GenreList`);
+                        router.push(`/genre/genreList`);
                     }                    
                 },
             ]
@@ -168,10 +180,10 @@ export const NavigationBar = (props) => {
                     command:(e) => {
                         setVisibleLeft(false);
                         router.push({
-                          pathname: `/User/${props.userObj.uid}/UserHistory`,
-                          query: { uid: props.userObj.uid },
+                          pathname: `/customer/${props.customerObj.uid}/customerHistory`,
+                          query: { uid: props.customerObj.uid },
                         },
-                        `/User/${props.userObj.uid}/UserHistory`,
+                        `/customer/${props.customerObj.uid}/customerHistory`,
                         );
                     } 
                 },
@@ -181,10 +193,10 @@ export const NavigationBar = (props) => {
                     command:(e) => {
                         setVisibleLeft(false);
                         router.push({
-                          pathname: `/User/${props.userObj.uid}/UserSubscribes`,
-                          query: { uid: props.userObj.uid },
+                          pathname: `/customer/${props.customerObj.uid}/customerSubscribes`,
+                          query: { uid: props.customerObj.uid },
                         },
-                        `/User/${props.userObj.uid}/UserSubscribes`,
+                        `/customer/${props.customerObj.uid}/customerSubscribes`,
                         );
                     }
                 }
@@ -199,10 +211,10 @@ export const NavigationBar = (props) => {
                     command:(e) => {
                         setVisibleLeft(false);
                         router.push({
-                          pathname: `/User/wODlzR5zAjZobEl2vpNkkyihHIj1/UserProfile`,
+                          pathname: `/customer/wODlzR5zAjZobEl2vpNkkyihHIj1/customerProfile`,
                           query: { uid: "wODlzR5zAjZobEl2vpNkkyihHIj1" },
                         },
-                        `/User/wODlzR5zAjZobEl2vpNkkyihHIj1/UserProfile`,
+                        `/customer/wODlzR5zAjZobEl2vpNkkyihHIj1/customerProfile`,
                         );
                     }
                 },
@@ -210,7 +222,7 @@ export const NavigationBar = (props) => {
         },
     ];
 
-    const sideMenuItems = props.userObj ? [...sideMenuItemsSignOut, ...sideMenuItemsSignIn] : [...sideMenuItemsSignOut];
+    const sideMenuItems = props.customerObj ? [...sideMenuItemsSignOut, ...sideMenuItemsSignIn] : [...sideMenuItemsSignOut];
 
     const leftContents = (
         <div className="ml-0 mr-0">
@@ -238,16 +250,17 @@ export const NavigationBar = (props) => {
         </div>
     );
     
-    const rightContents = props.userObj ? (
+    const rightContents = props.customerObj ? (
         <div className="ml-0 mr-0">
-            <Menu model={UserProfileItems} popup ref={UserProfileItem} id="popup_menu" />
-            <Button className="p-button-rounded p-button-text" onClick={(event) => UserProfileItem.current.toggle(event)} aria-controls="popup_menu" aria-haspopup>
-                <Image className="border-circle" alt={props.userObj.displayName} src={props.userObj.photoURL ? props.userObj.photoURL : `${prefix}/img/anonymous-user-logo.png`} onError={(e) => e.target.src = `${prefix}/img/anonymous-user-logo.png`} width={35} height={35} quality={75} />
+            <MenuRef model={customerProfileItems} ref={customerProfileItem} />
+            {/* <Menu id="popup_menu" model={customerProfileItems} ref={customerProfileItem}  popup /> */}
+            <Button className="p-button-rounded p-button-text" onClick={(event) => customerProfileItem.current.toggle(event)} aria-controls="popup_menu" aria-haspopup>
+                <Image className="border-circle" alt={props.customerObj.displayName} src={props.customerObj.photoURL ? props.customerObj.photoURL : `${prefix}/img/anonymous-user-logo.png`} onError={(e) => e.target.src = `${prefix}/img/anonymous-user-logo.png`} width={35} height={35} quality={75} />
             </Button>
         </div>
     ) : (
         <div className="ml-0 mr-0">
-            <Link href={`/Auth/SignIn`}>
+            <Link href={`/auth/signIn`}>
                 <Button label="로그인" icon="pi pi-unlock" />
             </Link>
         </div>

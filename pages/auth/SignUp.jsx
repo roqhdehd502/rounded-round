@@ -12,46 +12,46 @@ import { Button } from 'primereact/button';
 
 import ProjectContext from '../../context';
 
-import { checkDuplicatedEmailThunk, createUserObjThunk } from '../../store/modules/UserInfo';
+import { checkDuplicatedEmailThunk, createCustomerObjThunk } from '../../store/modules/customerInfo';
 
 
-SignUp.layout = "L2";
-export default function SignUp() {
+signUp.layout = "L2";
+export default function signUp() {
     const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
     const auth = getAuth();
 
-    const isDuplicatedUserEmailResult = useSelector(({ UserInfo }) => UserInfo.isDuplicatedUserEmailResult);
-    const duplicatedCheckLoading = useSelector(({ UserInfo }) => UserInfo.loading);
+    const isDuplicatedEmailResult = useSelector(({ customerInfo }) => customerInfo.isDuplicatedEmailResult);
+    const duplicatedCheckLoading = useSelector(({ customerInfo }) => customerInfo.loading);
 
-    const [userId, setUserId] = useState('');
-    const [userEmailAddress, setUserEmailAddress] = useState('');
-    const [userPassword, setUserPassword] = useState('');
-    const [userPasswordCheck, setUserPasswordCheck] = useState('');
+    const [customerId, setCustomerId] = useState('');
+    const [customerEmailAddress, setCustomerEmailAddress] = useState('');
+    const [customerPassword, setCustomerPassword] = useState('');
+    const [customerPasswordCheck, setCustomerPasswordCheck] = useState('');
 
-    const [isUserEmailInputDisabled, setIsUserEmailInputDisabled] = useState(false);
-    const [invalidUserEmail, setInvalidUserEmail] = useState('');
-    const [invalidUserPassword, setInvalidUserPassword] = useState('');
+    const [isCustomerEmailInputDisabled, setIsCustomerEmailInputDisabled] = useState(false);
+    const [invalidCustomerEmail, setInvalidCustomerEmail] = useState('');
+    const [invalidCustomerPassword, setInvalidCustomerPassword] = useState('');
     
     const [isCorrectEmail, setIsCorrectEmail] = useState(false);
     const [isCorrectPassword, setIsCorrectPassword] = useState(false);
 
     useEffect(() => {
-        switch(isDuplicatedUserEmailResult) {
+        switch(isDuplicatedEmailResult) {
             case 'Y':
-                setInvalidUserEmail('p-invaild');
-                setIsUserEmailInputDisabled(false);
+                setInvalidCustomerEmail('p-invaild');
+                setIsCustomerEmailInputDisabled(false);
                 setIsCorrectEmail(false);
                 alert("이미 등록된 이메일입니다.");
                 break;
             case 'N':
-                setInvalidUserEmail('');
-                setIsUserEmailInputDisabled(true);
+                setInvalidCustomerEmail('');
+                setIsCustomerEmailInputDisabled(true);
                 setIsCorrectEmail(true);
                 alert("사용하실 수 있는 이메일입니다.");
         }
-    }, [isDuplicatedUserEmailResult]);
+    }, [isDuplicatedEmailResult]);
 
     const onCheckDuplicatedEmail = useCallback(async (id, emailAddress) => {
         if(id !== '' || emailAddress !== '') {
@@ -63,37 +63,37 @@ export default function SignUp() {
             }
         } else {
             alert("이메일을 입력하세요!");
-            setInvalidUserEmail('p-invalid');
+            setInvalidCustomerEmail('p-invalid');
             setIsCorrectEmail(false);
         }
     }, [dispatch]);
 
     const onPasswordCorrectCheck = (firstPassword, lastPassword) => {
         if (firstPassword === lastPassword) {
-            setInvalidUserPassword('');
+            setInvalidCustomerPassword('');
             setIsCorrectPassword(true);
         } else {
-            setInvalidUserPassword('p-invalid');
+            setInvalidCustomerPassword('p-invalid');
             setIsCorrectPassword(false);
         }
     }
 
     const onHandlePasswordCorrectCheck = (firstPassword, e) => {
-        setUserPasswordCheck(e.target.value);  
+        setCustomerPasswordCheck(e.target.value);  
         setTimeout(onPasswordCorrectCheck(firstPassword, e.target.value), 100);
     } 
 
     const onSignUp = useCallback(async (id, emailAddress, password, isCorrectEmail, isCorrectPassword) => {//
         if (isCorrectEmail && isCorrectPassword) {
-            const userEmail = `${id}@${emailAddress}`;
-            const userPassword = password;
+            const customerEmail = `${id}@${emailAddress}`;
+            const customerPassword = password;
             try {
                 if (confirm('정말 가입하시겠습니까?')) {
-                    createUserWithEmailAndPassword(auth, userEmail, userPassword)
+                    createUserWithEmailAndPassword(auth, customerEmail, customerPassword)
                       .then((userCredential) => {
-                          const userObj = {
+                          const customerObj = {
                               displayName: userCredential.user.displayName,
-                              userEmail: userCredential.user.email,
+                              customerEmail: userCredential.user.email,
                               photoURL: userCredential.user.photoURL,
                               uid: userCredential.user.uid,
                               createdAt: Date.now(),
@@ -103,7 +103,7 @@ export default function SignUp() {
                               link: {linkName: '', linkAddress: ''},
                               enabled: true,
                           }
-                          dispatch(createUserObjThunk(userObj));
+                          dispatch(createCustomerObjThunk(customerObj));
                           router.replace(`/`);
                       })
                       .catch((error) => { 
@@ -117,9 +117,9 @@ export default function SignUp() {
             }
         } else {
             alert('가입 정보를 올바르게 입력하세요!');
-            setInvalidUserEmail('p-invalid');
-            setInvalidUserPassword('p-invalid');
-            setIsUserEmailInputDisabled(false);
+            setInvalidCustomerEmail('p-invalid');
+            setInvalidCustomerPassword('p-invalid');
+            setIsCustomerEmailInputDisabled(false);
             setIsCorrectEmail(false);
             setIsCorrectPassword(false);
         }
@@ -133,34 +133,34 @@ export default function SignUp() {
                     <div className="field p-fluid mt-6">
                         <label>이메일</label>
                         <span className="p-inputgroup">
-                            <InputText className={invalidUserEmail} value={userId} onChange={(e) => setUserId(e.target.value)} disabled={isUserEmailInputDisabled} />
+                            <InputText className={invalidCustomerEmail} value={customerId} onChange={(e) => setCustomerId(e.target.value)} disabled={isCustomerEmailInputDisabled} />
                             <span className="p-inputgroup-addon"><i className="pi pi-at"></i></span>
-                            <InputText className={invalidUserEmail} value={userEmailAddress} onChange={(e) => setUserEmailAddress(e.target.value)} disabled={isUserEmailInputDisabled} />
-                            <Button label="중복확인" className="p-button-success" onClick={() => onCheckDuplicatedEmail(userId, userEmailAddress)} loading={duplicatedCheckLoading} disabled={isUserEmailInputDisabled} />
+                            <InputText className={invalidCustomerEmail} value={customerEmailAddress} onChange={(e) => setCustomerEmailAddress(e.target.value)} disabled={isCustomerEmailInputDisabled} />
+                            <Button label="중복확인" className="p-button-success" onClick={() => onCheckDuplicatedEmail(customerId, customerEmailAddress)} loading={duplicatedCheckLoading} disabled={isCustomerEmailInputDisabled} />
                         </span>
                     </div>
                     <div className="field p-fluid">
                         <label>비밀번호</label>
                         <span className="p-inputgroup">
-                          <Password className={invalidUserPassword} value={userPassword} onChange={(e) => setUserPassword(e.target.value)} toggleMask />
+                          <Password className={invalidCustomerPassword} value={customerPassword} onChange={(e) => setCustomerPassword(e.target.value)} toggleMask />
                         </span>
                     </div>
                     <div className="field p-fluid">
                         <label>비밀번호 확인</label>
                         <span className="p-inputgroup">
-                          <Password className={invalidUserPassword} value={userPasswordCheck} onChange={(e) => onHandlePasswordCorrectCheck(userPassword, e)} feedback={false} toggleMask />
+                          <Password className={invalidCustomerPassword} value={customerPasswordCheck} onChange={(e) => onHandlePasswordCorrectCheck(customerPassword, e)} feedback={false} toggleMask />
                         </span>
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Button label="회원가입" icon="pi pi-user-plus" className="pr-5" onClick={() => onSignUp(userId, userEmailAddress, userPassword, isCorrectEmail, isCorrectPassword)} />
+                        <Button label="회원가입" icon="pi pi-user-plus" className="pr-5" onClick={() => onSignUp(customerId, customerEmailAddress, customerPassword, isCorrectEmail, isCorrectPassword)} />
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Link href={`/Auth/SignIn`}>
+                        <Link href={`/auth/signIn`}>
                             <Button label="로그인" icon="pi pi-sign-in" className="p-button-info pr-5" />
                         </Link>
                     </div>
                     <div className="field p-fluid">
-                        <Link href={`/Auth/FindPassword`}>
+                        <Link href={`/auth/findPassword`}>
                             <Button label="비밀번호 찾기" icon="pi pi-search" className="p-button-info pr-5" />
                         </Link>
                     </div>

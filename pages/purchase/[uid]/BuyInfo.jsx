@@ -14,11 +14,11 @@ import ProjectContext from '../../../context';
 
 import { getCarts } from '../../../service';
 
-import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/Filters';
+import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/filters';
 
 
-BuyInfo.layout = "L1";
-export default function BuyInfo() {
+buyInfo.layout = "L1";
+export default function buyInfo() {
     const { prefix } = useContext(ProjectContext);
     const router = useRouter();
 
@@ -56,10 +56,10 @@ export default function BuyInfo() {
             sessionStorage.removeItem('rounded-round-buylist');
             
             router.replace({
-              pathname: `/Purchase/${router.query.uid}/PayResult/${payId}`,
+              pathname: `/purchase/${router.query.uid}/payResult/${payId}`,
               query: { uid: router.query.uid, payId: payId },
             },
-            `/Purchase/${router.query.uid}/PayResult/${payId}`,
+            `/purchase/${router.query.uid}/payResult/${payId}`,
             );
         }
     }

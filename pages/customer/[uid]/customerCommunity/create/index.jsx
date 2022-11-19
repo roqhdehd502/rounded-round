@@ -14,11 +14,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 import ProjectContext from '../../../../../context';
 
-import { createUserCommunityThunk } from '../../../../../store/modules/UserCommunity';
+import { getCustomerInfoObjThunk } from '../../../../../store/modules/customerInfo';
+import { createCustomerCommunityThunk } from '../../../../../store/modules/customerCommunitiesInfo';
 
 
-UserCommunityCreate.layout = "L1";
-export default function UserCommunityCreate() {
+customerCommunityCreate.layout = "L1";
+export default function customerCommunityCreate() {
     const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
@@ -26,22 +27,22 @@ export default function UserCommunityCreate() {
     const [contents, setContents] = useState('');
 
     useEffect(() => {
-
+        console.log(router.query.uid);
     }, [router.query]);
 
-    const createCommunity = useCallback(async (communityContents) => {
+    const createCommunity = useCallback(async (communityObj) => {
         try {
             const thumbnailUuid = uuidv4();
             const createCommunityObj = {
-                uid: router.query.uid,
-                contents: communityContents.replaceAll("\n", "\\n"),
+                uid: communityObj.uid,
+                contents: communityObj.contents.replaceAll("\n", "\\n"),
                 uploadDate: Date.now(),
                 thumbnailUuid,      
             }
 
             const photoFile = document.querySelector('#photo-file').files[0];
             const storage = firebaseStorage.getStorage();
-            const storageRef = firebaseStorage.ref(storage, `usercommunityimages/${createCommunityObj.uid}/${thumbnailUuid}`);
+            const storageRef = firebaseStorage.ref(storage, `customercommunityimages/${communityObj.uid}/${thumbnailUuid}`);
 
             if (photoFile) {
                 firebaseStorage.uploadBytes(storageRef, photoFile)
@@ -50,17 +51,17 @@ export default function UserCommunityCreate() {
                       firebaseStorage.getDownloadURL(storageRef)
                         .then((url) => {
                             createCommunityObj.thumbnail = url;
-                            dispatch(createUserCommunityThunk(createCommunityObj));
+                            dispatch(createCustomerCommunityThunk(createCommunityObj));
                         });
                   }).catch((error) => {
                       console.log(error);
                   });
             } else {
                 createCommunityObj.thumbnail = '';
-                dispatch(createUserCommunityThunk(createCommunityObj));
+                dispatch(createCustomerCommunityThunk(createCommunityObj));
             }
 
-            router.replace(`/User/${createCommunityObj.uid}/UserCommunity`);
+            router.replace(`/customer/${communityObj.uid}/customerCommunity`);
         }   catch(error) {
             console.log(error);
         }
@@ -89,11 +90,11 @@ export default function UserCommunityCreate() {
                         </span>
                     </div>
                     <div className="field p-fluid mt-6">
-                        <Button label="등록하기" icon="pi pi-user-edit" className="pr-5" onClick={()=> createCommunity(contents)} />
+                        <Button label="등록하기" icon="pi pi-user-edit" className="pr-5" onClick={()=> createCommunity({uid: router.query.uid, contents})} />
                     </div>
                     <Divider />
                     <div className="field p-fluid">
-                        <Link href={`/User/${router.query.uid}/UserCommunity`}>
+                        <Link href={`/customer/${router.query.uid}/customerCommunity`}>
                             <Button label="돌아가기" icon="pi pi-arrow-left" className="p-button-info pr-5" />
                         </Link>
                     </div>

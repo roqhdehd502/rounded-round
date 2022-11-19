@@ -17,56 +17,50 @@ import {
     getDocs,
     query,
     where,
-    //addDoc,
     setDoc,
     updateDoc, 
 } from "firebase/firestore";
 
 import { firestore } from '../../firebaseConfiguration';
 
-//import * as firebaseStorage from "firebase/storage";
-
 
 const initialState = { 
-    userObj: null,
-    userInfoObj: null,
-    isDuplicatedUserEmailResult: null,
+    customerObj: null,
+    customerInfoObj: null,
+    isDuplicatedEmailResult: null,
     loginAccess: false,
-
-    userContents: null,
-    userCommunity: null,
 
     loading: false,
     error: null,
 };
 
 export const checkDuplicatedEmailThunk = createAsyncThunk(
-    "UserInfo/checkDuplicatedEmailThunk",
+    "customerInfo/checkDuplicatedEmailThunk",
     async (confirmEmailAddress, thunkAPI) => {
-        let users = [];
+        let datas = [];
         let q = query(
-            collection(firestore, "userInfo"),
-            where("userEmail", "==", confirmEmailAddress),
+            collection(firestore, "customerInfo"),
+            where("customerEmail", "==", confirmEmailAddress),
         );
         try {
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc) => {
                 let data = doc.data();
                 data.docId = doc.id;
-                users.push(data);
+                datas.push(data);
             });
-            return users.length;
+            return datas.length;
         } catch (error) {
             return thunkAPI.rejectWithValue(error);
         }
     }
 );
 
-export const createUserObjThunk = createAsyncThunk(
-    "UserInfo/createUserObjThunk",
-    async (userObj, thunkAPI) => {
+export const createCustomerObjThunk = createAsyncThunk(
+    "customerInfo/createCustomerObjThunk",
+    async (customerObj, thunkAPI) => {
         try {
-            await setDoc(doc(firestore, "userInfo", userObj.uid), userObj)
+            await setDoc(doc(firestore, "customerInfo", customerObj.uid), customerObj)
               .then((docRef) => { return docRef })
               .catch((error) => { console.log(error) });
         } catch (error) {
@@ -75,11 +69,11 @@ export const createUserObjThunk = createAsyncThunk(
     }
 );
 
-export const getUserInfoObjThunk = createAsyncThunk(
-    "UserInfo/getUserInfoObjThunk",
+export const getCustomerInfoObjThunk = createAsyncThunk(
+    "customerInfo/getCustomerInfoObjThunk",
     async (uid, thunkAPI) => {
         try {
-            const docRef = doc(firestore, "userInfo", uid);
+            const docRef = doc(firestore, "customerInfo", uid);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 return docSnap.data();
@@ -92,17 +86,17 @@ export const getUserInfoObjThunk = createAsyncThunk(
     }
 );
 
-export const patchUserInfoObjThunk = createAsyncThunk(
-    "UserInfo/patchUserInfoObjThunk",
+export const patchCustomerInfoObjThunk = createAsyncThunk(
+    "customerInfo/patchCustomerInfoObjThunk",
     async (payload, thunkAPI) => {
-        const docRef = doc(firestore, "userInfo", payload.uid);
+        const docRef = doc(firestore, "customerInfo", payload.uid);
         try {
             await updateDoc(docRef, {
-                displayName: payload.updateUserObj.displayName,
-                photoURL: payload.userPhotoURL,
-                bio: payload.updateUserObj.bio,
-                infoDetail: payload.updateUserObj.infoDetail,
-                link: payload.updateUserObj.link,
+                displayName: payload.updateCustomerObj.displayName,
+                photoURL: payload.customerPhotoURL,
+                bio: payload.updateCustomerObj.bio,
+                infoDetail: payload.updateCustomerObj.infoDetail,
+                link: payload.updateCustomerObj.link,
             })
         } catch (error) {
             return thunkAPI.rejectWithValue(error);
@@ -111,23 +105,23 @@ export const patchUserInfoObjThunk = createAsyncThunk(
 );
 
 
-const UserInfoSlice = createSlice({
-    name: 'UserInfo',
+const customerInfoSlice = createSlice({
+    name: 'customerInfo',
 
     initialState,
 
     reducers: {
-        getUserObj(state, action) {
-            state.userObj = action.payload ? action.payload : null;
-            state.loginAccess = state.userObj ? true : false;
+        getCustomerObj(state, action) {
+            state.customerObj = action.payload ? action.payload : null;
+            state.loginAccess = state.customerObj ? true : false;
         },
         emailLogin(state, action) {
-            action.userObj = action.payload;
+            action.customerObj = action.payload;
             state.loginAccess = true;
             console.log("LOGIN SUCCESS.");
         },
         googleLogin(state, action) {
-            action.userObj = action.payload;
+            action.customerObj = action.payload;
             state.loginAccess = true;
             console.log("GOOGLE LOGIN SUCCESS.");
         },
@@ -135,41 +129,41 @@ const UserInfoSlice = createSlice({
             signOut(getAuth())
               .then(() => { console.log("LOGOUT SUCCESS."); })
               .catch((error) => { console.log("LOGOUT FAILED!", error); });
-            state.userObj = null;
+            state.customerObj = null;
             state.loginAccess = false;   
         },
         signUp(state, action) {
-            createUserWithEmailAndPassword(getAuth(), action.payload.userEmail, action.payload.userPassword)
+            createUserWithEmailAndPassword(getAuth(), action.payload.customerEmail, action.payload.customerPassword)
               .then(() => { console.log("SIGN UP SUCCESS.") })
               .catch((error) => { console.log("SIGN UP FAILED!", error) });
-            state.userObj = null;
+            state.customerObj = null;
         },
-        patchUserObj(state, action) { 
+        patchCustomerObj(state, action) { 
             updateProfile(getAuth().currentUser, {
-                displayName: action.payload.updateUserObj.displayName,
-                photoURL: action.payload.photoURL,
-            }).then(() => {
-                console.log("UPDATE SUCCESS!");
+                displayName: action.payload.updateCustomerObj.displayName,
+                photoURL: action.payload.customerPhotoURL,
+            }).then((result) => {
+                console.log("UPDATE SUCCESS!", result);
             }).catch((error) => {
                 console.log(error);
             });
         },
-        patchUserPassword(state, action) {
+        patchCustomerPassword(state, action) {
             getAuth().languageCode = 'ko';
             sendPasswordResetEmail(getAuth(), action.payload)
-              .then(() => { console.log("UPDATE USER PASSWORD SEND SUCCESS.") })
-              .catch((err) => { console.log("UPDATE USER PASSWORD SEND FAILD.", err) });
+              .then(() => { console.log("UPDATE CUSTOMER PASSWORD SEND SUCCESS.") })
+              .catch((err) => { console.log("UPDATE CUSTOMER PASSWORD SEND FAILD.", err) });
         },      
-        sendUserEmailVerification(state) {
+        sendCustomerEmailVerification(state) {
             getAuth().languageCode = 'ko';
             sendEmailVerification(getAuth().currentUser)
               .then(() => { console.log("EMAIL VERIFICATION SEND SUCCESS.") })
               .catch(() => { console.log("EMAIL VERIFICATION SEND FAILD.") });
         },
-        removeUserInfo(state) {
+        removeCustomerInfo(state) {
             deleteUser(getAuth().currentUser)
-              .then(() => { console.log("DELETE USER SUCCESS.") })
-              .catch(() => { console.log("DELETE USER FAILED!") });
+              .then(() => { console.log("DELETE CUSTOMER SUCCESS.") })
+              .catch(() => { console.log("DELETE CUSTOMER FAILED!") });
         },
     },
 
@@ -181,9 +175,9 @@ const UserInfoSlice = createSlice({
         [checkDuplicatedEmailThunk.fulfilled]: (state, action) => {
             state.loading = false;
             if (action.payload >= 1) {
-                state.isDuplicatedUserEmailResult = 'Y';
+                state.isDuplicatedEmailResult = 'Y';
             } else {
-                state.isDuplicatedUserEmailResult = 'N';
+                state.isDuplicatedEmailResult = 'N';
             }
         },
         [checkDuplicatedEmailThunk.rejected]: (state, action) => {
@@ -191,40 +185,40 @@ const UserInfoSlice = createSlice({
             state.error = action.error;
         },
 
-        [createUserObjThunk.pending]: (state, action) => {
+        [createCustomerObjThunk.pending]: (state, action) => {
             state.loading = true;
             console.log("SIGN UP...", action.payload);
         },
-        [createUserObjThunk.fulfilled]: (state, action) => {
+        [createCustomerObjThunk.fulfilled]: (state, action) => {
             state.loading = false;
             console.log("SIGN UP SUCCESS.", action.payload);
         },
-        [createUserObjThunk.rejected]: (state, action) => {
+        [createCustomerObjThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },
 
-        [getUserInfoObjThunk.pending]: (state, action) => {
+        [getCustomerInfoObjThunk.pending]: (state, action) => {
             state.loading = true;
         },
-        [getUserInfoObjThunk.fulfilled]: (state, action) => {
+        [getCustomerInfoObjThunk.fulfilled]: (state, action) => {
             state.loading = false;
-            state.userInfoObj = action.payload;
+            state.customerInfoObj = action.payload;
         },
-        [getUserInfoObjThunk.rejected]: (state, action) => {
+        [getCustomerInfoObjThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },
 
-        [patchUserInfoObjThunk.pending]: (state, action) => {
+        [patchCustomerInfoObjThunk.pending]: (state, action) => {
             state.loading = true;
         },
-        [patchUserInfoObjThunk.fulfilled]: (state, action) => {
+        [patchCustomerInfoObjThunk.fulfilled]: (state, action) => {
             state.loading = false;
-            state.userObj = null;
-            state.userInfoObj = null;
+            state.customerObj = null;
+            state.customerInfoObj = null;
         },
-        [patchUserInfoObjThunk.rejected]: (state, action) => {
+        [patchCustomerInfoObjThunk.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },   
@@ -232,15 +226,15 @@ const UserInfoSlice = createSlice({
 });
 
 export const { 
-    getUserObj,
+    getCustomerObj,
     emailLogin,
     googleLogin,
     logout,
     signUp,
-    patchUserObj,
-    patchUserPassword,
-    sendUserEmailVerification,
-    removeUserInfo,
-} = UserInfoSlice.actions;
+    patchCustomerObj,
+    patchCustomerPassword,
+    sendCustomerEmailVerification,
+    removeCustomerInfo,
+} = customerInfoSlice.actions;
 
-export default UserInfoSlice.reducer;
+export default customerInfoSlice.reducer;

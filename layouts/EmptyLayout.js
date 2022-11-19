@@ -7,10 +7,10 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import ProjectContext from '../context';
 
-import * as UserInfoActions from '../store/modules/UserInfo';
+import * as customerInfoActions from '../store/modules/customerInfo';
 
 
-export default function EmptyLayout({ children }) {
+export default function emptyLayout({ children }) {
     const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
@@ -18,21 +18,21 @@ export default function EmptyLayout({ children }) {
 
     const [loading, setLoading] = useState(true);
 
-    const userObj = useSelector(({ UserInfo }) => UserInfo.userObj);
+    const customerObj = useSelector(({ customerInfo }) => customerInfo.customerObj);
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 const payload = user;
-                dispatch(UserInfoActions.getUserObj(payload));
+                dispatch(customerInfoActions.getCustomerObj(payload));
             } else {
-                dispatch(UserInfoActions.getUserObj(null));
+                dispatch(customerInfoActions.getCustomerObj(null));
             }
         });
         setLoading(true);
-    }, [userObj]);
+    }, [customerObj]);
 
-    if (userObj) {
+    if (customerObj) {
         console.log("YOU ALREADY LOGINED!");
         router.replace(`/`);
     }

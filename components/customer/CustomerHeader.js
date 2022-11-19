@@ -10,28 +10,28 @@ import { Divider } from 'primereact/divider';
 
 import ProjectContext from '../../context';
 
-import * as UserInfoActions from '../../store/modules/UserInfo';
-import { getUserInfoObjThunk } from '../../store/modules/UserInfo';
+import * as customerInfoActions from '../../store/modules/customerInfo';
+import { getCustomerInfoObjThunk } from '../../store/modules/customerInfo';
 
 
-export default function UserHeader(props) {
-    const activeUserIndex = props.activeIndex;
+export default function CustomerHeader(props) {
+    const activeCustomerIndex = props.activeIndex;
     const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const userObj = useSelector(({ UserInfo }) => UserInfo.userObj);
-    const userInfoObj = useSelector(({ UserInfo }) => UserInfo.userInfoObj);
+    const customerObj = useSelector(({ customerInfo }) => customerInfo.customerObj);
+    const customerInfoObj = useSelector(({ customerInfo }) => customerInfo.customerInfoObj);
     
     useEffect(() => {
         if (!router.isReady) return; 
-        dispatch(getUserInfoObjThunk(router.query.uid));
+        dispatch(getCustomerInfoObjThunk(router.query.uid));
     }, [router.isReady]);
 
     const onEmailVerificationSend = useCallback(() => {
-        dispatch(UserInfoActions.sendUserEmailVerification());
+        dispatch(customerInfoActions.sendCustomerEmailVerification());
         alert('가입하신 회원님의 이메일로 계정 인증 요청 메일을 전송하였습니다.');
-        dispatch(UserInfoActions.logout());
+        dispatch(customerInfoActions.logout());
         router.replace(`/`);
     }, [dispatch]);
 
@@ -41,10 +41,10 @@ export default function UserHeader(props) {
                 <div className="flex align-content-center align-items-center justify-content-center">
                     <div className="card w-30rem">
                         <div className="flex justify-content-center">
-                            <Image className="border-circle image-align-center" alt={userInfoObj.displayName} src={userInfoObj.photoURL ? userInfoObj.photoURL : `${prefix}/img/anonymous-user-logo.png`} onError={(e) => e.target.src = `${prefix}/img/anonymous-user-logo.png`} width={240} height={240} quality={100} />
+                            <Image className="border-circle image-align-center" alt={customerInfoObj.displayName} src={customerInfoObj.photoURL ? customerInfoObj.photoURL : `${prefix}/img/anonymous-user-logo.png`} onError={(e) => e.target.src = `${prefix}/img/anonymous-user-logo.png`} width={240} height={240} quality={100} />
                         </div>
                         <h1 className="flex justify-content-center">
-                            {userInfoObj.displayName ? userInfoObj.displayName : userInfoObj.userEmail}
+                            {customerInfoObj.displayName ? customerInfoObj.displayName : customerInfoObj.customerEmail}
                         </h1>
                     </div>
                 </div>
@@ -52,26 +52,26 @@ export default function UserHeader(props) {
                 <div className="card w-auto mb-3">
                     <div className="flex justify-content-center flex-wrap">
                         <div className="flex align-items-center">
-                            {userObj && userObj.uid === userInfoObj.uid ? (
+                            {customerObj && customerObj.uid === customerInfoObj.uid ? (
                                 <>
-                                    {userObj.emailVerified ? (
+                                    {customerObj.emailVerified ? (
                                         <Button className="mr-4 w-8rem p-button-rounded p-button-info" icon="pi pi-unlock" label="인증됨" disabled />
                                     ) : (
                                         <Button className="mr-4 w-8rem p-button-rounded p-button-info" icon="pi pi-unlock" label="인증하기" onClick={() => onEmailVerificationSend()} />
                                     )}
                                     <Link 
                                       href={{
-                                        pathname: `/User/${userObj.uid}/UserProfile/Update`,
+                                        pathname: `/customer/${customerObj.uid}/customerProfile/update`,
                                         query: { 
-                                          uid: userInfoObj.uid,
-                                          displayName: userInfoObj.displayName,
-                                          photoURL: userInfoObj.photoURL,
-                                          bio: userInfoObj.bio,
-                                          infoDetail: userInfoObj.infoDetail,
-                                          link: JSON.stringify(userInfoObj.link),
+                                          uid: customerInfoObj.uid,
+                                          displayName: customerInfoObj.displayName,
+                                          photoURL: customerInfoObj.photoURL,
+                                          bio: customerInfoObj.bio,
+                                          infoDetail: customerInfoObj.infoDetail,
+                                          link: JSON.stringify(customerInfoObj.link),
                                         }
                                       }}
-                                      as={`/User/${userObj.uid}/UserProfile/Update`}
+                                      as={`/customer/${customerObj.uid}/customerProfile/update`}
                                     >
                                         <Button className="ml-4 w-8rem p-button-rounded p-button-warning" icon="pi pi-pencil" label="수정하기" />
                                     </Link>
@@ -79,7 +79,7 @@ export default function UserHeader(props) {
                             ) : (
                                 <>
                                     {/* 구독여부 분기 처리 구현하기 */}
-                                    {userObj ? (
+                                    {customerObj ? (
                                         <>
                                             <Button className={`p-button-rounded p-button-info`} icon="pi pi-check" label="구독됨" />
                                         </>
@@ -101,30 +101,30 @@ export default function UserHeader(props) {
                         <div className="flex align-items-center">
                             <Link 
                               href={{
-                                pathname: `/User/${userInfoObj.uid}/UserContents`,
-                                query: { ...userInfoObj },
+                                pathname: `/customer/${customerInfoObj.uid}/customerContents`,
+                                query: { ...customerInfoObj },
                               }}
-                              as={`/User/${userInfoObj.uid}/UserContents`}
+                              as={`/customer/${customerInfoObj.uid}/customerContents`}
                             >
-                                <Button className={`w-8rem p-button-rounded${activeUserIndex === 0 ? '' : ' p-button-outlined'}`} icon="pi pi-folder" label="컨텐츠" />
+                                <Button className={`w-8rem p-button-rounded${activeCustomerIndex === 0 ? '' : ' p-button-outlined'}`} icon="pi pi-folder" label="컨텐츠" />
                             </Link>
                             <Link 
                               href={{
-                                pathname: `/User/${userInfoObj.uid}/UserCommunity`,
-                                query: { ...userInfoObj },
+                                pathname: `/customer/${customerInfoObj.uid}/customerCommunity`,
+                                query: { ...customerInfoObj },
                               }}
-                              as={`/User/${userInfoObj.uid}/UserCommunity`}
+                              as={`/customer/${customerInfoObj.uid}/customerCommunity`}
                             >
-                                <Button className={`ml-4 mr-4 w-8rem p-button-rounded${activeUserIndex === 1 ? '' : ' p-button-outlined'}`} icon="pi pi-comments" label="커뮤니티" />
+                                <Button className={`ml-4 mr-4 w-8rem p-button-rounded${activeCustomerIndex === 1 ? '' : ' p-button-outlined'}`} icon="pi pi-comments" label="커뮤니티" />
                             </Link>
                             <Link 
                               href={{
-                                pathname: `/User/${userInfoObj.uid}/UserProfile`,
-                                query: { ...userInfoObj },
+                                pathname: `/customer/${customerInfoObj.uid}/customerProfile`,
+                                query: { ...customerInfoObj },
                               }}
-                              as={`/User/${userInfoObj.uid}/UserProfile`}
+                              as={`/customer/${customerInfoObj.uid}/customerProfile`}
                             >
-                                <Button className={`w-8rem p-button-rounded${activeUserIndex === 2 ? '' : ' p-button-outlined'}`} icon="pi pi-user" label="정보" />
+                                <Button className={`w-8rem p-button-rounded${activeCustomerIndex === 2 ? '' : ' p-button-outlined'}`} icon="pi pi-user" label="정보" />
                             </Link>
                         </div>
                     </div>
