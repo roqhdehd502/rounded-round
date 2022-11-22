@@ -93,7 +93,7 @@ export const patchCustomerInfoObjThunk = createAsyncThunk(
         try {
             await updateDoc(docRef, {
                 displayName: payload.updateCustomerObj.displayName,
-                photoURL: payload.customerPhotoURL,
+                photoURL: payload.photoURL,
                 bio: payload.updateCustomerObj.bio,
                 infoDetail: payload.updateCustomerObj.infoDetail,
                 link: payload.updateCustomerObj.link,
@@ -141,7 +141,7 @@ const customerInfoSlice = createSlice({
         patchCustomerObj(state, action) { 
             updateProfile(getAuth().currentUser, {
                 displayName: action.payload.updateCustomerObj.displayName,
-                photoURL: action.payload.customerPhotoURL,
+                photoURL: action.payload.photoURL,
             }).then((result) => {
                 console.log("UPDATE SUCCESS!", result);
             }).catch((error) => {

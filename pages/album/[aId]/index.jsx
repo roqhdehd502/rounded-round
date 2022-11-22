@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import Link from "next/Link";
@@ -8,8 +8,7 @@ import Image from 'next/image';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-
-import ProjectContext from '../../../context';
+import { Toast } from 'primereact/toast';
 
 import { DialogCommon } from '../../../commons/primereact/DialogCommon';
 import { ellipsisText, formatUnitEachThousand, timeFormatting } from '../../../commons/functional/filters';
@@ -21,11 +20,12 @@ import { getAlbum, getSongsInAlbum } from '../../../service';
 
 albumDetail.layout = "L1";
 export default function albumDetail() {
-    const { prefix } = useContext(ProjectContext);
     // const dispatch = useDispatch();
     const router = useRouter();
 
     const customerObj = useSelector(({ customerInfo }) => customerInfo.customerObj);
+
+    const toast = useRef(null);
 
     // const albumObj = useSelector(({ AlbumsInfo }) => AlbumsInfo.albumObj);
     // const songsInAlbum = useSelector(({ AlbumsInfo }) => AlbumsInfo.songsInAlbum);
@@ -49,7 +49,12 @@ export default function albumDetail() {
 
     const onPutInCart = () => {
         if (!selectedCustomers || !selectedCustomers.length) {
-            alert('곡을 선택 해주십시오.');
+            toast.current.show({
+              severity: 'error', 
+              summary: '장바구니 담기 실패!', 
+              detail: '곡을 선택 해주십시오.', 
+              life: 3000
+            });
             return;
         }
 
@@ -79,19 +84,29 @@ export default function albumDetail() {
     const renderHeader = () => {
         return (
             <div className="flex justify-content-between align-items-center">
-                <div>
-                    <Button 
-                      icon="pi pi-shopping-cart" 
-                      label="담기" 
-                      className="p-button-rounded p-button-outlined mr-3"
-                      onClick={() => onPutInCart()}
-                    />
-                    <Button 
-                      icon="pi pi-download" 
-                      label="다운" 
-                      className="p-button-rounded p-button-outlined"
-                    />
-                </div>
+                {customerObj ? (
+                    <div>
+                        <Button 
+                          icon="pi pi-shopping-cart" 
+                          label="담기" 
+                          className="p-button-rounded p-button-outlined mr-3"
+                          onClick={() => onPutInCart()}
+                        />
+                        <Button 
+                          icon="pi pi-download" 
+                          label="다운" 
+                          className="p-button-rounded p-button-outlined"
+                        />
+                    </div>
+                ) : (  
+                    <Link href={`/auth/signIn`}>
+                        <Button 
+                          icon="pi pi-unlock"
+                          label="로그인 후 구입하기"  
+                          className="p-button-rounded p-button-outlined"
+                        />
+                    </Link>
+                )}
             </div>
         )
     }
@@ -161,6 +176,8 @@ export default function albumDetail() {
 
     return (
         <>
+            <Toast ref={toast} />
+
             {albumObj ? (
                 <div className="card surface-0 p-5 border-round-2xl">
                     <h2 className="mb-3">앨범 정보</h2>

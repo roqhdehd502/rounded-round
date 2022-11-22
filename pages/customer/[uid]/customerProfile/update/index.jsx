@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -11,8 +11,6 @@ import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Divider } from 'primereact/divider';
 
-import ProjectContext from '../../../../../context';
-
 import { convertNewlineText } from '../../../../../commons/functional/filters';
 
 import * as customerInfoActions from '../../../../../store/modules/customerInfo';
@@ -21,7 +19,6 @@ import { getCustomerInfoObjThunk, patchCustomerInfoObjThunk } from '../../../../
 
 customerProfileUpdate.layout = "L1";
 export default function customerProfileUpdate() {
-    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -29,18 +26,25 @@ export default function customerProfileUpdate() {
     const customerInfoObj = useSelector(({ customerInfo }) => customerInfo.customerInfoObj);
 
     const [newAttachment, setNewAttachment] = useState("");
+
+    const [customerUid, setCustomerUid] = useState('');    
+    const [customerPhotoURL, setCustomerPhotoURL] = useState('');
     const [customerDisplayName, setCustomerDisplayName] = useState('');
     const [customerBio, setCustomerBio] = useState('');
     const [customerInfoDetail, setCustomerInfoDetail] = useState('');
-    const [customerLink, setCustomerLink] = useState(null);
+    const [customerLinkName, setCustomerLinkName] = useState('');
+    const [customerLinkAddress, setCustomerLinkAddress] = useState('');
 
     useEffect(() => {
         dispatch(getCustomerInfoObjThunk(router.query.uid));
 
+        setCustomerUid(customerObj ? customerObj.uid : '');
+        setCustomerPhotoURL(customerObj ? customerObj.photoURL : '');
         setCustomerDisplayName(customerObj ? customerObj.displayName : '');
         setCustomerBio(customerInfoObj ? customerInfoObj.bio : '');
         setCustomerInfoDetail(customerInfoObj ? convertNewlineText(customerInfoObj.infoDetail) : '');
-        setCustomerLink(customerInfoObj ? customerInfoObj.link : null);
+        setCustomerLinkName(customerInfoObj ? customerInfoObj.link.linkName : '');
+        setCustomerLinkAddress(customerInfoObj ? customerInfoObj.link.linkAddress : '');
     }, [router.query, customerObj ? customerObj.uid : null, customerInfoObj ? customerInfoObj.uid : null]);
 
     const onNewFileChange = (event) => {
@@ -63,11 +67,13 @@ export default function customerProfileUpdate() {
                     displayName: customerInfo.customerDisplayName,
                     bio: customerInfo.customerBio,
                     infoDetail: customerInfo.customerInfoDetail.replaceAll("\n", "\\n"), 
-                    link: customerInfo.customerLink,        
+                    link: {
+                        linkName: customerInfo.customerLinkName,
+                        linkAddress: customerInfo.customerLinkAddress,
+                    },        
                 }
-                console.log("updateCustomerObj", updateCustomerObj);
                 
-                let customerPhotoURL = null;
+                let photoURL = null;
                 const photoFile = document.querySelector('#photo-file').files[0];
                 const storage = firebaseStorage.getStorage();
                 const storageRef = firebaseStorage.ref(storage, `customerimages/${router.query.uid}`);
@@ -78,20 +84,20 @@ export default function customerProfileUpdate() {
                           console.log("upload image", snapshot);
                           firebaseStorage.getDownloadURL(storageRef)
                             .then((url) => {
-                                customerPhotoURL = url;
-                                dispatch(customerInfoActions.patchCustomerObj({updateCustomerObj, customerPhotoURL}));
-                                dispatch(patchCustomerInfoObjThunk({uid: router.query.uid, updateCustomerObj, customerPhotoURL} ));
+                                photoURL = url;
+                                dispatch(customerInfoActions.patchCustomerObj({updateCustomerObj, photoURL}));
+                                dispatch(patchCustomerInfoObjThunk({uid: customerInfo.customerUid, updateCustomerObj, photoURL} ));
                             });
                       }).catch((error) => {
                           console.log(error);
                       });
                 } else {
-                    customerPhotoURL = customerObj ? customerObj.photoURL : '';
-                    dispatch(customerInfoActions.patchCustomerObj({updateCustomerObj, customerPhotoURL}));
-                    dispatch(patchCustomerInfoObjThunk({uid: router.query.uid, updateCustomerObj, customerPhotoURL} ));
+                    photoURL = customerInfo.customerPhotoURL;
+                    dispatch(customerInfoActions.patchCustomerObj({updateCustomerObj, photoURL}));
+                    dispatch(patchCustomerInfoObjThunk({uid: customerInfo.customerUid, updateCustomerObj, photoURL} ));
                 }
 
-                router.replace(`/customer/${router.query.uid}/customerProfile`);
+                router.replace(`/customer/${customerInfo.customerUid}/customerProfile`);
             }
         }   catch(error) {
             console.log(error);
@@ -171,13 +177,13 @@ export default function customerProfileUpdate() {
                             <div className="field p-fluid mt-6">
                                 <label>링크</label>
                                 <div className="p-inputgroup">
-                                    <InputText value={customerLink ? customerLink.linkName : ''} onChange={(e) => setCustomerLink(e.target.value)} />
-                                    <InputText value={customerLink ? customerLink.linkAddress : ''} onChange={(e) => setCustomerLink(e.target.value)} />
+                                    <InputText value={customerLinkName} onChange={(e) => setCustomerLinkName(e.target.value)} />
+                                    <InputText value={customerLinkAddress} onChange={(e) => setCustomerLinkAddress(e.target.value)} />
                                 </div>
                             </div>
                             <Divider />
                             <div className="field p-fluid mt-6">
-                                <Button label="변경하기" icon="pi pi-user-edit" className="pr-5" onClick={()=> updateCustomer({customerDisplayName, customerBio, customerInfoDetail, customerLink})} />
+                                <Button label="변경하기" icon="pi pi-user-edit" className="pr-5" onClick={()=> updateCustomer({customerUid, customerPhotoURL, customerDisplayName, customerBio, customerInfoDetail, customerLinkName, customerLinkAddress})} />
                             </div>
                             <Divider />
                             <div className="field p-fluid">

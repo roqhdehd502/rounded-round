@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -7,20 +7,19 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
-
-import ProjectContext from '../../../context';
+import { Toast } from 'primereact/toast';
 
 import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/filters';
 
 
 cartList.layout = "L1";
 export default function cartList() {
-    const { prefix } = useContext(ProjectContext);
     const router = useRouter();
+
+    const toast = useRef(null);
 
     const [customers, setCustomers] = useState(null);
     const [selectedPrice, setSelectedPrice] = useState(0);
-
     const [selectedCustomers, setSelectedCustomers] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -41,8 +40,13 @@ export default function cartList() {
     }, [selectedCustomers]);
 
     const onRemoveCart = () => {
-        if (!selectedCustomers) {
-            alert('장바구니에서 삭제 하실 곡을 선택해주십시오!');
+        if (selectedCustomers.length === 0) {
+            toast.current.show({
+              severity: 'warn', 
+              summary: '장바구니 삭제 실패!', 
+              detail: '장바구니에서 삭제 하실 곡을 선택해주십시오.', 
+              life: 3000
+            });
             return;
         }
 
@@ -72,13 +76,23 @@ export default function cartList() {
     }
 
     const onBuySongs = () => {
-        if (!customers) {
-            alert('장바구니에 담긴 곡이 없습니다!');
+        if (customers === null) {
+            toast.current.show({
+              severity: 'warn', 
+              summary: '구입 실패!', 
+              detail: '장바구니에 담긴 곡이 없습니다.', 
+              life: 3000
+            });
             return;
         }
 
-        if (!selectedCustomers) {
-            alert('구입하실 곡을 선택해주십시오!');
+        if (selectedCustomers.length === 0) {
+            toast.current.show({
+              severity: 'warn', 
+              summary: '구입 실패!', 
+              detail: '구입하실 곡을 선택해주십시오.', 
+              life: 3000
+            });
             return;
         }
 
@@ -161,6 +175,8 @@ export default function cartList() {
 
     return (
         <>
+            <Toast ref={toast} />
+
             {selectedCustomers ? (
                 <div className="datatable-doc-demo">
                     <div className="card surface-0 p-5 border-round-2xl">

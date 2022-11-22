@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -7,22 +7,21 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
+import { Toast } from 'primereact/toast';
 
 import { v4 as uuidv4 } from 'uuid';
-
-import ProjectContext from '../../../context';
 
 import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/filters';
 
 
 buyInfo.layout = "L1";
 export default function buyInfo() {
-    const { prefix } = useContext(ProjectContext);
     const router = useRouter();
+
+    const toast = useRef(null);
 
     const [customers, setCustomers] = useState(null);
     const [totalPrice, setTotalPrice] = useState(0);
-
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -33,8 +32,13 @@ export default function buyInfo() {
     }, []);
 
     const onPaySongs = () => {
-        if (!customers) {
-            alert('구입할 곡 정보에 담긴 곡이 없습니다!');
+        if (customers.length === 0) {
+            toast.current.show({
+              severity: 'warn', 
+              summary: '결제 실패!', 
+              detail: '구입할 곡 정보에 담긴 곡이 없습니다.', 
+              life: 3000
+            });
             return;
         }
 
@@ -107,6 +111,8 @@ export default function buyInfo() {
 
     return (
         <>
+            <Toast ref={toast} />
+
             {customers ? (
                 <div className="datatable-doc-demo">
                     <div className="card surface-0 p-5 border-round-2xl">

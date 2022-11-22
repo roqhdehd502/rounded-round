@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -9,21 +9,21 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
-
-import ProjectContext from '../../context';
+import { Toast } from 'primereact/toast';
 
 import { checkDuplicatedEmailThunk, createCustomerObjThunk } from '../../store/modules/customerInfo';
 
 
 signUp.layout = "L2";
 export default function signUp() {
-    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
     const auth = getAuth();
 
     const isDuplicatedEmailResult = useSelector(({ customerInfo }) => customerInfo.isDuplicatedEmailResult);
     const duplicatedCheckLoading = useSelector(({ customerInfo }) => customerInfo.loading);
+
+    const toast = useRef(null);
 
     const [customerId, setCustomerId] = useState('');
     const [customerEmailAddress, setCustomerEmailAddress] = useState('');
@@ -43,13 +43,23 @@ export default function signUp() {
                 setInvalidCustomerEmail('p-invaild');
                 setIsCustomerEmailInputDisabled(false);
                 setIsCorrectEmail(false);
-                alert("이미 등록된 이메일입니다.");
+                toast.current.show({
+                  severity: 'warn', 
+                  summary: '이메일 중복!', 
+                  detail: '이미 등록된 이메일입니다.', 
+                  life: 3000
+                });
                 break;
             case 'N':
                 setInvalidCustomerEmail('');
                 setIsCustomerEmailInputDisabled(true);
                 setIsCorrectEmail(true);
-                alert("사용하실 수 있는 이메일입니다.");
+                toast.current.show({
+                  severity: 'success', 
+                  summary: '이메일 사용가능.', 
+                  detail: '사용하실 수 있는 이메일입니다.', 
+                  life: 3000
+                });
         }
     }, [isDuplicatedEmailResult]);
 
@@ -62,7 +72,12 @@ export default function signUp() {
                 console.log(error);
             }
         } else {
-            alert("이메일을 입력하세요!");
+            toast.current.show({
+              severity: 'error', 
+              summary: '이메일 중복 확인 실패!', 
+              detail: '이메일을 입력하세요.', 
+              life: 3000
+            });
             setInvalidCustomerEmail('p-invalid');
             setIsCorrectEmail(false);
         }
@@ -116,7 +131,12 @@ export default function signUp() {
                 console.log(error);
             }
         } else {
-            alert('가입 정보를 올바르게 입력하세요!');
+            toast.current.show({
+              severity: 'error', 
+              summary: '회원 가입 실패!', 
+              detail: '가입 정보를 올바르게 입력하세요.', 
+              life: 3000
+            });
             setInvalidCustomerEmail('p-invalid');
             setInvalidCustomerPassword('p-invalid');
             setIsCustomerEmailInputDisabled(false);
@@ -127,6 +147,8 @@ export default function signUp() {
 
     return (
         <>
+            <Toast ref={toast} />
+
             <div className="flex align-content-center align-items-center justify-content-center form-vertical-align-center">
                 <div className="card surface-0 p-5 border-round-2xl w-30rem">
                     <h1 className="flex justify-content-center">회원가입</h1>

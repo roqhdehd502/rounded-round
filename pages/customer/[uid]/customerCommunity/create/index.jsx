@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useContext } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState, useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
 import { useRouter } from 'next/router';
@@ -12,22 +12,18 @@ import { Divider } from 'primereact/divider';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import ProjectContext from '../../../../../context';
-
-import { getCustomerInfoObjThunk } from '../../../../../store/modules/customerInfo';
 import { createCustomerCommunityThunk } from '../../../../../store/modules/customerCommunitiesInfo';
 
 
 customerCommunityCreate.layout = "L1";
 export default function customerCommunityCreate() {
-    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
-
+    
     const [contents, setContents] = useState('');
 
     useEffect(() => {
-        console.log(router.query.uid);
+        
     }, [router.query]);
 
     const createCommunity = useCallback(async (communityObj) => {

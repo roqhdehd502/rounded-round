@@ -1,10 +1,11 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import Image from 'next/image';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 
 import { getBuyHistories } from '../../../service';
 
@@ -13,6 +14,8 @@ import { ellipsisText, timeCounter } from '../../../commons/functional/filters';
 
 buyHistory.layout = "L1";
 export default function buyHistory() {
+    const toast = useRef(null);
+
     const [customers, setCustomers] = useState(null);
     const [selectedCustomers, setSelectedCustomers] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -25,7 +28,12 @@ export default function buyHistory() {
 
     const onRemoveBuyHistory = () => {
         if (!selectedCustomers) {
-            alert('기록에서 삭제 하실 곡을 선택해주십시오!');
+            toast.current.show({
+              severity: 'error', 
+              summary: '삭제 실패!', 
+              detail: '기록에서 삭제 하실 곡을 선택해주십시오.', 
+              life: 3000
+            });
             return;
         }
 
@@ -36,12 +44,22 @@ export default function buyHistory() {
 
     const onReDownloadSongs = () => {
         if (!customers) {
-            alert('회원님이 구입하신 곡이 없습니다!');
+            toast.current.show({
+              severity: 'error', 
+              summary: '다운로드 실패!', 
+              detail: '회원님이 구입하신 곡이 없습니다.', 
+              life: 3000
+            });
             return;
         }
 
         if (!selectedCustomers) {
-            alert('다운로드 하실 곡을 선택해주십시오!');
+            toast.current.show({
+              severity: 'error', 
+              summary: '다운로드 실패!', 
+              detail: '다운로드 하실 곡을 선택해주십시오.', 
+              life: 3000
+            });
             return;
         }
 
@@ -102,6 +120,8 @@ export default function buyHistory() {
 
     return (
         <>
+            <Toast ref={toast} />
+
             <div className="datatable-doc-demo">
                 <div className="card surface-0 p-5 border-round-2xl">
                     <h1 className="ml-3 mt-0 mb-0">내가 구입한 노래</h1>

@@ -44,30 +44,48 @@ export default function customerProfile() {
                             <div className="field text-center p-fluid mt-4 p-1 pl-3 pr-3 border-round-3xl">
                                 <h3>설명</h3>
                                 <p className="white-space-normal">
-                                    {customerInfoObj.bio}
+                                    {customerInfoObj.bio ? 
+                                        customerInfoObj.bio 
+                                    : (
+                                        <p className="text-600">
+                                            현재 입력된 실명 정보가 없습니다.
+                                        </p>
+                                    )}
                                 </p>
                             </div>
                             <div className="field text-center p-fluid mt-4 p-1 border-round-3xl">
                                 <h3>세부정보</h3>
                                 <p className="white-space-normal">
-                                    {customerInfoObj.infoDetail.split('\\n').map((line, index) => {
-                                        return (
-                                            <span key={index}>
-                                                {line}<br />
-                                            </span>
-                                        )
-                                    })}
+                                    {customerInfoObj.infoDetail ? 
+                                        customerInfoObj.infoDetail.split('\\n').map((line, index) => {
+                                            return (
+                                                <span key={index}>
+                                                    {line}<br />
+                                                </span>
+                                            )
+                                        })
+                                    : ( 
+                                        <p className="text-600">
+                                            현재 입력된 세부정보가 없습니다.
+                                        </p>
+                                    )}
                                 </p>
                             </div>
                             <div className="field text-center p-fluid mt-4 p-1 border-round-3xl">
                                 <h3>링크</h3>
                                 <div>
-                                    <Button 
-                                      label={customerInfoObj.link.linkName} 
-                                      icon="pi pi-external-link" 
-                                      className="p-button-text pr-5"
-                                      onClick={() => window.open(customerInfoObj.link.linkAddress)}
-                                    />
+                                    {customerInfoObj.link.linkName ? (
+                                        <Button 
+                                          label={customerInfoObj.link.linkName} 
+                                          icon="pi pi-external-link" 
+                                          className="p-button-text pr-5"
+                                          onClick={() => window.open(customerInfoObj.link.linkAddress)}
+                                        />
+                                    ) : (
+                                        <p className="text-600">
+                                            현재 입력된 링크가 없습니다.
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>

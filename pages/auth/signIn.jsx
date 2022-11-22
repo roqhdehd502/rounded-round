@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useContext } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useState, useCallback, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 
 import Link from "next/Link";
 import { useRouter } from 'next/router';
@@ -9,33 +9,31 @@ import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvide
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
-
-import ProjectContext from '../../context';
+import { Toast } from 'primereact/toast';
 
 import * as customerInfoActions from '../../store/modules/customerInfo';
-import { checkDuplicatedEmailThunk, createCustomerObjThunk } from '../../store/modules/customerInfo';
+import { createCustomerObjThunk } from '../../store/modules/customerInfo';
 
 
 signIn.layout = "L2";
 export default function signIn() {
-    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
     const auth = getAuth();
 
-    const isDuplicatedEmailResult = useSelector(({ customerInfo }) => customerInfo.loading);
+    const toast = useRef(null);
 
     const [customerEmail, setCustomerEmail] = useState('');
     const [customerPassword, setCustomerPassword] = useState('');
-    const [customerObj, setCustomerObj] = useState(null);
-
-    useEffect(() => {
-        if (isDuplicatedEmailResult) createGoogleNewCustomerObj(isDuplicatedEmailResult, customerObj);
-    }, [isDuplicatedEmailResult]);    
 
     const emailLogin = useCallback((payload) => {
-        if(!payload.customerEmail || !payload.customerPassword) {
-            alert('올바른 계정이 아닙니다.');
+        if (!payload.customerEmail || !payload.customerPassword) {
+            toast.current.show({
+                severity: 'error', 
+                summary: '올바른 계정이 아닙니다!', 
+                detail: '이메일 혹은 비밀번호를 확인해주세요.', 
+                life: 3000
+            });
             return;
         } 
 
@@ -54,42 +52,42 @@ export default function signIn() {
         const provider = new GoogleAuthProvider();
         auth.languageCode = 'ko';
         signInWithPopup(auth, provider)
-          .then((payload) => { 
-              setCustomerObj(payload.user);
-              dispatch(customerInfoActions.googleLogin(payload.user));
-              dispatch(checkDuplicatedEmailThunk(payload.user.uid));
+          .then((payload) => {
+              let isLoginAccress = false; 
+              if (payload.user.metadata.createdAt === payload.user.metadata.lastLoginAt) {
+                  dispatch(customerInfoActions.googleLogin(payload.user));
+                  createGoogleNewCustomerObj(payload.user);
+                  isLoginAccress = true;
+              } else {
+                  dispatch(customerInfoActions.googleLogin(payload.user));
+                  isLoginAccress = true;
+              }
           })
           .catch((error) => { 
               console.log("GOOGLE LOGIN FAILED!", error); 
           });
     }, [dispatch]);
 
-    const createGoogleNewCustomerObj = useCallback((emailExist, customerInfo) => {
-        switch(emailExist) {
-            case 'Y':
-                console.log("이미 있는 계정이지롱", emailExist);
-                break;
-            case 'N':
-                console.log("없는 계정이지롱", emailExist);
-                const customer = {
-                    displayName: customerInfo.displayName,
-                    customerEmail: customerInfo.email,
-                    photoURL: customerInfo.photoURL,
-                    uid: customerInfo.uid,
-                    createdAt: Date.now(),
-                    subscribes: 0,
-                    bio: '',
-                    infoDetail: '',
-                    link: {linkName: '', linkAddress: ''},
-                    enabled: true,
-                }
-                dispatch(createCustomerObjThunk(customer));
-                break;
+    const createGoogleNewCustomerObj = useCallback((customerInfoObj) => {
+        const customer = {
+            displayName: customerInfoObj.displayName,
+            customerEmail: customerInfoObj.email,
+            photoURL: customerInfoObj.photoURL,
+            uid: customerInfoObj.uid,
+            createdAt: Date.now(),
+            subscribes: 0,
+            bio: '',
+            infoDetail: '',
+            link: { linkName: '', linkAddress: '' },
+            enabled: true,
         }
+        dispatch(createCustomerObjThunk(customer));
     }, [dispatch]);
 
     return (
         <>
+            <Toast ref={toast} />
+
             <div className="flex align-content-center align-items-center justify-content-center form-vertical-align-center">
                 <div className="card surface-0 p-5 border-round-2xl w-30rem">
                     <h1 className="flex justify-content-center">로그인</h1>

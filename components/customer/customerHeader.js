@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useContext } from 'react';
+import { useEffect, useCallback, useContext, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -7,6 +7,7 @@ import Image from 'next/image';
 
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import ProjectContext from '../../context';
 
@@ -22,21 +23,31 @@ export default function CustomerHeader(props) {
 
     const customerObj = useSelector(({ customerInfo }) => customerInfo.customerObj);
     const customerInfoObj = useSelector(({ customerInfo }) => customerInfo.customerInfoObj);
-    
+
     useEffect(() => {
         if (!router.isReady) return; 
         dispatch(getCustomerInfoObjThunk(router.query.uid));
     }, [router.isReady]);
 
     const onEmailVerificationSend = useCallback(() => {
-        dispatch(customerInfoActions.sendCustomerEmailVerification());
-        alert('가입하신 회원님의 이메일로 계정 인증 요청 메일을 전송하였습니다.');
-        dispatch(customerInfoActions.logout());
-        router.replace(`/`);
+        confirmDialog({
+          header: '이메일 인증 확인 전송',
+          icon: 'pi pi-exclamation-triangle',
+          message: '가입하신 이메일 주소로 인증 확인 이메일을 전송하시겠습니까?',
+          position: 'top',
+          accept: () => {
+            dispatch(customerInfoActions.sendCustomerEmailVerification());
+            dispatch(customerInfoActions.logout());
+            router.replace(`/`);
+          },
+          reject: () => { return } 
+        });
     }, [dispatch]);
 
     return (
         <>
+            <ConfirmDialog />
+
             <div className="card surface-0 p-5 border-round-2xl">
                 <div className="flex align-content-center align-items-center justify-content-center">
                     <div className="card w-30rem">
@@ -62,14 +73,7 @@ export default function CustomerHeader(props) {
                                     <Link 
                                       href={{
                                         pathname: `/customer/${customerObj.uid}/customerProfile/update`,
-                                        query: { 
-                                          uid: customerInfoObj.uid,
-                                          displayName: customerInfoObj.displayName,
-                                          photoURL: customerInfoObj.photoURL,
-                                          bio: customerInfoObj.bio,
-                                          infoDetail: customerInfoObj.infoDetail,
-                                          link: JSON.stringify(customerInfoObj.link),
-                                        }
+                                        query: { uid: customerInfoObj.uid }
                                       }}
                                       as={`/customer/${customerObj.uid}/customerProfile/update`}
                                     >
