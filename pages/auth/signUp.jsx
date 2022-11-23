@@ -10,6 +10,7 @@ import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import { checkDuplicatedEmailThunk, createCustomerObjThunk } from '../../store/modules/customerInfo';
 
@@ -103,30 +104,35 @@ export default function signUp() {
             const customerEmail = `${id}@${emailAddress}`;
             const customerPassword = password;
             try {
-                if (confirm('정말 가입하시겠습니까?')) {
-                    createUserWithEmailAndPassword(auth, customerEmail, customerPassword)
-                      .then((userCredential) => {
-                          const customerObj = {
-                              displayName: userCredential.user.displayName,
-                              customerEmail: userCredential.user.email,
-                              photoURL: userCredential.user.photoURL,
-                              uid: userCredential.user.uid,
-                              createdAt: Date.now(),
-                              subscribes: 0,
-                              bio: '',
-                              infoDetail: '',
-                              link: {linkName: '', linkAddress: ''},
-                              enabled: true,
-                          }
-                          dispatch(createCustomerObjThunk(customerObj));
-                          router.replace(`/`);
-                      })
-                      .catch((error) => { 
-                          console.log("SIGN UP FAILED!", error); 
-                      });
-                } else {
-                    return;
-                }
+              confirmDialog({
+                header: '회원가입',
+                icon: 'pi pi-exclamation-triangle',
+                message: '정말 가입하시겠습니까?',
+                position: 'top',
+                accept: () => {
+                  createUserWithEmailAndPassword(auth, customerEmail, customerPassword)
+                    .then((userCredential) => {
+                        const customerObj = {
+                            displayName: userCredential.user.displayName,
+                            customerEmail: userCredential.user.email,
+                            photoURL: userCredential.user.photoURL,
+                            uid: userCredential.user.uid,
+                            createdAt: Date.now(),
+                            subscribes: 0,
+                            bio: '',
+                            infoDetail: '',
+                            link: {linkName: '', linkAddress: ''},
+                            enabled: true,
+                        }
+                        dispatch(createCustomerObjThunk(customerObj));
+                        router.replace(`/`);
+                    })
+                    .catch((error) => { 
+                        console.log("SIGN UP FAILED!", error); 
+                    });
+                },
+                reject: () => { return } 
+              });
             } catch (error) {
                 console.log(error);
             }
@@ -148,6 +154,7 @@ export default function signUp() {
     return (
         <>
             <Toast ref={toast} />
+            <ConfirmDialog />
 
             <div className="flex align-content-center align-items-center justify-content-center form-vertical-align-center">
                 <div className="card surface-0 p-5 border-round-2xl w-30rem">

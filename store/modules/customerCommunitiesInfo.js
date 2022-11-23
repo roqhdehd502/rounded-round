@@ -1,11 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { 
-    getAuth,
-    updateProfile,
-} from "firebase/auth";
-
-import { 
     collection,
     doc,
     getDoc,
@@ -117,82 +112,76 @@ const customerCommunitiesInfoSlice = createSlice({
     initialState,
 
     reducers: {
-        patchCustomerObj(state, action) { 
-            updateProfile(getAuth().currentUser, {
-                displayName: action.payload.updateCustomerObj.displayName,
-                photoURL: action.payload.customerPhotoURL,
-            }).then(() => {
-                console.log("UPDATE SUCCESS!");
-            }).catch((error) => {
-                console.log(error);
-            });
+        dummyCustomerCommunityObj(state, action) { 
+            console.log("dummy")
         },
     },
 
-    extraReducers: {
-        [getCustomerCommunityThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [getCustomerCommunityThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.customerCommunityObj = action.payload;
-        },
-        [getCustomerCommunityThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },
+    extraReducers: (builder) => {
+        builder
+          .addCase(getCustomerCommunityThunk.pending, (state, action) => {
+              state.loading = true;
+          })
+          .addCase(getCustomerCommunityThunk.fulfilled, (state, action) => {
+              state.loading = false;
+              state.customerCommunityObj = action.payload;
+          })
+          .addCase(getCustomerCommunityThunk.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error;
+          })
 
-        [getCustomerCommunitiesThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [getCustomerCommunitiesThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.customerCommunities = action.payload;
-        },
-        [getCustomerCommunitiesThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },
+          .addCase(getCustomerCommunitiesThunk.pending, (state, action) => {
+              state.loading = true;
+          })
+          .addCase(getCustomerCommunitiesThunk.fulfilled, (state, action) => {
+              state.loading = false;
+              state.customerCommunities = action.payload;
+          })
+          .addCase(getCustomerCommunitiesThunk.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error;
+          })
 
-        [createCustomerCommunityThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [createCustomerCommunityThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            console.log("CREATE SUCCESS.", action.payload);
-        },
-        [createCustomerCommunityThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },
+          .addCase(createCustomerCommunityThunk.pending, (state, action) => {
+              state.loading = true;
+          })
+          .addCase(createCustomerCommunityThunk.fulfilled, (state, action) => {
+              state.loading = false;
+              console.log("CREATE SUCCESS.", action.payload);
+          })
+          .addCase(createCustomerCommunityThunk.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error;
+          })
 
-        [patchCustomerCommunityThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [patchCustomerCommunityThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-        },
-        [patchCustomerCommunityThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },
+          .addCase(patchCustomerCommunityThunk.pending, (state, action) => {
+              state.loading = true;
+          })
+          .addCase(patchCustomerCommunityThunk.fulfilled, (state, action) => {
+              state.loading = false;
+          })
+          .addCase(patchCustomerCommunityThunk.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error;
+          })
 
-        [deleteCustomerCommunityThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [deleteCustomerCommunityThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.customerCommunities = [];
-        },
-        [deleteCustomerCommunityThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },
-    },
+          .addCase(deleteCustomerCommunityThunk.pending, (state, action) => {
+              state.loading = true;
+          })
+          .addCase(deleteCustomerCommunityThunk.fulfilled, (state, action) => {
+              state.loading = false;
+              state.customerCommunities = [];
+          })
+          .addCase(deleteCustomerCommunityThunk.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error;
+          })
+    }, 
 });
 
 export const { 
-    patchCustomerObj,
+    dummyCustomerCommunityObj,
 } = customerCommunitiesInfoSlice.actions;
 
 export default customerCommunitiesInfoSlice.reducer;

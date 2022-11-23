@@ -8,6 +8,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 import { Toast } from 'primereact/toast';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/filters';
 
@@ -26,11 +27,18 @@ export default function cartList() {
     useEffect(() => {
         const outstandingSongs = sessionStorage.getItem('rounded-round-buylist');
         if (outstandingSongs) {
-            if (confirm('현재 구입 페이지에 결제하지 않은 곡이 있습니다.\n구입 페이지로 이동하시겠습니까?')) {
+            confirmDialog({
+              header: '장바구니 이동',
+              icon: 'pi pi-exclamation-triangle',
+              message: `현재 구입 페이지에 결제하지 않은 곡이 있습니다.\n구입 페이지로 이동하시겠습니까?`,
+              position: 'top',
+              accept: () => {
                 router.replace(`/purchase/${router.query.uid}/buyInfo`);
-            } else {
+              },
+              reject: () => { 
                 sessionStorage.removeItem('rounded-round-buylist');
-            }
+              } 
+            });
         }
 
         const data = JSON.parse(sessionStorage.getItem('rounded-round-cartlist'));
@@ -50,7 +58,13 @@ export default function cartList() {
             return;
         }
 
-        if (confirm('정말 삭제 하시겠습니까?')) {
+        confirmDialog({
+          header: '장바구니 이력 삭제',
+          icon: 'pi pi-exclamation-triangle',
+          acceptClassName: 'p-button-danger',
+          message: `정말 삭제 하시겠습니까?`,
+          position: 'top',
+          accept: () => {
             const map = new Map();
             const beforeCartList = JSON.parse(sessionStorage.getItem('rounded-round-cartlist'));
             const selectedRemoveCartList = selectedCustomers;
@@ -72,7 +86,9 @@ export default function cartList() {
             sessionStorage.removeItem('rounded-round-cartlist');
             sessionStorage.setItem('rounded-round-cartlist', JSON.stringify(afterCartList));
             setCustomers(afterCartList);
-        }
+          },
+          reject: () => { return } 
+        });
     }
 
     const onBuySongs = () => {
@@ -96,7 +112,12 @@ export default function cartList() {
             return;
         }
 
-        if (confirm(`가격은 총 ${formatUnitEachThousand(selectedPrice * 800)}원 입니다.\n정말 구입하시겠습니까?`)) {
+        confirmDialog({
+          header: '결제 확인',
+          icon: 'pi pi-exclamation-triangle',
+          message: `가격은 총 ${formatUnitEachThousand(selectedPrice * 800)}원 입니다.\n정말 구입하시겠습니까?`,
+          position: 'top',
+          accept: () => {
             const map = new Map();
             const beforeCartList = JSON.parse(sessionStorage.getItem('rounded-round-cartlist'));
             const selectedBuySongsList = selectedCustomers;
@@ -120,7 +141,9 @@ export default function cartList() {
             sessionStorage.setItem('rounded-round-cartlist', JSON.stringify(afterCartList));
             sessionStorage.setItem('rounded-round-buylist', JSON.stringify(selectedBuySongsList));
             router.replace(`/purchase/${router.query.uid}/buyInfo`); 
-        }
+          },
+          reject: () => { return } 
+        });
     }
 
     const renderHeader = () => {
@@ -176,6 +199,7 @@ export default function cartList() {
     return (
         <>
             <Toast ref={toast} />
+            <ConfirmDialog />
 
             {selectedCustomers ? (
                 <div className="datatable-doc-demo">

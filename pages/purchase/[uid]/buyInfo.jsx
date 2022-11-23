@@ -8,6 +8,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 import { Toast } from 'primereact/toast';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -42,7 +43,12 @@ export default function buyInfo() {
             return;
         }
 
-        if (confirm(`가격은 총 ${formatUnitEachThousand(totalPrice * 800)}원 입니다.\n정말 결제하시겠습니까?`)) {
+        confirmDialog({
+          header: '결제 확인',
+          icon: 'pi pi-exclamation-triangle',
+          message: `가격은 총 ${formatUnitEachThousand(totalPrice * 800)}원 입니다.\n정말 결제하시겠습니까?`,
+          position: 'top',
+          accept: () => {
             console.log("결제 API 호출 뒤 결과 값 객체에 담기!");
             let payList = JSON.parse(sessionStorage.getItem('rounded-round-buylist'));
             const payId = uuidv4();
@@ -58,12 +64,14 @@ export default function buyInfo() {
             sessionStorage.removeItem('rounded-round-buylist');
             
             router.replace({
-              pathname: `/purchase/${router.query.uid}/payResult/${payId}`,
-              query: { uid: router.query.uid, payId: payId },
+                pathname: `/purchase/${router.query.uid}/payResult/${payId}`,
+                query: { uid: router.query.uid, payId: payId },
             },
-            `/purchase/${router.query.uid}/payResult/${payId}`,
+                `/purchase/${router.query.uid}/payResult/${payId}`,
             );
-        }
+          },
+          reject: () => { return } 
+        });
     }
 
     const renderHeader = () => {
@@ -112,6 +120,7 @@ export default function buyInfo() {
     return (
         <>
             <Toast ref={toast} />
+            <ConfirmDialog />
 
             {customers ? (
                 <div className="datatable-doc-demo">

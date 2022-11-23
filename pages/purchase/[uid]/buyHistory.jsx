@@ -6,6 +6,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import { getBuyHistories } from '../../../service';
 
@@ -37,9 +38,17 @@ export default function buyHistory() {
             return;
         }
 
-        if (confirm('정말 삭제 하시겠습니까?')) {
+        confirmDialog({
+          header: '구입 이력 삭제',
+          icon: 'pi pi-info-circle',
+          acceptClassName: 'p-button-danger',
+          message: '정말 삭제 하시겠습니까?',
+          position: 'top',
+          accept: () => {
             console.log("엘리먼트 삭제하고 해당 DB 수정!");
-        }
+          },
+          reject: () => { return } 
+        });
     }
 
     const onReDownloadSongs = () => {
@@ -63,9 +72,16 @@ export default function buyHistory() {
             return;
         }
 
-        if (confirm('다시 다운로드 하시겠습니까?')) {
+        confirmDialog({
+          header: '다운로드',
+          icon: 'pi pi-exclamation-triangle',
+          message: '다시 다운로드 하시겠습니까?',
+          position: 'top',
+          accept: () => {
             console.log('재다운로드 정보 세션에 담고 페이지로 이동!');
-        }
+          },
+          reject: () => { return } 
+        });
     }    
 
     const renderHeader = () => {
@@ -121,6 +137,7 @@ export default function buyHistory() {
     return (
         <>
             <Toast ref={toast} />
+            <ConfirmDialog />
 
             <div className="datatable-doc-demo">
                 <div className="card surface-0 p-5 border-round-2xl">

@@ -10,6 +10,7 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Divider } from 'primereact/divider';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import { convertNewlineText } from '../../../../../commons/functional/filters';
 
@@ -62,7 +63,12 @@ export default function customerProfileUpdate() {
 
     const updateCustomer = useCallback(async (customerInfo) => {
         try {
-            if (confirm('정말 변경하시겠습니까?')) {
+            confirmDialog({
+              header: '회원 정보 변경',
+              icon: 'pi pi-exclamation-triangle',
+              message: '정말 변경하시겠습니까?',
+              position: 'top',
+              accept: () => {
                 const updateCustomerObj = {
                     displayName: customerInfo.customerDisplayName,
                     bio: customerInfo.customerBio,
@@ -98,18 +104,28 @@ export default function customerProfileUpdate() {
                 }
 
                 router.replace(`/customer/${customerInfo.customerUid}/customerProfile`);
-            }
-        }   catch(error) {
+              },
+              reject: () => { return } 
+            });
+        } catch(error) {
             console.log(error);
         }
     }, [dispatch]);
 
     const updateCustomerPassword = useCallback(() => {
         try {
-            dispatch(customerInfoActions.patchCustomerPassword(customerEmail));
-            alert('가입하신 회원님의 이메일로 비밀번호 변경 요청을 전송하였습니다.');
-            dispatch(customerInfoActions.logout());
-            router.replace(`/`);
+            confirmDialog({
+              header: '비밀번호 변경 전송',
+              icon: 'pi pi-exclamation-triangle',
+              message: '가입하신 이메일 주소로 비밀번호 변경 이메일을 전송하시겠습니까?',
+              position: 'top',
+              accept: () => {
+                dispatch(customerInfoActions.patchCustomerPassword(customerEmail));
+                dispatch(customerInfoActions.logout());
+                router.replace(`/`);
+              },
+              reject: () => { return } 
+            });
         } catch (error) {
             console.log(error);
         }
@@ -117,9 +133,17 @@ export default function customerProfileUpdate() {
 
     const deletecustomerObj = useCallback(() => {
         try {
-            if(confirm('정말 회원님의 계정을 삭제하시겠습니까?')) {
+            confirmDialog({
+              header: '회원 정보 삭제',
+              icon: 'pi pi-info-circle',
+              acceptClassName: 'p-button-danger',
+              message: '정말 회원님의 계정을 삭제하시겠습니까?',
+              position: 'top',
+              accept: () => {
                 console.log("추후 구현할 것");
-            }
+              },
+              reject: () => { return } 
+            });
         } catch (error) {
             console.log(error);
         }
@@ -127,6 +151,8 @@ export default function customerProfileUpdate() {
 
     return (
         <>
+            <ConfirmDialog />
+
             {customerObj ? (
                 <>
                     <div className="flex align-content-center align-items-center justify-content-center form-vertical-align-center">

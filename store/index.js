@@ -8,9 +8,9 @@ import reducer from './modules';
 
 const makeStore = (context) => configureStore({ 
     reducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-        serializableCheck: false,
-    }).concat(logger),
+    middleware: process.env.NODE_ENV !== 'production' ? 
+      (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}).concat(logger) : 
+      (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}),
     devTools: process.env.NODE_ENV !== 'production',
 });
 

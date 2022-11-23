@@ -41,7 +41,7 @@ export default function emptyLayout({ children }) {
         <>
             {loading ? (
                 <>
-                    <div className="content-width-padding ">
+                    <div className="content-width-padding">
                         { children }
                     </div>
                 </>

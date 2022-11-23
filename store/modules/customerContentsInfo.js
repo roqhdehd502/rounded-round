@@ -1,11 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { 
-    getAuth,
-    updateProfile,
-} from "firebase/auth";
-
-import { 
     collection,
     doc,
     getDoc,
@@ -14,7 +9,6 @@ import {
     where,
     orderBy,
     addDoc,
-    //setDoc,
     updateDoc,
     deleteDoc, 
 } from "firebase/firestore";
@@ -118,82 +112,76 @@ const customerContentsInfoSlice = createSlice({
     initialState,
 
     reducers: {
-        patchCustomerObj(state, action) { 
-            updateProfile(getAuth().currentUser, {
-                displayName: action.payload.updateCustomerObj.displayName,
-                photoURL: action.payload.photoURL,
-            }).then(() => {
-                console.log("UPDATE SUCCESS!");
-            }).catch((error) => {
-                console.log(error);
-            });
+        dummyCustomerContentsObj(state, action) { 
+            console.log("dummy")
         },
     },
 
-    extraReducers: {
-        [getCustomerContentThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [getCustomerContentThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.customerContentObj = action.payload;
-        },
-        [getCustomerContentThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },
+    extraReducers: (builder) => {
+        builder
+          .addCase(getCustomerContentThunk.pending, (state, action) => {
+              state.loading = true;
+          })
+          .addCase(getCustomerContentThunk.fulfilled, (state, action) => {
+              state.loading = false;
+              state.customerContentObj = action.payload;
+          })
+          .addCase(getCustomerContentThunk.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error;
+          })
 
-        [getCustomerContentsThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [getCustomerContentsThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.customerContents = action.payload;
-        },
-        [getCustomerContentsThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },
+          .addCase(getCustomerContentsThunk.pending, (state, action) => {
+              state.loading = true;
+          })
+          .addCase(getCustomerContentsThunk.fulfilled, (state, action) => {
+              state.loading = false;
+              state.customerContents = action.payload;
+          })
+          .addCase(getCustomerContentsThunk.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error;
+          })
 
-        [createCustomerContentThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [createCustomerContentThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            console.log("CREATE SUCCESS.", action.payload);
-        },
-        [createCustomerContentThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },
+          .addCase(createCustomerContentThunk.pending, (state, action) => {
+              state.loading = true;
+          })
+          .addCase(createCustomerContentThunk.fulfilled, (state, action) => {
+              state.loading = false;
+              console.log("CREATE SUCCESS.", action.payload);
+          })
+          .addCase(createCustomerContentThunk.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error;
+          })
 
-        [patchCustomerContentThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [patchCustomerContentThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-        },
-        [patchCustomerContentThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },
+          .addCase(patchCustomerContentThunk.pending, (state, action) => {
+              state.loading = true;
+          })
+          .addCase(patchCustomerContentThunk.fulfilled, (state, action) => {
+              state.loading = false;
+          })
+          .addCase(patchCustomerContentThunk.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error;
+          })
 
-        [deleteCustomerContentThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [deleteCustomerContentThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.customerContents = [];
-        },
-        [deleteCustomerContentThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },
+          .addCase(deleteCustomerContentThunk.pending, (state, action) => {
+              state.loading = true;
+          })
+          .addCase(deleteCustomerContentThunk.fulfilled, (state, action) => {
+              state.loading = false;
+              state.customerContents = [];
+          })
+          .addCase(deleteCustomerContentThunk.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error;
+          })
     },
 });
 
 export const { 
-    patchUserObj,
+    dummyCustomerContentsObj,
 } = customerContentsInfoSlice.actions;
 
 export default customerContentsInfoSlice.reducer;

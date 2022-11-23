@@ -9,6 +9,7 @@ import * as firebaseStorage from "firebase/storage";
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Divider } from 'primereact/divider';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import ProjectContext from '../../../../../context';
 
@@ -39,7 +40,12 @@ export default function customerCommunityUpdate() {
 
     const updateCommunity = useCallback(async (communityObj) => {
         try {
-            if (confirm('정말 수정하시겠습니까?')) {
+            confirmDialog({
+              header: '회원 커뮤니티 수정',
+              icon: 'pi pi-exclamation-triangle',
+              message: '정말 수정하시겠습니까?',
+              position: 'top',
+              accept: () => {
                 const updateCommunityObj = {
                     docId: router.query.docId,
                     thumbnail: communityObj.communityThumbnail, 
@@ -67,15 +73,22 @@ export default function customerCommunityUpdate() {
                 }
                 
                 router.replace(`/customer/${router.query.uid}/customerCommunity`);
-            }
-        }   catch(error) {
+              },
+              reject: () => { return } 
+            });
+        } catch(error) {
             console.log(error);
         }
     }, [dispatch]);
 
     const deleteCommunity = useCallback(async () => {
         try {
-            if (confirm('정말 삭제하시겠습니까?')) {
+            confirmDialog({
+              header: '회원 커뮤니티 삭제',
+              icon: 'pi pi-exclamation-triangle',
+              message: '정말 삭제하시겠습니까?',
+              position: 'top',
+              accept: () => {
                 if (router.query.thumbnail) {
                     const storage = firebaseStorage.getStorage();
                     const storageRef = firebaseStorage.ref(storage, `customercommunityimages/${router.query.uid}/${customerCommunityObj.thumbnailUuid}`);
@@ -90,7 +103,9 @@ export default function customerCommunityUpdate() {
                 }
                 
                 router.replace(`/customer/${router.query.uid}/customerCommunity`);
-            } 
+              },
+              reject: () => { return } 
+            });
         } catch(error) {
             console.log(error);
         }  
@@ -98,6 +113,8 @@ export default function customerCommunityUpdate() {
 
     return (
         <>
+            <ConfirmDialog />
+
             {customerCommunityObj ? (
                 <>
                     <div className="flex align-content-center align-items-center justify-content-center form-vertical-align-center">

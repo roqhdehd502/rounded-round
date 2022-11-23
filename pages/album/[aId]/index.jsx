@@ -9,6 +9,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import { DialogCommon } from '../../../commons/primereact/DialogCommon';
 import { ellipsisText, formatUnitEachThousand, timeFormatting } from '../../../commons/functional/filters';
@@ -57,8 +58,13 @@ export default function albumDetail() {
             });
             return;
         }
-
-        if (confirm('정말 장바구니에 담으시겠습니까?')) {
+        
+        confirmDialog({
+          header: '장바구니 담기',
+          icon: 'pi pi-exclamation-triangle',
+          message: '정말 장바구니에 담으시겠습니까?',
+          position: 'top',
+          accept: () => {
             const cartList = [...selectedCustomers];
 
             if (sessionStorage.getItem('rounded-round-cartlist')) {
@@ -74,10 +80,16 @@ export default function albumDetail() {
             } else {
                 sessionStorage.setItem('rounded-round-cartlist', JSON.stringify(cartList));
             }
-            
-            if (confirm('장바구니에 담는 것을 성공했습니다.\n구입 페이지로 이동하시겠습니까?')) {
-                router.push(`/purchase/${customerObj.uid}/cartList`);
-            }
+
+            confirmPushToCartList();
+          },
+          reject: () => { return } 
+        });
+    }
+
+    const confirmPushToCartList = () => {
+        if (confirm('장바구니에 담는 것을 성공했습니다.\n구입 페이지로 이동하시겠습니까?')) {
+            router.push(`/purchase/${customerObj.uid}/cartList`);
         }
     }
 
@@ -177,6 +189,7 @@ export default function albumDetail() {
     return (
         <>
             <Toast ref={toast} />
+            <ConfirmDialog />
 
             {albumObj ? (
                 <div className="card surface-0 p-5 border-round-2xl">

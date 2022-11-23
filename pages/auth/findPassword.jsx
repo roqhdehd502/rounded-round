@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import ProjectContext from '../../context';
 
@@ -22,9 +23,17 @@ export default function findPassword() {
 
     const onFindPassword = useCallback((email) => {
         try {
-            dispatch(customerInfoActions.patchCustomerPassword(email));
-            alert('가입하신 회원님의 이메일로 비밀번호 변경 요청을 전송하였습니다.');
-            router.replace(`/`);
+            confirmDialog({
+              header: '비밀번호 변경 전송',
+              icon: 'pi pi-exclamation-triangle',
+              message: '가입하신 이메일 주소로 비밀번호 변경 이메일을 전송하시겠습니까?',
+              position: 'top',
+              accept: () => {
+                dispatch(customerInfoActions.patchCustomerPassword(email));
+                router.replace(`/`);
+              },
+              reject: () => { return } 
+            });
         } catch (error) {
             console.log(error);
         }
@@ -32,6 +41,8 @@ export default function findPassword() {
 
     return (
         <>
+            <ConfirmDialog />
+
             <div className="flex align-content-center align-items-center justify-content-center form-vertical-align-center">
                 <div className="card surface-0 p-5 border-round-2xl w-30rem">
                     <h1 className="flex justify-content-center">비밀번호 찾기</h1>

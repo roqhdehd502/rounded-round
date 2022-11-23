@@ -167,61 +167,62 @@ const customerInfoSlice = createSlice({
         },
     },
 
-    extraReducers: {
-        [checkDuplicatedEmailThunk.pending]: (state, action) => {
-            state.loading = true;
-            console.log("SEARCH...", action.payload);
-        },
-        [checkDuplicatedEmailThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            if (action.payload >= 1) {
-                state.isDuplicatedEmailResult = 'Y';
-            } else {
-                state.isDuplicatedEmailResult = 'N';
-            }
-        },
-        [checkDuplicatedEmailThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },
+    extraReducers: (builder) => {
+        builder
+          .addCase(checkDuplicatedEmailThunk.pending, (state, action) => {
+              state.loading = true;
+              console.log("SEARCH...", action.payload);
+          })
+          .addCase(checkDuplicatedEmailThunk.fulfilled, (state, action) => {
+              state.loading = false;
+              if (action.payload >= 1) {
+                  state.isDuplicatedEmailResult = 'Y';
+              } else {
+                  state.isDuplicatedEmailResult = 'N';
+              }
+          })
+          .addCase(checkDuplicatedEmailThunk.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error;
+          })
 
-        [createCustomerObjThunk.pending]: (state, action) => {
-            state.loading = true;
-            console.log("SIGN UP...", action.payload);
-        },
-        [createCustomerObjThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            console.log("SIGN UP SUCCESS.", action.payload);
-        },
-        [createCustomerObjThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },
+          .addCase(createCustomerObjThunk.pending, (state, action) => {
+              state.loading = true;
+              console.log("SIGN UP...", action.payload);
+          })
+          .addCase(createCustomerObjThunk.fulfilled, (state, action) => {
+              state.loading = false;
+              console.log("SIGN UP SUCCESS.", action.payload);
+          })
+          .addCase(createCustomerObjThunk.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error;
+          })
 
-        [getCustomerInfoObjThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [getCustomerInfoObjThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.customerInfoObj = action.payload;
-        },
-        [getCustomerInfoObjThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },
+          .addCase(getCustomerInfoObjThunk.pending, (state, action) => {
+              state.loading = true;
+          })
+          .addCase(getCustomerInfoObjThunk.fulfilled, (state, action) => {
+              state.loading = false;
+              state.customerInfoObj = action.payload;
+          })
+          .addCase(getCustomerInfoObjThunk.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error;
+          })
 
-        [patchCustomerInfoObjThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [patchCustomerInfoObjThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.customerObj = null;
-            state.customerInfoObj = null;
-        },
-        [patchCustomerInfoObjThunk.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        },   
+          .addCase(patchCustomerInfoObjThunk.pending, (state, action) => {
+              state.loading = true;
+          })
+          .addCase(patchCustomerInfoObjThunk.fulfilled, (state, action) => {
+              state.loading = false;
+              state.customerObj = null;
+              state.customerInfoObj = null;
+          })
+          .addCase(patchCustomerInfoObjThunk.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.error;
+          })
     },
 });
 
