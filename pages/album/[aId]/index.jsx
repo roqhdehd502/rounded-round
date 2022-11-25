@@ -70,11 +70,9 @@ export default function albumDetail() {
             if (sessionStorage.getItem('rounded-round-cartlist')) {
                 let beforeCartList = JSON.parse(sessionStorage.getItem('rounded-round-cartlist'));
                 beforeCartList.push(...cartList);
-                const map = new Map();
-                for (const item of beforeCartList) {
-                    map.set(JSON.stringify(item), item);
-                }
-                const afterCartList = [...map.values()];
+                const afterCartList = beforeCartList.filter(
+                  (arr, index, callback) => index === callback.findIndex(t => t.id === arr.id)
+                );
                 sessionStorage.removeItem('rounded-round-cartlist');
                 sessionStorage.setItem('rounded-round-cartlist', JSON.stringify(afterCartList));
             } else {

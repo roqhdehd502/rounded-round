@@ -6,6 +6,22 @@ const productionURL = "https://roqhdehd502.github.io/rounded-round";
 
 const nextConfig = {
     basePath: !debug ? `/rounded-round` : ``,
+    // async rewrites() {
+    //   return [
+    //     {
+    //       source: "/:path*",
+    //       destination: `${process.env.NEXT_PUBLIC_IAMPORT_REQUEST_BASE_URL}/:path*`
+    //     },
+    //     {
+    //       source: "/:path*",
+    //       destination: `https://code.jquery.com/:path*`
+    //     },
+    //     {
+    //       source: "/:path*",
+    //       destination: `https://cdn.iamport.kr/:path*`
+    //     },
+    //   ];
+    // },
     images: {
         unoptimized: true,
         domains: [

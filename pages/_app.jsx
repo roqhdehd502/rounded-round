@@ -8,6 +8,7 @@ import 'primeflex/primeflex.css';
 import { Provider } from 'react-redux';
 
 import Head from 'next/head';
+import Script from 'next/script';
 
 import { ProjectProvider } from '../context';
 
@@ -41,10 +42,13 @@ function MyApp({ Component, ...rest }) {
                 <Provider store={store}>
                     <Head>
                         <title>Rounded Round</title>
-                        {/* <meta name="referrer" content="no-referrer" /> */}
                         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                         <link rel="icon" href="/favicon.ico" />
                     </Head>
+
+                    <Script async strategy="beforeInteractive" src="https://code.jquery.com/jquery-1.12.4.min.js" />
+                    <Script async strategy="beforeInteractive" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js" />
+                    
                     <Layout>
                         <Component {...props.pageProps} />
                     </Layout>

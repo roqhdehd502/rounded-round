@@ -14,6 +14,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/filters';
 
+import { getPayInformation } from '../../../remote/iamport/payment';
+
 
 buyInfo.layout = "L1";
 export default function buyInfo() {
@@ -49,9 +51,8 @@ export default function buyInfo() {
           message: `가격은 총 ${formatUnitEachThousand(totalPrice * 800)}원 입니다.\n정말 결제하시겠습니까?`,
           position: 'top',
           accept: () => {
-            console.log("결제 API 호출 뒤 결과 값 객체에 담기!");
             let payList = JSON.parse(sessionStorage.getItem('rounded-round-buylist'));
-            const payId = uuidv4();
+            const payId = `ORD-${uuidv4()}`;
 
             payList.forEach(item => {
                 item.payId = payId;
@@ -59,9 +60,11 @@ export default function buyInfo() {
                 item.payDate = Date.now();
                 item.price = 800;
             });
-
+            
+            getPayInformation(payList);
             sessionStorage.setItem('rounded-round-payresult', JSON.stringify(payList));  
             sessionStorage.removeItem('rounded-round-buylist');
+            /** 구매이력 DB에도 payList 담기 */
             
             router.replace({
                 pathname: `/purchase/${router.query.uid}/payResult/${payId}`,

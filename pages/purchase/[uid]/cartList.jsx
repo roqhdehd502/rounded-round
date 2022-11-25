@@ -65,27 +65,22 @@ export default function cartList() {
           message: `정말 삭제 하시겠습니까?`,
           position: 'top',
           accept: () => {
-            const map = new Map();
-            const beforeCartList = JSON.parse(sessionStorage.getItem('rounded-round-cartlist'));
+            let remaincartList = customers;
             const selectedRemoveCartList = selectedCustomers;
-            let diffCartList = [];
 
-            for (let i=0; i<beforeCartList.length; i++) {
+            for (let i=0; i<remaincartList.length; i++) {
                 for (let j=0; j<selectedRemoveCartList.length; j++) {
-                    if (beforeCartList[i].id !== selectedRemoveCartList[j].id) {
-                        diffCartList.push(beforeCartList[i]);
+                    if (remaincartList[i].id === selectedRemoveCartList[j].id) {
+                        remaincartList.splice(i, 1);
                     }
                 }
             }
             
-            for (const item of diffCartList) {
-                map.set(JSON.stringify(item), item);
-            }
-
-            const afterCartList = [...map.values()];
             sessionStorage.removeItem('rounded-round-cartlist');
-            sessionStorage.setItem('rounded-round-cartlist', JSON.stringify(afterCartList));
-            setCustomers(afterCartList);
+            sessionStorage.setItem('rounded-round-cartlist', JSON.stringify(remaincartList));
+            setCustomers(remaincartList ? remaincartList : []);
+            setSelectedCustomers([]);
+            setSelectedPrice(0);
           },
           reject: () => { return } 
         });
