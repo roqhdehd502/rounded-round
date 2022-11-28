@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 
+import { useSelector, useDispatch } from 'react-redux';
+
+import { useRouter } from 'next/router';
 import Image from 'next/image';
 
 import { DataTable } from 'primereact/datatable';
@@ -8,24 +11,27 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
-import { getBuyHistories } from '../../../service';
-
 import { ellipsisText, timeCounter } from '../../../commons/functional/filters';
+
+import { getCustomerBuyHistoriesThunk, deleteBuyHistoryThunk } from '../../../store/modules/purchaseInfo';
 
 
 buyHistory.layout = "L1";
 export default function buyHistory() {
+    const dispatch = useDispatch();
+    const router = useRouter();
+
     const toast = useRef(null);
 
-    const [customers, setCustomers] = useState(null);
+    const customerBuyHistories = useSelector(({ purchaseInfo }) => purchaseInfo.customerBuyHistories);
+
     const [selectedCustomers, setSelectedCustomers] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const data = getBuyHistories().sort((a, b) => { return b.uploadDate - a.uploadDate });
-        setCustomers(data); 
+        dispatch(getCustomerBuyHistoriesThunk(router.query.uid)); 
         setLoading(false);
-    }, []);
+    }, [router.query]);
 
     const onRemoveBuyHistory = () => {
         if (!selectedCustomers) {
@@ -42,17 +48,23 @@ export default function buyHistory() {
           header: '구입 이력 삭제',
           icon: 'pi pi-info-circle',
           acceptClassName: 'p-button-danger',
-          message: '정말 삭제 하시겠습니까?',
+          message: '삭제 후 무료로 재구입이 불가능합니다. 정말 삭제 하시겠습니까?',
           position: 'top',
           accept: () => {
-            console.log("엘리먼트 삭제하고 해당 DB 수정!");
+            try {
+                selectedCustomers.forEach(item => {
+                    dispatch(deleteBuyHistoryThunk(item.docId));
+                });
+            } catch (error) {
+                alert("구입 한 노래를 삭제 할 수 없습니다!");
+            }
           },
           reject: () => { return } 
         });
     }
 
     const onReDownloadSongs = () => {
-        if (!customers) {
+        if (!customerBuyHistories) {
             toast.current.show({
               severity: 'error', 
               summary: '다운로드 실패!', 
@@ -127,7 +139,7 @@ export default function buyHistory() {
     const buyDateBodyTemplate = (rowData) => {
         return (
             <>
-                <label>{timeCounter(rowData.uploadDate)}</label>
+                <label>{timeCounter(rowData.payDate)}</label>
             </>
         );
     }
@@ -139,23 +151,31 @@ export default function buyHistory() {
             <Toast ref={toast} />
             <ConfirmDialog />
 
-            <div className="datatable-doc-demo">
-                <div className="card surface-0 p-5 border-round-2xl">
-                    <h1 className="ml-3 mt-0 mb-0">내가 구입한 노래</h1>
-                    <DataTable 
-                      value={customers} className="p-datatable-customers" header={header} rows={customers ? customers.length : 0}
-                      dataKey="id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)}
-                      emptyMessage="회원님이 구입한 곡이 없습니다."
-                      loading={loading} responsiveLayout="scroll"
-                    >
-                        <Column selectionMode="multiple" selectionAriaLabel="songName" headerStyle={{ minWidth: '1em' }} />
-                        <Column field="thumbnail" body={thumbnailBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ minWidth: '1rem'}} />
-                        <Column field="songName" header="곡정보" body={songInformationBodyTemplate} headerStyle={{ minWidth: '14rem' }} bodyStyle={{ minWidth: '14rem' }} />
-                        <Column field="albumName" header="앨범" body={albumNameBodyTemplate} headerStyle={{ minWidth: '14rem' }} bodyStyle={{ minWidth: '14rem' }} />
-                        <Column header="구입한 날짜" body={buyDateBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
-                    </DataTable>
+            {customerBuyHistories ? (
+                <div className="datatable-doc-demo">
+                    <div className="card surface-0 p-5 border-round-2xl">
+                        <h1 className="ml-3 mt-0 mb-0">내가 구입한 노래</h1>
+                        <DataTable 
+                          value={customerBuyHistories} className="p-datatable-customers" header={header} rows={customerBuyHistories ? customerBuyHistories.length : 0}
+                          dataKey="id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)}
+                          emptyMessage="회원님이 구입한 곡이 없습니다."
+                          loading={loading} responsiveLayout="scroll"
+                        >
+                            <Column selectionMode="multiple" selectionAriaLabel="songName" headerStyle={{ minWidth: '1em' }} />
+                            <Column field="thumbnail" body={thumbnailBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ minWidth: '1rem'}} />
+                            <Column field="songName" header="곡정보" body={songInformationBodyTemplate} headerStyle={{ minWidth: '14rem' }} bodyStyle={{ minWidth: '14rem' }} />
+                            <Column field="albumName" header="앨범" body={albumNameBodyTemplate} headerStyle={{ minWidth: '14rem' }} bodyStyle={{ minWidth: '14rem' }} />
+                            <Column header="구입한 날짜" body={buyDateBodyTemplate} headerStyle={{ minWidth: '1rem'}} bodyStyle={{ overflow: 'visible' }} />
+                        </DataTable>
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div className="flex justify-content-center align-content-center min-h-screen">
+                    <div>
+                        <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

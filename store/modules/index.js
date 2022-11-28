@@ -6,6 +6,7 @@ import customerCommunitiesInfo from "./customerCommunitiesInfo";
 import customerContentsInfo from "./customerContentsInfo";
 import albumsInfo from "./albumsInfo";
 import songsInfo from "./songsInfo";
+import purchaseInfo from "./purchaseInfo";
 
  
 const reducer = (state, action) => {
@@ -21,6 +22,7 @@ const reducer = (state, action) => {
         customerContentsInfo,
         albumsInfo,
         songsInfo,
+        purchaseInfo,
     })(state, action);
 }
 

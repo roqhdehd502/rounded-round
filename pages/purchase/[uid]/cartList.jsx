@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 
+import { useSelector, useDispatch } from 'react-redux';
+
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 
@@ -9,19 +11,28 @@ import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Badge } from 'primereact/badge';
 
 import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/filters';
+
+import { getCustomerBuyHistoriesThunk } from '../../../store/modules/purchaseInfo';
 
 
 cartList.layout = "L1";
 export default function cartList() {
+    const dispatch = useDispatch();
     const router = useRouter();
+
+    const customerBuyHistories = useSelector(({ purchaseInfo }) => purchaseInfo.customerBuyHistories);
+    /** 할인가 store 기능 구현되면 useSelector로 적용 */
+    const songPriceOff = 800;
 
     const toast = useRef(null);
 
-    const [customers, setCustomers] = useState(null);
-    const [selectedPrice, setSelectedPrice] = useState(0);
+    const [customers, setCustomers] = useState([]);
     const [selectedCustomers, setSelectedCustomers] = useState([]);
+    const [selectedPrice, setSelectedPrice] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(0);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -42,10 +53,15 @@ export default function cartList() {
         }
 
         const data = JSON.parse(sessionStorage.getItem('rounded-round-cartlist'));
-        setCustomers(data ? data : []);
-        setSelectedPrice(selectedCustomers ? selectedCustomers.length : 0);
+        dispatch(getCustomerBuyHistoriesThunk(router.query.uid))
+          .then((result) => {
+              if (result) setCustomers(isBoughtSongInData(data, result.payload)); 
+          })
+        
+        setSelectedPrice(selectedCustomers ? selectedPriceInSong(selectedCustomers) : 0);
+        setTotalPrice(selectedCustomers ? selectedTotalPriceInSong(selectedCustomers, songPriceOff) : 0)
         setLoading(false);
-    }, [selectedCustomers]);
+    }, [router.query, customers.length ? customers[0].id : [], selectedCustomers]);
 
     const onRemoveCart = () => {
         if (selectedCustomers.length === 0) {
@@ -110,7 +126,7 @@ export default function cartList() {
         confirmDialog({
           header: '결제 확인',
           icon: 'pi pi-exclamation-triangle',
-          message: `가격은 총 ${formatUnitEachThousand(selectedPrice * 800)}원 입니다.\n정말 구입하시겠습니까?`,
+          message: `가격은 총 ${formatUnitEachThousand(totalPrice)}원 입니다.\n정말 구입하시겠습니까?`,
           position: 'top',
           accept: () => {
             const map = new Map();
@@ -131,10 +147,10 @@ export default function cartList() {
             }
 
             const afterCartList = [...map.values()];
-            console.log("afterCartList", afterCartList);
             sessionStorage.removeItem('rounded-round-cartlist');
             sessionStorage.setItem('rounded-round-cartlist', JSON.stringify(afterCartList));
             sessionStorage.setItem('rounded-round-buylist', JSON.stringify(selectedBuySongsList));
+            sessionStorage.setItem('rounded-round-buyTotalPrice', totalPrice);
             router.replace(`/purchase/${router.query.uid}/buyInfo`); 
           },
           reject: () => { return } 
@@ -181,12 +197,52 @@ export default function cartList() {
         return <label>{ellipsisText(rowData.albumName, 27)}</label>
     }
 
-    const songPriceBodyTemplate = () => {
+    const songPriceBodyTemplate = (rowData) => {
         return (
             <>
-                <h4>{formatUnitEachThousand(800)}원</h4>
+                {rowData.price ?
+                    (
+                        <h4>{formatUnitEachThousand(rowData.price)}원</h4>
+                    ) : (
+                        <h4 className="text-600">
+                            {formatUnitEachThousand(rowData.price)}원
+                            <Badge className="ml-1" value="재구입" />
+                        </h4>
+                    )
+                }
             </>
         );
+    };
+
+    const isBoughtSongInData = (cartData, payload) => {
+        let result = cartData;
+        if (result && payload) {
+            result.forEach(songItem => {
+              payload.forEach(historySongItem => {
+                    if (songItem.id === historySongItem.id) songItem.price = 0;
+                });
+            });
+        }
+
+        return result ? result : [];
+    }
+
+    const selectedPriceInSong = (selectedCartData) => {
+        let result = 0;
+        selectedCartData.forEach(item => {
+            result += item.price;
+        });
+
+        return result;
+    }
+
+    const selectedTotalPriceInSong = (selectedCartData, priceOff) => {
+        let result = 0;
+        selectedCartData.forEach(item => {
+            result += item.price;
+        });
+
+        return (result - priceOff) >= 0 ? result - priceOff : 0;
     }
 
     const header = renderHeader();
@@ -200,10 +256,10 @@ export default function cartList() {
                 <div className="datatable-doc-demo">
                     <div className="card surface-0 p-5 border-round-2xl">
                         <h1 className="ml-3 mt-0 mb-6">장바구니</h1>
-                        <h3 className="ml-3">선택된 곡 가격 : {formatUnitEachThousand(selectedPrice * 800)}원</h3>
-                        <h3 className="ml-3">할인가 : 0원</h3>
+                        <h3 className="ml-3">선택된 곡 가격 : {formatUnitEachThousand(selectedPrice)}원</h3>
+                        <h3 className="ml-3">할인가 : {formatUnitEachThousand(songPriceOff)}원</h3>
                         <Divider className="w-20rem" />
-                        <h3 className="ml-3">총 : {formatUnitEachThousand(selectedPrice * 800)}원</h3>
+                        <h3 className="ml-3">총 : {formatUnitEachThousand(totalPrice)}원</h3>
                     </div>
                     <div className="mt-4 mb-4"></div>
                     <div className="card surface-0 p-5 border-round-2xl">

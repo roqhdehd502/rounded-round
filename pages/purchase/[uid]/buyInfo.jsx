@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 
+import { useSelector, useDispatch } from 'react-redux';
+
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 
@@ -9,16 +11,20 @@ import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Badge } from 'primereact/badge';
 
 import { v4 as uuidv4 } from 'uuid';
 
 import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/filters';
 
-import { getPayInformation } from '../../../remote/iamport/payment';
+import { getPayInformation } from '../../../commons/functional/payment';
+
+import { getCustomerBuyHistoriesThunk, createBuyHistoryThunk } from '../../../store/modules/purchaseInfo';
 
 
 buyInfo.layout = "L1";
 export default function buyInfo() {
+    const dispatch = useDispatch();
     const router = useRouter();
 
     const toast = useRef(null);
@@ -28,11 +34,14 @@ export default function buyInfo() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const data = JSON.parse(sessionStorage.getItem('rounded-round-buylist'));
-        setCustomers(data ? data : []);
-        setTotalPrice(data ? data.length : 0);
+        const buyData = JSON.parse(sessionStorage.getItem('rounded-round-buylist'));
+        const totalPriceData = sessionStorage.getItem('rounded-round-buyTotalPrice');
+        setCustomers(buyData ? buyData : []);
+        setTotalPrice(totalPriceData*1);
+
+
         setLoading(false);
-    }, []);
+    }, [router.query]);
 
     const onPaySongs = () => {
         if (customers.length === 0) {
@@ -48,30 +57,51 @@ export default function buyInfo() {
         confirmDialog({
           header: '결제 확인',
           icon: 'pi pi-exclamation-triangle',
-          message: `가격은 총 ${formatUnitEachThousand(totalPrice * 800)}원 입니다.\n정말 결제하시겠습니까?`,
+          message: `가격은 총 ${formatUnitEachThousand(totalPrice)}원 입니다.\n정말 결제하시겠습니까?`,
           position: 'top',
           accept: () => {
             let payList = JSON.parse(sessionStorage.getItem('rounded-round-buylist'));
             const payId = `ORD-${uuidv4()}`;
-
             payList.forEach(item => {
                 item.payId = payId;
                 item.uid = router.query.uid;
                 item.payDate = Date.now();
-                item.price = 800;
             });
-            
-            getPayInformation(payList);
-            sessionStorage.setItem('rounded-round-payresult', JSON.stringify(payList));  
-            sessionStorage.removeItem('rounded-round-buylist');
-            /** 구매이력 DB에도 payList 담기 */
-            
-            router.replace({
-                pathname: `/purchase/${router.query.uid}/payResult/${payId}`,
-                query: { uid: router.query.uid, payId: payId },
-            },
-                `/purchase/${router.query.uid}/payResult/${payId}`,
-            );
+
+            try {
+                const payObj = getPayInformation(payList, totalPrice);
+                IMP.init(process.env.NEXT_PUBLIC_IAMPORT_IDENTIFICATION_CODE);
+                IMP.request_pay(payObj, (rsp) => {
+                    if (rsp.success) {
+                        sessionStorage.removeItem('rounded-round-buylist');
+                        sessionStorage.setItem('rounded-round-payprice', totalPrice);
+                        payList.forEach(item => {
+                            dispatch(createBuyHistoryThunk(item));
+                        });
+                        router.replace({
+                            pathname: `/purchase/${router.query.uid}/payResult/${payId}`,
+                            query: { uid: router.query.uid, payId: payId },
+                        },
+                            `/purchase/${router.query.uid}/payResult/${payId}`,
+                        );
+                    } else {
+                        toast.current.show({
+                          severity: 'warn', 
+                          summary: '결제 실패!', 
+                          detail: '결제를 취소 하였습니다.', 
+                          life: 3000
+                        });
+                    }
+                });
+            } catch (error) {
+                console.log("error", error);
+                toast.current.show({
+                  severity: 'error', 
+                  summary: '결제 실패!', 
+                  detail: '오류로 인해 결제할 수 없습니다.', 
+                  life: 3000
+                });
+            }
           },
           reject: () => { return } 
         });
@@ -110,10 +140,19 @@ export default function buyInfo() {
         return <label>{ellipsisText(rowData.albumName, 27)}</label>
     }
 
-    const songPriceBodyTemplate = () => {
+    const songPriceBodyTemplate = (rowData) => {
         return (
             <>
-                <h4>{formatUnitEachThousand(800)}원</h4>
+                {rowData.price ?
+                    (
+                        <h4>{formatUnitEachThousand(rowData.price)}원</h4>
+                    ) : (
+                        <h4 className="text-600">
+                            {formatUnitEachThousand(rowData.price)}원
+                            <Badge className="ml-1" value="재구입" />
+                        </h4>
+                    )
+                }
             </>
         );
     }
@@ -130,7 +169,7 @@ export default function buyInfo() {
                     <div className="card surface-0 p-5 border-round-2xl">
                         <h1 className="ml-3 mt-0 mb-0">구입할 곡 정보</h1>
                         <Divider className="w-20rem" />
-                        <h3 className="ml-3">총 : {formatUnitEachThousand(totalPrice * 800)}원</h3>
+                        <h3 className="ml-3">반영된 총 금액 : {formatUnitEachThousand(totalPrice)}원</h3>
                     </div>
                     <div className="mt-4 mb-4"></div>
                     <div className="card surface-0 p-5 border-round-2xl">

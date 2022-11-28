@@ -25,7 +25,6 @@ export default function customerHistory() {
     });
     const [globalFilterValue, setGlobalFilterValue] = useState('');
     const [loading, setLoading] = useState(true);
-    const [selectedGenreMenu, setSelectedGenreMenu] = useState(null);
 
     const genreMenu = [{
             name: 'Hip-Hop',
@@ -46,11 +45,7 @@ export default function customerHistory() {
             d.uploadDate = new Date(d.uploadDate);
             return d;
         });
-    }
-
-    const onGenreMenuChange = (e) => {
-        setSelectedGenreMenu(e.value);
-    }    
+    } 
 
     const onGlobalFilterChange = (e) => {
         const value = e.target.value;

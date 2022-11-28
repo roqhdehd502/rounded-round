@@ -29,6 +29,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/tvNSXS4x9nc",
     "albumTrackNumber": 1,
     "cdNumber": 1,
+    "price": 800,
   },
   {
     "id": 1001,
@@ -49,6 +50,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/XEV4x7xEprw",
     "albumTrackNumber": 2,
     "cdNumber": 1,
+    "price": 800,
   },
   {
     "id": 1002,
@@ -69,6 +71,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/AxNXkI94tbY",
     "albumTrackNumber": 3,
     "cdNumber": 1,
+    "price": 800,
   },
   {
     "id": 1003,
@@ -81,7 +84,6 @@ export const songData = [{
     "albumName": "Mr. Morale & The Big Steppers",
     "genre": "Hip-Hop",
     "thumbnail": "https://firebasestorage.googleapis.com/v0/b/rounded-round.appspot.com/o/albumimages%2FMr_Morale_and_The_Big_Steppers.png?alt=media&token=a95f2da5-6887-4577-bc82-a8034230ba55",
-    
     "uploadDate": 1652400000000,
     "isEnabled": true,
     "views": randomView(),
@@ -90,6 +92,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/Lx3MGrafykU",
     "albumTrackNumber": 4,
     "cdNumber": 1,
+    "price": 800,
   },
   {
     "id": 1004,
@@ -110,6 +113,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/toEW7_-pvOY",
     "albumTrackNumber": 5,
     "cdNumber": 1,
+    "price": 800,
   },
   {
     "id": 1005,
@@ -130,6 +134,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/ll6S032PHNs",
     "albumTrackNumber": 6,
     "cdNumber": 1,
+    "price": 800,
   },
   {
     "id": 1006,
@@ -142,7 +147,6 @@ export const songData = [{
     "albumName": "Mr. Morale & The Big Steppers",
     "genre": "Hip-Hop",
     "thumbnail": "https://firebasestorage.googleapis.com/v0/b/rounded-round.appspot.com/o/albumimages%2FMr_Morale_and_The_Big_Steppers.png?alt=media&token=a95f2da5-6887-4577-bc82-a8034230ba55", 
-    
     "uploadDate": 1652400000000,
     "isEnabled": true,
     "views": randomView(),
@@ -151,6 +155,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/hl3-ZPg-JAA",
     "albumTrackNumber": 7,
     "cdNumber": 1,
+    "price": 800,
   },
   {
     "id": 1007,
@@ -162,8 +167,7 @@ export const songData = [{
     "songName": "We Cry Together (with Taylour Paige)",
     "albumName": "Mr. Morale & The Big Steppers",
     "genre": "Hip-Hop",
-    "thumbnail": "https://firebasestorage.googleapis.com/v0/b/rounded-round.appspot.com/o/albumimages%2FMr_Morale_and_The_Big_Steppers.png?alt=media&token=a95f2da5-6887-4577-bc82-a8034230ba55", 
-    
+    "thumbnail": "https://firebasestorage.googleapis.com/v0/b/rounded-round.appspot.com/o/albumimages%2FMr_Morale_and_The_Big_Steppers.png?alt=media&token=a95f2da5-6887-4577-bc82-a8034230ba55",   
     "uploadDate": 1652400000000,
     "isEnabled": true,
     "views": randomView(),
@@ -172,6 +176,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/C_s9JJnqQqM",
     "albumTrackNumber": 8,
     "cdNumber": 1,
+    "price": 800,
   },
   {
     "id": 1008,
@@ -184,7 +189,6 @@ export const songData = [{
     "albumName": "Mr. Morale & The Big Steppers",
     "genre": "Hip-Hop",
     "thumbnail": "https://firebasestorage.googleapis.com/v0/b/rounded-round.appspot.com/o/albumimages%2FMr_Morale_and_The_Big_Steppers.png?alt=media&token=a95f2da5-6887-4577-bc82-a8034230ba55",  
-    
     "uploadDate": 1652400000000,
     "isEnabled": true,
     "views": randomView(),
@@ -193,6 +197,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/0kS-MtxPr9I",
     "albumTrackNumber": 9,
     "cdNumber": 1,
+    "price": 800,
   },
   {
     "id": 1009,
@@ -213,6 +218,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/6nTcdw7bVdc",
     "albumTrackNumber": 10,
     "cdNumber": 2,
+    "price": 800,
   },
   {
     "id": 1010,
@@ -225,7 +231,6 @@ export const songData = [{
     "albumName": "Mr. Morale & The Big Steppers",
     "genre": "Hip-Hop",
     "thumbnail": "https://firebasestorage.googleapis.com/v0/b/rounded-round.appspot.com/o/albumimages%2FMr_Morale_and_The_Big_Steppers.png?alt=media&token=a95f2da5-6887-4577-bc82-a8034230ba55", 
-    
     "uploadDate": 1652400000000,
     "isEnabled": true,
     "views": randomView(),
@@ -234,6 +239,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/eL1L287YbkQ",
     "albumTrackNumber": 11,
     "cdNumber": 2,
+    "price": 800,
   },
   {
     "id": 1011,
@@ -254,6 +260,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/00QQWJIFxDA",
     "albumTrackNumber": 12,
     "cdNumber": 2,
+    "price": 800,
   },
   {
     "id": 1012,
@@ -265,8 +272,7 @@ export const songData = [{
     "songName": "Savior (Interlude)",
     "albumName": "Mr. Morale & The Big Steppers",
     "genre": "Hip-Hop",
-    "thumbnail": "https://firebasestorage.googleapis.com/v0/b/rounded-round.appspot.com/o/albumimages%2FMr_Morale_and_The_Big_Steppers.png?alt=media&token=a95f2da5-6887-4577-bc82-a8034230ba55",  
-    
+    "thumbnail": "https://firebasestorage.googleapis.com/v0/b/rounded-round.appspot.com/o/albumimages%2FMr_Morale_and_The_Big_Steppers.png?alt=media&token=a95f2da5-6887-4577-bc82-a8034230ba55",   
     "uploadDate": 1652400000000,
     "isEnabled": true,
     "views": randomView(),
@@ -275,6 +281,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/ROUFkWceDRM",
     "albumTrackNumber": 13,
     "cdNumber": 2,
+    "price": 800,
   },
   {
     "id": 1013,
@@ -287,7 +294,6 @@ export const songData = [{
     "albumName": "Mr. Morale & The Big Steppers",
     "genre": "Hip-Hop",
     "thumbnail": "https://firebasestorage.googleapis.com/v0/b/rounded-round.appspot.com/o/albumimages%2FMr_Morale_and_The_Big_Steppers.png?alt=media&token=a95f2da5-6887-4577-bc82-a8034230ba55", 
-    
     "uploadDate": 1652400000000,
     "isEnabled": true,
     "views": randomView(),
@@ -296,6 +302,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/HTAQxUXq674",
     "albumTrackNumber": 14,
     "cdNumber": 2,
+    "price": 800,
   },
   {
     "id": 1014,
@@ -308,7 +315,6 @@ export const songData = [{
     "albumName": "Mr. Morale & The Big Steppers",
     "genre": "Hip-Hop",
     "thumbnail": "https://firebasestorage.googleapis.com/v0/b/rounded-round.appspot.com/o/albumimages%2FMr_Morale_and_The_Big_Steppers.png?alt=media&token=a95f2da5-6887-4577-bc82-a8034230ba55",   
-    
     "uploadDate": 1652400000000,
     "isEnabled": true,
     "views": randomView(),
@@ -317,6 +323,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/-vrhf1P9zwc",
     "albumTrackNumber": 15,
     "cdNumber": 2,
+    "price": 800,
   },
   {
     "id": 1015,
@@ -329,7 +336,6 @@ export const songData = [{
     "albumName": "Mr. Morale & The Big Steppers",
     "genre": "Hip-Hop",
     "thumbnail": "https://firebasestorage.googleapis.com/v0/b/rounded-round.appspot.com/o/albumimages%2FMr_Morale_and_The_Big_Steppers.png?alt=media&token=a95f2da5-6887-4577-bc82-a8034230ba55", 
-    
     "uploadDate": 1652400000000,
     "isEnabled": true,
     "views": randomView(),
@@ -338,6 +344,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/SdwEIPD1bEw",
     "albumTrackNumber": 16,
     "cdNumber": 2,
+    "price": 800,
   },
   {
     "id": 1016,
@@ -350,7 +357,6 @@ export const songData = [{
     "albumName": "Mr. Morale & The Big Steppers",
     "genre": "Hip-Hop",
     "thumbnail": "https://firebasestorage.googleapis.com/v0/b/rounded-round.appspot.com/o/albumimages%2FMr_Morale_and_The_Big_Steppers.png?alt=media&token=a95f2da5-6887-4577-bc82-a8034230ba55",  
-    
     "uploadDate": 1652400000000,
     "isEnabled": true,
     "views": randomView(),
@@ -359,6 +365,7 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/Vo89NfFYKKI",
     "albumTrackNumber": 17,
     "cdNumber": 2,
+    "price": 800,
   },
   {
     "id": 1017,
@@ -379,5 +386,6 @@ export const songData = [{
     "youtubeURL": "https://www.youtube.com/embed/OqR71_BYS-c",
     "albumTrackNumber": 18,
     "cdNumber": 2,
+    "price": 800,
   },
 ];
