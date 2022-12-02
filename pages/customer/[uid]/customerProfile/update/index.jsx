@@ -26,7 +26,7 @@ export default function customerProfileUpdate() {
     const customerObj = useSelector(({ customerInfo }) => customerInfo.customerObj);
     const customerInfoObj = useSelector(({ customerInfo }) => customerInfo.customerInfoObj);
 
-    const [newAttachment, setNewAttachment] = useState("");
+    const [newAttachment, setNewAttachment] = useState('');
 
     const [customerUid, setCustomerUid] = useState('');    
     const [customerPhotoURL, setCustomerPhotoURL] = useState('');

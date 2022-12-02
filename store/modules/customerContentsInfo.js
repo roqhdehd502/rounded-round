@@ -85,6 +85,7 @@ export const patchCustomerContentThunk = createAsyncThunk(
         try {
             await updateDoc(docRef, {
                 thumbnail: payload.thumbnail,
+                title: payload.title,
                 contents: payload.contents,
             })
         } catch (error) {

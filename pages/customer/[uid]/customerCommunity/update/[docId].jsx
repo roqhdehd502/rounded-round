@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -11,8 +11,6 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Divider } from 'primereact/divider';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
-import ProjectContext from '../../../../../context';
-
 import { convertNewlineText } from '../../../../../commons/functional/filters';
 
 import { getCustomerCommunityThunk, patchCustomerCommunityThunk, deleteCustomerCommunityThunk } from '../../../../../store/modules/customerCommunitiesInfo';
@@ -20,7 +18,6 @@ import { getCustomerCommunityThunk, patchCustomerCommunityThunk, deleteCustomerC
 
 customerCommunityUpdate.layout = "L1";
 export default function customerCommunityUpdate() {
-    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -89,7 +86,7 @@ export default function customerCommunityUpdate() {
               message: '정말 삭제하시겠습니까?',
               position: 'top',
               accept: () => {
-                if (router.query.thumbnail) {
+                if (customerCommunityObj.thumbnail) {
                     const storage = firebaseStorage.getStorage();
                     const storageRef = firebaseStorage.ref(storage, `customercommunityimages/${router.query.uid}/${customerCommunityObj.thumbnailUuid}`);
 
@@ -127,7 +124,7 @@ export default function customerCommunityUpdate() {
                                       id="photo-file"
                                       type="file"
                                       accept="image/*"
-                                      placeholder="이미지를 업로드 하세요"
+                                      placeholder="수정할 이미지를 업로드 하세요"
                                     />
                                 </span>
                             </div>

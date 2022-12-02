@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import Link from "next/Link";
 import { useRouter } from 'next/router';

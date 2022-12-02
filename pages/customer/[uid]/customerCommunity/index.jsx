@@ -37,7 +37,7 @@ export default function customerCommunity() {
         dispatch(getCustomerInfoObjThunk(router.query.uid));
         dispatch(getCustomerCommunitiesThunk(router.query.uid));
         setLoading(false);
-    }, [router.query, customerObj ? customerObj.uid : null, customerInfoObj ? customerInfoObj.uid : null]);
+    }, [router.query, customerObj?.uid, customerInfoObj?.uid]);
 
     const contentBodyTemplate = (rowData) => {
         return (

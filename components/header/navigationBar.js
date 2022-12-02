@@ -254,7 +254,7 @@ export const NavigationBar = (props) => {
         <div className="ml-0 mr-0">
             <MenuRef model={customerProfileItems} ref={customerProfileItem} />
             <Button className="p-button-rounded p-button-text" onClick={(event) => customerProfileItem.current.toggle(event)} aria-controls="popup_menu" aria-haspopup>
-                <Image className="border-circle" alt={props.customerObj.displayName} src={props.customerObj.photoURL ? props.customerObj.photoURL : `${prefix}/img/anonymous-user-logo.png`} onError={(e) => e.target.src = `${prefix}/img/anonymous-user-logo.png`} width={35} height={35} quality={75} />
+                <Image className="border-circle" alt={props.customerObj.displayName} src={props.customerObj.photoURL ? props.customerObj.photoURL : `${prefix}/img/anonymous-user-logo.png`} onError={(e) => e.target.src = `${prefix}/img/anonymous-user-logo.png`} width={35} height={35} quality={25} />
             </Button>
         </div>
     ) : (
