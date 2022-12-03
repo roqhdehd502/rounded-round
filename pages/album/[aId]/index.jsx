@@ -11,6 +11,8 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
+import { LoadingComponent } from '../../../components/commons/loadingComponent';
+
 import { DialogCommon } from '../../../commons/primereact/DialogCommon';
 import { ellipsisText, formatUnitEachThousand, timeFormatting } from '../../../commons/functional/filters';
 
@@ -236,11 +238,9 @@ export default function albumDetail() {
                     </div>
                 </div>
             ) : (
-                <div className="flex justify-content-center align-content-center min-h-screen">
-                    <div>
-                        <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
-                    </div>
-                </div>
+                <>
+                    <LoadingComponent />
+                </>
             )}
 
             <div className="mt-4 mb-4"></div>

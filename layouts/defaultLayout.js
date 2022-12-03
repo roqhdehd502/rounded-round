@@ -5,6 +5,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { NavigationBar } from '../components/header/navigationBar';
 import { Footer } from '../components/footer/footer';
+import { LoadingComponent } from '../components/commons/loadingComponent';
 
 import * as customerInfoActions from '../store/modules/customerInfo';
 
@@ -42,11 +43,7 @@ export default function DefaultLayout({ children }) {
                 </>
             ) : (
                 <>
-                    <div className="flex justify-content-center align-content-center min-h-screen">
-                        <div>
-                            <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
-                        </div>
-                    </div>
+                    <LoadingComponent />
                 </>
             )}
         </>

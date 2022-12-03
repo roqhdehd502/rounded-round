@@ -13,6 +13,8 @@ import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Badge } from 'primereact/badge';
 
+import { LoadingComponent } from '../../../components/commons/loadingComponent';
+
 import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/filters';
 
 import { getCustomerBuyHistoriesThunk } from '../../../store/modules/purchaseInfo';
@@ -278,11 +280,9 @@ export default function cartList() {
                     </div>
                 </div>
             ) : (
-                <div className="flex justify-content-center align-content-center min-h-screen">
-                    <div>
-                        <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
-                    </div>
-                </div>
+                <>
+                    <LoadingComponent />
+                </>
             )}
         </>
     );

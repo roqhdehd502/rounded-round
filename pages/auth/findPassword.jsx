@@ -1,4 +1,4 @@
-import { useState, useCallback, useContext } from 'react';
+import { useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -8,14 +8,11 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
-import ProjectContext from '../../context';
-
 import * as customerInfoActions from '../../store/modules/customerInfo';
 
 
 findPassword.layout = "L2";
 export default function findPassword() {
-    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
 

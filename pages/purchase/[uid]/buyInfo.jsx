@@ -15,8 +15,9 @@ import { Badge } from 'primereact/badge';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/filters';
+import { LoadingComponent } from '../../../components/commons/loadingComponent';
 
+import { ellipsisText, formatUnitEachThousand } from '../../../commons/functional/filters';
 import { getPayInformation } from '../../../commons/functional/payment';
 
 import { getCustomerBuyHistoriesThunk, createBuyHistoryThunk } from '../../../store/modules/purchaseInfo';
@@ -187,11 +188,9 @@ export default function buyInfo() {
                     </div>
                 </div>
             ) : (
-                <div className="flex justify-content-center align-content-center min-h-screen">
-                    <div>
-                        <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
-                    </div>
-                </div>
+                <>
+                    <LoadingComponent />
+                </>
             )}
         </>
     );

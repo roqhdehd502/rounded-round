@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { Button } from 'primereact/button';
 
 import CustomerHeader from '../../../../components/customer/customerHeader';
+import { LoadingComponent } from '../../../../components/commons/loadingComponent';
 
 import { formatUnitEachThousand, timeFormatting } from '../../../../commons/functional/filters'
 
@@ -93,11 +94,7 @@ export default function customerProfile() {
                 </>
             ) : (
                 <>
-                    <div className="flex justify-content-center align-content-center min-h-screen">
-                        <div>
-                            <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
-                        </div>
-                    </div>            
+                    <LoadingComponent />
                 </>
             )}
         </>

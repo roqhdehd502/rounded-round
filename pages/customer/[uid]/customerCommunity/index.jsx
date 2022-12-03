@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -10,9 +10,8 @@ import { Column } from 'primereact/column';
 import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 
-import ProjectContext from '../../../../context';
-
 import CustomerHeader from '../../../../components/customer/customerHeader';
+import { LoadingComponent } from '../../../../components/commons/loadingComponent';
 
 import { timeCounter } from '../../../../commons/functional/filters'
 
@@ -22,7 +21,6 @@ import { getCustomerCommunitiesThunk } from '../../../../store/modules/customerC
 
 customerCommunity.layout = "L1";
 export default function customerCommunity() {
-    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -129,11 +127,7 @@ export default function customerCommunity() {
                 </>
             ) : (
                 <>
-                    <div className="flex justify-content-center align-content-center min-h-screen">
-                        <div>
-                            <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
-                        </div>
-                    </div>             
+                    <LoadingComponent />
                 </>
             )}
         </>

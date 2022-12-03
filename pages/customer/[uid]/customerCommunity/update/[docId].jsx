@@ -11,6 +11,8 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Divider } from 'primereact/divider';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
+import { LoadingComponent } from '../../../../../components/commons/loadingComponent';
+
 import { convertNewlineText } from '../../../../../commons/functional/filters';
 
 import { getCustomerCommunityThunk, patchCustomerCommunityThunk, deleteCustomerCommunityThunk } from '../../../../../store/modules/customerCommunitiesInfo';
@@ -157,11 +159,7 @@ export default function customerCommunityUpdate() {
                 </>
             ) : (
                 <>
-                    <div className="flex justify-content-center align-content-center min-h-screen">
-                        <div>
-                            <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
-                        </div>
-                    </div>
+                    <LoadingComponent />
                 </>
             )}
         </>

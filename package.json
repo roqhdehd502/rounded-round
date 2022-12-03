@@ -1,7 +1,7 @@
 {
   "homepage": "https://roqhdehd502.github.io/rounded-round",
   "name": "rounded-round",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "scripts": {
     "dev": "next dev",

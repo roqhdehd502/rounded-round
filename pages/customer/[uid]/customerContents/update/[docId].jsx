@@ -12,6 +12,8 @@ import { Editor } from 'primereact/editor';
 import { Divider } from 'primereact/divider';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
+import { LoadingComponent } from '../../../../../components/commons/loadingComponent';
+
 import { getCustomerContentThunk, patchCustomerContentThunk, deleteCustomerContentThunk } from '../../../../../store/modules/customerContentsInfo';
 
 
@@ -261,11 +263,7 @@ export default function customerContentsUpdate() {
                 </>
             ) : (
                 <>
-                    <div className="flex justify-content-center align-content-center min-h-screen">
-                        <div>
-                            <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
-                        </div>
-                    </div>
+                    <LoadingComponent />
                 </>
             )}
         </>

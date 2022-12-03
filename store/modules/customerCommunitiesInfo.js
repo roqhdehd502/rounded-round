@@ -31,11 +31,7 @@ export const getCustomerCommunityThunk = createAsyncThunk(
         try {
             const docRef = doc(firestore, "customerCommunity", docId);
             const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                return docSnap.data();
-            } else {
-                return null;
-            }      
+            return docSnap.exists() ? docSnap.data() : null;     
         } catch (error) {
             return thunkAPI.rejectWithValue(error);
         }
@@ -70,8 +66,13 @@ export const createCustomerCommunityThunk = createAsyncThunk(
     async (payload, thunkAPI) => {
         try {
             await addDoc(collection(firestore, "customerCommunity"), payload)
-              .then((docRef) => { return docRef })
-              .catch((error) => { console.log(error) });
+              .then(async (docRef) => {
+                  const docChildRef = doc(firestore, "customerCommunity", docRef.id);
+                  const docSnap = await getDoc(docChildRef);
+                  return docSnap.exists() ? docSnap.data() : null; 
+              }).catch((error) => { 
+                  console.log(error); 
+              });
         } catch (error) {
             return thunkAPI.rejectWithValue(error);
         }
@@ -148,7 +149,7 @@ const customerCommunitiesInfoSlice = createSlice({
           })
           .addCase(createCustomerCommunityThunk.fulfilled, (state, action) => {
               state.loading = false;
-              console.log("CREATE SUCCESS.", action.payload);
+              state.customerCommunities.push(action.payload);
           })
           .addCase(createCustomerCommunityThunk.rejected, (state, action) => {
               state.loading = false;

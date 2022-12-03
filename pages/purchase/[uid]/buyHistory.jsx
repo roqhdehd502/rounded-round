@@ -11,6 +11,8 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
+import { LoadingComponent } from '../../../components/commons/loadingComponent';
+
 import { ellipsisText, timeCounter } from '../../../commons/functional/filters';
 
 import { getCustomerBuyHistoriesThunk, deleteBuyHistoryThunk } from '../../../store/modules/purchaseInfo';
@@ -170,11 +172,9 @@ export default function buyHistory() {
                     </div>
                 </div>
             ) : (
-                <div className="flex justify-content-center align-content-center min-h-screen">
-                    <div>
-                        <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
-                    </div>
-                </div>
+                <>
+                    <LoadingComponent />
+                </>
             )}
         </>
     );

@@ -1,9 +1,7 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 // import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
-
-import ProjectContext from '../../context';
 
 import { getAlbums } from '../../service';
 
@@ -13,7 +11,6 @@ import { CarouselCommon } from '../../commons/primereact/CarouselCommon';
 
 
 export const NewAlbum = () => {
-    const { prefix } = useContext(ProjectContext);
     //const dispatch = useDispatch();
 
     //const albums = useSelector(({ albumsInfo }) => albumsInfo.albums);

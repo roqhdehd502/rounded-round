@@ -1,17 +1,16 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { useRouter } from 'next/router';
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import ProjectContext from '../context';
+import { LoadingComponent } from '../components/commons/loadingComponent';
 
 import * as customerInfoActions from '../store/modules/customerInfo';
 
 
 export default function emptyLayout({ children }) {
-    const { prefix } = useContext(ProjectContext);
     const dispatch = useDispatch();
     const router = useRouter();
     const auth = getAuth();
@@ -47,11 +46,7 @@ export default function emptyLayout({ children }) {
                 </>
             ) : (
                 <>
-                    <div className="flex justify-content-center align-content-center min-h-screen">
-                        <div>
-                            <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
-                        </div>
-                    </div>
+                    <LoadingComponent />
                 </>
             )}
         </>

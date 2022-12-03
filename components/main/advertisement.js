@@ -4,6 +4,8 @@ import Image from 'next/image';
 
 import { getAdvertisement } from '../../service';
 
+import { LoadingComponent } from '../../components/commons/loadingComponent';
+
 
 export const Advertisement = () => {
     const [advertisement, setAdvertisement] = useState(null);
@@ -24,11 +26,7 @@ export const Advertisement = () => {
                 </>
             ) : (
                 <>
-                    <div className="flex justify-content-center align-content-center h-10rem">
-                        <div>
-                            <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
-                        </div>
-                    </div>
+                    <LoadingComponent />
                 </>
             )}
         </>

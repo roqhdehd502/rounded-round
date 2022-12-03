@@ -12,6 +12,8 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Divider } from 'primereact/divider';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
+import { LoadingComponent } from '../../../../../components/commons/loadingComponent';
+
 import { convertNewlineText } from '../../../../../commons/functional/filters';
 
 import * as customerInfoActions from '../../../../../store/modules/customerInfo';
@@ -238,11 +240,7 @@ export default function customerProfileUpdate() {
                 </>
             ) : (
                 <>
-                    <div className="flex justify-content-center align-content-center min-h-screen">
-                        <div>
-                            <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
-                        </div>
-                    </div>              
+                    <LoadingComponent />
                 </>
             )}
         </>

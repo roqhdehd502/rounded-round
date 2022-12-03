@@ -4,6 +4,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 import customerInfo from "./customerInfo";
 import customerCommunitiesInfo from "./customerCommunitiesInfo";
 import customerContentsInfo from "./customerContentsInfo";
+import customerSubscribesInfo from "./customerSubscribesInfo";
 import albumsInfo from "./albumsInfo";
 import songsInfo from "./songsInfo";
 import purchaseInfo from "./purchaseInfo";
@@ -20,6 +21,7 @@ const reducer = (state, action) => {
         customerInfo,
         customerCommunitiesInfo,
         customerContentsInfo,
+        customerSubscribesInfo,
         albumsInfo,
         songsInfo,
         purchaseInfo,

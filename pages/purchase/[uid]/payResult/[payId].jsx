@@ -10,6 +10,8 @@ import { Column } from 'primereact/column';
 import { Divider } from 'primereact/divider';
 import { Badge } from 'primereact/badge';
 
+import { LoadingComponent } from '../../../../components/commons/loadingComponent';
+
 import { ellipsisText, formatUnitEachThousand, timeFormatting } from '../../../../commons/functional/filters';
 
 import { getBuyHistoriesThunk } from '../../../../store/modules/purchaseInfo';
@@ -105,11 +107,9 @@ export default function payResultInfo() {
                     </div>
                 </div>
             ) : (
-                <div className="flex justify-content-center align-content-center min-h-screen">
-                    <div>
-                        <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
-                    </div>
-                </div>
+                <>
+                    <LoadingComponent />
+                </>
             )}
         </>
     );

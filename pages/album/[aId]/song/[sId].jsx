@@ -8,7 +8,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 
-import ProjectContext from '../../../../context';
+import { LoadingComponent } from '../../../../components/commons/loadingComponent';
 
 import { DialogCommon } from '../../../../commons/primereact/DialogCommon';
 import { ellipsisText, formatUnitEachThousand } from '../../../../commons/functional/filters';
@@ -18,7 +18,6 @@ import { getSongsInAlbum, getSong } from '../../../../service';
 
 songDetail.layout = "L1";
 export default function songDetail() {
-    const { prefix } = useContext(ProjectContext);
     const router = useRouter();
 
     const [songObj, setSongObj] = useState();
@@ -167,11 +166,9 @@ export default function songDetail() {
                     </div>
                 </div>
             ) : (
-                <div className="flex justify-content-center align-content-center min-h-screen">
-                    <div>
-                        <i className="pi pi-spin pi-spinner" style={{'fontSize': '2em'}}></i>
-                    </div>
-                </div>
+                <>
+                    <LoadingComponent />
+                </>
             )}
 
             <div className="mt-4 mb-4"></div>

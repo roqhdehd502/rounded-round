@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useContext, useRef } from 'react';
+import { useEffect, useCallback, useRef, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/Link";
@@ -7,12 +7,14 @@ import Image from 'next/image';
 
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
+import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import ProjectContext from '../../context';
 
 import * as customerInfoActions from '../../store/modules/customerInfo';
 import { getCustomerInfoObjThunk } from '../../store/modules/customerInfo';
+import { getCustomerSubscribesThunk, createCustomerSubscribeThunk, deleteCustomerSubscribeThunk } from '../../store/modules/customerSubscribesInfo';
 
 
 export default function CustomerHeader(props) {
@@ -23,11 +25,14 @@ export default function CustomerHeader(props) {
 
     const customerObj = useSelector(({ customerInfo }) => customerInfo.customerObj);
     const customerInfoObj = useSelector(({ customerInfo }) => customerInfo.customerInfoObj);
+    const customerSubscribes = useSelector(({ customerSubscribesInfo }) => customerSubscribesInfo.customerSubscribes);
+
+    const toast = useRef(null);
 
     useEffect(() => {
-        if (!router.isReady) return; 
         dispatch(getCustomerInfoObjThunk(router.query.uid));
-    }, [router.isReady]);
+        dispatch(getCustomerSubscribesThunk({subscriberUid: customerObj.uid, subscribedUid: router.query.uid}));
+    }, [router.query, customerInfoObj?.uid, customerSubscribes ? customerSubscribes[0]?.subscriberUid : []]);
 
     const onEmailVerificationSend = useCallback(() => {
         confirmDialog({
@@ -44,8 +49,42 @@ export default function CustomerHeader(props) {
         });
     }, [dispatch]);
 
+    const onSubcribeCustomer = useCallback((subscriberUid, subscribedUid, subscribedCustomerDisplayName) => {
+        const createSubscribeObj = {
+            subscriberUid,
+            subscribedUid
+        }      
+        dispatch(createCustomerSubscribeThunk(createSubscribeObj));
+        toast.current.show({
+          severity: 'success', 
+          summary: '구독 성공', 
+          detail: `${subscribedCustomerDisplayName}님을 구독 하였습니다.`, 
+          life: 3000
+        });
+    }, [dispatch]);
+
+    const onUnSubcribeCustomer = useCallback((docId, subscribedCustomerDisplayName) => {
+        confirmDialog({
+          header: '구독 취소',
+          icon: 'pi pi-exclamation-triangle',
+          message: '정말 구독 취소 하시겠습니까?',
+          position: 'top',
+          accept: () => {
+            dispatch(deleteCustomerSubscribeThunk(docId));
+            toast.current.show({
+              severity: 'info', 
+              summary: '구독 취소', 
+              detail: `${subscribedCustomerDisplayName}님을 구독 취소 하였습니다.`, 
+              life: 3000
+            });
+          },
+          reject: () => { return } 
+        });
+    }, [dispatch]);
+
     return (
         <>
+            <Toast ref={toast} />
             <ConfirmDialog />
 
             <div className="card surface-0 p-5 border-round-2xl">
@@ -82,14 +121,21 @@ export default function CustomerHeader(props) {
                                 </>
                             ) : (
                                 <>
-                                    {/* 구독여부 분기 처리 구현하기 */}
                                     {customerObj ? (
                                         <>
-                                            <Button className={`p-button-rounded p-button-info`} icon="pi pi-check" label="구독됨" />
+                                            {customerSubscribes.length >= 1 ? (
+                                                <>
+                                                    <Button className={`p-button-rounded p-button-info`} icon="pi pi-check" label="구독됨" onClick={() => onUnSubcribeCustomer(customerSubscribes[0].docId, customerInfoObj.displayName)} />
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Button className={`p-button-rounded p-button-info`} icon="pi pi-plus" label="구독하기" onClick={() => onSubcribeCustomer(customerObj.uid, customerInfoObj.uid, customerInfoObj.displayName)} />
+                                                </>
+                                            )}
                                         </>
                                     ) : (
                                         <>
-                                            <Button className={`p-button-rounded p-button-info`} icon="pi pi-plus" label="구독하기" />
+                                            <span></span>
                                         </>
                                     )}
                                 </>
